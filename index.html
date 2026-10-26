@@ -1,0 +1,1652 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Pintar Sifir</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Apps sifir 1–10 dwibahasa (BM/EN) untuk murid sekolah rendah: belajar, kuiz dan cabaran dengan sentuhan, isyarat tangan atau arahan suara.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#6C3CF0">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pintar Sifir">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Lilita+One&display=swap">
+<style>
+/* Layout: festive one-column app. Violet-to-pink hero banner, rainbow table tiles, game-show answer colours. */
+:root{
+  --bg:#F4EFFF;
+  --pat-op:.26;
+  --card:#FFFFFF;
+  --card-2:#F2ECFF;
+  --line:#E2D7FF;
+  --ink:#271A5C;
+  --ink-soft:#6B5FA3;
+  --primary:#6C3CF0;
+  --primary-ink:#FFFFFF;
+  --hl:#FFD23F;
+  --hl-ink:#3A2A00;
+  --good:#12A150;
+  --good-bg:#DCF7E6;
+  --bad:#E5364F;
+  --bad-bg:#FFE2E8;
+  --shade:#000000;
+  --on-color:#FFFFFF;
+  --on-light:#33240A;
+  --lift:rgba(60,30,140,.24);
+  --scrim:rgba(20,10,50,.5);
+  --hero-a:#6C3CF0; --hero-b:#B23CEB; --hero-c:#FF4D8D;
+  --chal-a:#FF8A00; --chal-b:#FF3D7F;
+  --kancil:#C77634; --kancil-2:#F7E4C8; --kancil-ink:#2D1B10; --eye-hi:#FFFFFF; --cheek:rgba(255,120,120,.5);
+  --c1:#F03E3E; --c2:#FF8A00; --c3:#FFC400; --c4:#8CCB2B; --c5:#17B04F;
+  --c6:#0FAFAA; --c7:#3B82F6; --c8:#5B4FE8; --c9:#A845E8; --c10:#EC4899;
+  --m-touch:#F27A00; --m-gesture:#9B3DE0; --m-voice:#0A9E99;
+  --o1:#F03E5A; --o2:#3B82F6; --o3:#FFB800; --o4:#16A34A;
+  --f-display:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Andika","Segoe UI",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#140D35; --pat-op:.12; --card:#211951; --card-2:#2B2265; --line:#3A2F7E;
+    --ink:#F5F1FF; --ink-soft:#B9AEEA; --primary:#8C6BFF; --primary-ink:#FFFFFF;
+    --good:#4ADE80; --good-bg:#15402A; --bad:#FF6B81; --bad-bg:#4C1C2B;
+    --lift:rgba(0,0,0,.55); --scrim:rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#140D35; --pat-op:.12; --card:#211951; --card-2:#2B2265; --line:#3A2F7E;
+  --ink:#F5F1FF; --ink-soft:#B9AEEA; --primary:#8C6BFF; --primary-ink:#FFFFFF;
+  --good:#4ADE80; --good-bg:#15402A; --bad:#FF6B81; --bad-bg:#4C1C2B;
+  --lift:rgba(0,0,0,.55); --scrim:rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:var(--pat-op);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='230' height='230' viewBox='0 0 170 170'%3E%3Cg fill='none' stroke-width='5' stroke-linecap='round'%3E%3Cpath d='M18 18l16 16M34 18L18 34' stroke='%23FF4D8D'/%3E%3Cpath d='M118 22v22M107 33h22' stroke='%233B82F6'/%3E%3Cpath d='M62 96h22M62 107h22' stroke='%23FFB800'/%3E%3Cpath d='M134 116l15 15M149 116l-15 15' stroke='%230FAFAA'/%3E%3Cpath d='M20 132h20' stroke='%23A845E8'/%3E%3C/g%3E%3Cg fill='%23A845E8'%3E%3Ccircle cx='30' cy='123' r='3'/%3E%3Ccircle cx='30' cy='141' r='3'/%3E%3C/g%3E%3Ccircle cx='88' cy='52' r='5' fill='%238CCB2B'/%3E%3Ccircle cx='158' cy='74' r='4' fill='%23FF8A00'/%3E%3Ccircle cx='96' cy='156' r='3.5' fill='%23F03E3E'/%3E%3C/svg%3E");}
+button{font:inherit;color:inherit;cursor:pointer}
+button:disabled{cursor:default}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
+
+.app{
+  --sc:var(--c3); --sc-tc:var(--on-light);
+  --sc-ink:color-mix(in srgb,var(--sc) 62%,var(--ink));
+  max-width:1060px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:4px 40px;
+}
+body.has-sensor .app{padding-bottom:160px}
+@media (min-width:900px){ body.has-sensor .app{max-width:1340px;padding-bottom:40px;padding-right:max(304px,env(safe-area-inset-right,0px))} }
+
+/* ---------- header ---------- */
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-block:10px}
+.brand{display:flex;align-items:center;gap:8px;background:none;border:0;padding:4px 6px 4px 0;font:400 24px/1 var(--f-display);color:var(--ink);letter-spacing:.01em}
+.brand .mini{display:block;width:40px;height:40px;flex:none}
+.brand b{font-weight:400;color:var(--primary)}
+body[data-screen="home"] .brand{display:none}
+.bar-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.pill{display:flex;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:3px;gap:2px}
+.pill button{border:0;background:transparent;border-radius:999px;padding:7px 12px;font-weight:700;font-size:14px;color:var(--ink-soft);display:flex;gap:6px;align-items:center;white-space:nowrap}
+.pill button svg{width:18px;height:18px;fill:currentColor}
+.pill button[aria-pressed="true"]{background:var(--primary);color:var(--primary-ink)}
+.lang button{padding:7px 11px;font-family:var(--f-display);font-weight:400;font-size:15px;letter-spacing:.03em}
+.lang button[aria-pressed="true"]{background:var(--hl);color:var(--hl-ink)}
+body[data-screen="home"] .seg{display:none}
+.icon-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;color:var(--ink);flex:none}
+.icon-btn svg{width:22px;height:22px}
+.icon-btn .off{display:none}
+.icon-btn[aria-pressed="false"] .on{display:none}
+.icon-btn[aria-pressed="false"] .off{display:block}
+@media (max-width:560px){ .bar{gap:6px} .bar-right{gap:6px} .brand > span:last-child{display:none} .seg button .t{display:none} .seg button{padding:7px 9px} .lang button{padding:6px 8px;font-size:14px} .icon-btn{width:38px;height:38px} .icon-btn svg{width:20px;height:20px} }
+
+/* ---------- shared ---------- */
+.screen{display:grid;gap:18px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:24px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:17px;line-height:1.1;padding:14px 20px;border-radius:16px;border:2px solid var(--line);background:var(--card);color:var(--ink);box-shadow:0 4px 0 var(--line);transition:transform .1s,box-shadow .1s;position:relative;text-decoration:none}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--line)}
+.btn svg{width:20px;height:20px;flex:none}
+.btn.primary{background:var(--primary);color:var(--primary-ink);border-color:transparent;box-shadow:0 5px 0 color-mix(in srgb,var(--primary) 60%,var(--shade))}
+.btn.ghost{box-shadow:none;background:var(--card)}
+.hint{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:16px;font-weight:700;font-size:15.5px;
+  background:color-mix(in srgb,var(--hl) 24%,var(--card));border:2px dashed color-mix(in srgb,var(--hl) 80%,var(--shade))}
+.hint svg{width:26px;height:26px;flex:none;fill:currentColor}
+.hint b{color:var(--primary)}
+.sec{font:400 23px/1.1 var(--f-display);margin:4px 0 -6px;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
+.sec::before{content:"";flex:none;width:11px;height:11px;border-radius:50%;background:var(--hl);box-shadow:16px 0 0 var(--c10),32px 0 0 var(--c7);margin-right:34px}
+[data-finger]{position:relative}
+.holding{outline:5px solid var(--hl)!important;outline-offset:3px}
+.holding::after{content:"";position:absolute;left:10px;right:10px;bottom:7px;height:8px;border-radius:8px;pointer-events:none;z-index:2;
+  background:linear-gradient(90deg,var(--hl) calc(var(--hold,0)*100%),color-mix(in srgb,var(--card) 70%,transparent) 0)}
+.fbadge,.fist-tag{display:none;align-items:center;gap:3px;padding:3px 7px 3px 5px;border-radius:999px;background:var(--hl);color:var(--hl-ink);font:700 13px/1 var(--f-body);white-space:nowrap;text-shadow:none;z-index:2}
+.fbadge svg,.fist-tag svg{width:13px;height:15px;fill:currentColor}
+.fbadge{position:absolute;top:7px;right:7px}
+body[data-mode="gesture"] .fbadge,body[data-mode="gesture"] .fist-tag{display:inline-flex}
+
+/* ---------- mascot ---------- */
+.mascot svg{width:100%;height:auto;display:block;overflow:visible}
+.kancil .eyes-happy,.kancil .mouth-o{display:none}
+[data-mood="happy"] .kancil .eyes-open{display:none}
+[data-mood="happy"] .kancil .eyes-happy{display:inline}
+[data-mood="sad"] .kancil .mouth-smile{display:none}
+[data-mood="sad"] .kancil .mouth-o{display:inline}
+[data-mood="happy"] .kancil{animation:hop .5s ease}
+[data-mood="sad"] .kancil{animation:tilt .6s ease}
+.kancil .ears{transform-origin:60px 60px;animation:ear 4s ease-in-out infinite}
+@keyframes hop{30%{transform:translateY(-12%) rotate(-4deg)}60%{transform:translateY(0) rotate(3deg)}}
+@keyframes tilt{40%{transform:rotate(-8deg)}}
+@keyframes ear{0%,88%,100%{transform:none}92%{transform:rotate(-4deg)}96%{transform:rotate(3deg)}}
+
+/* ---------- home: hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:30px;padding:22px clamp(16px,4vw,34px) 20px;color:var(--on-color);
+  background:linear-gradient(125deg,var(--hero-a),var(--hero-b) 55%,var(--hero-c));
+  box-shadow:0 8px 0 color-mix(in srgb,var(--hero-a) 55%,var(--shade)),0 24px 40px -22px var(--lift);
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px 22px;align-items:center}
+.deco{position:absolute;pointer-events:none;border-radius:50%}
+.deco.d1{width:200px;height:200px;right:-90px;top:-110px;background:color-mix(in srgb,var(--hl) 85%,transparent);opacity:.9}
+.deco.d2{width:110px;height:110px;right:-40px;bottom:-60px;background:var(--c6);opacity:.85}
+.deco.d5{width:60px;height:60px;left:-20px;bottom:-24px;background:var(--c2);opacity:.9}
+.deco.x{border-radius:0;width:auto;height:auto;font:400 54px/1 var(--f-display);color:var(--on-color);opacity:.2;right:18px;bottom:96px;transform:rotate(14deg)}
+.hero > *:not(.deco){position:relative}
+.hero .mascot{grid-row:span 2;width:clamp(88px,17vw,140px);filter:drop-shadow(0 6px 0 color-mix(in srgb,var(--hero-a) 60%,var(--shade)))}
+.title{font:400 clamp(44px,9.5vw,86px)/.92 var(--f-display);margin:0 0 4px;letter-spacing:.01em;text-wrap:balance;text-shadow:0 4px 0 color-mix(in srgb,var(--hero-a) 70%,var(--shade))}
+.title .s{color:var(--hl)}
+.sub{margin:0;font:700 15px/1.2 var(--f-body);letter-spacing:.08em;text-transform:uppercase;opacity:.92}
+.bubble{position:relative;justify-self:start;background:var(--card);color:var(--ink);border-radius:18px;padding:10px 14px;font-size:17px;max-width:46ch;margin:0;box-shadow:0 4px 0 color-mix(in srgb,var(--hero-a) 45%,var(--shade))}
+.bubble::before{content:"";position:absolute;left:-8px;top:16px;width:16px;height:16px;background:var(--card);transform:rotate(45deg);border-radius:3px}
+.stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stat{display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--on-color) 16%,transparent);border:2px solid color-mix(in srgb,var(--on-color) 30%,transparent);border-radius:18px;padding:8px 12px 8px 8px;min-width:0}
+.stat .si{width:42px;height:42px;flex:none;border-radius:13px;display:grid;place-items:center}
+.stat .si svg{width:24px;height:24px}
+.stat .si.y{background:var(--hl);color:var(--hl-ink)}
+.stat .si.g{background:var(--c4);color:var(--on-light)}
+.stat .si.o{background:var(--c2);color:var(--on-color)}
+.stat b{display:block;font:400 26px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.stat b small{font-size:.6em;opacity:.85}
+.stat span{display:block;font-size:13px;font-weight:700;opacity:.92;line-height:1.15}
+@media (max-width:620px){
+  .hero{grid-template-columns:auto minmax(0,1fr);padding:16px 14px;gap:12px 12px}
+  .hero .mascot{grid-row:auto;width:76px}
+  .deco.d1{width:120px;height:120px;right:-62px;top:-70px}
+  .deco.x{display:none}
+  .sub{font-size:12px;letter-spacing:.05em}
+  .bubble{font-size:15px;grid-column:1/-1}
+  .bubble::before{left:30px;top:-8px}
+  .stats{gap:6px}
+  .stat{flex-direction:column;text-align:center;gap:4px;padding:8px 4px}
+  .stat .si{width:34px;height:34px}
+  .stat span{font-size:11.5px}
+}
+
+/* ---------- home: modes ---------- */
+.modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mode-card{--m:var(--m-touch);text-align:left;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;align-items:center;padding:14px;border-radius:22px;
+  border:3px solid color-mix(in srgb,var(--m) 40%,var(--line));background:var(--card);color:var(--ink);
+  box-shadow:0 5px 0 color-mix(in srgb,var(--m) 40%,var(--line));transition:transform .1s}
+.mode-card[data-set-mode="gesture"]{--m:var(--m-gesture)}
+.mode-card[data-set-mode="voice"]{--m:var(--m-voice)}
+.mode-card .ic{grid-row:span 2;width:54px;height:54px;border-radius:17px;display:grid;place-items:center;background:color-mix(in srgb,var(--m) 15%,var(--card));color:var(--m)}
+.mode-card .ic svg{width:30px;height:30px;fill:currentColor}
+.mode-card strong{font:400 21px/1.1 var(--f-display);letter-spacing:.01em}
+.mode-card .d{font-size:14.5px;color:var(--ink-soft)}
+.mode-card[aria-pressed="true"]{background:var(--m);border-color:var(--m);color:var(--on-color);box-shadow:0 5px 0 color-mix(in srgb,var(--m) 60%,var(--shade))}
+.mode-card[aria-pressed="true"] strong{text-shadow:0 2px 0 color-mix(in srgb,var(--m) 60%,var(--shade))}
+.mode-card[aria-pressed="true"] .ic{background:var(--on-color);color:var(--m)}
+.mode-card[aria-pressed="true"] .d{color:var(--on-color)}
+@media (max-width:620px){
+  .modes{gap:8px}
+  .mode-card{grid-template-columns:1fr;justify-items:center;text-align:center;padding:12px 4px}
+  .mode-card .ic{grid-row:auto;width:46px;height:46px}
+  .mode-card strong{font-size:16.5px}
+  .mode-card .d{display:none}
+}
+
+/* ---------- home: tiles ---------- */
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.tile{--c:var(--c1);--tc:var(--on-color);display:grid;justify-items:center;gap:3px;padding:12px 4px 10px;border-radius:22px;border:0;
+  background:var(--c);color:var(--tc);box-shadow:0 6px 0 color-mix(in srgb,var(--c) 68%,var(--shade)),0 14px 22px -14px var(--lift);transition:transform .1s,box-shadow .1s;overflow:visible}
+.tile::before{content:"";position:absolute;left:7px;right:7px;top:6px;height:40%;border-radius:16px 16px 50% 50%;background:linear-gradient(color-mix(in srgb,var(--on-color) 30%,transparent),transparent);pointer-events:none}
+.tile:active{transform:translateY(4px);box-shadow:0 2px 0 color-mix(in srgb,var(--c) 68%,var(--shade))}
+.tile.lt{--tc:var(--on-light)}
+.tile-k{font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.92}
+.tile-n{font:400 clamp(38px,8vw,60px)/1 var(--f-display);text-shadow:0 3px 0 color-mix(in srgb,var(--c) 62%,var(--shade))}
+.tile.lt .tile-n{text-shadow:0 3px 0 color-mix(in srgb,var(--c) 60%,var(--on-color))}
+.stars{display:flex;gap:1px;background:var(--card);border-radius:999px;padding:3px 6px}
+.star svg{width:15px;height:15px;display:block;fill:var(--card-2);stroke:color-mix(in srgb,var(--ink-soft) 55%,transparent);stroke-width:1.6}
+.star.on svg{fill:var(--hl);stroke:color-mix(in srgb,var(--hl) 50%,var(--shade))}
+.tile .fbadge{top:-11px;right:-6px;box-shadow:0 2px 0 color-mix(in srgb,var(--hl) 50%,var(--shade))}
+@media (max-width:520px){ .tiles{gap:9px} .tile{border-radius:16px;padding:9px 1px 8px} .star svg{width:11px;height:11px} .stars{padding:2px 4px} .tile-k{font-size:9.5px;letter-spacing:.05em} }
+
+/* ---------- home: challenge + install ---------- */
+.challenge{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 14px;align-items:center;text-align:left;padding:16px 18px;border-radius:24px;border:0;
+  background:linear-gradient(120deg,var(--chal-a),var(--chal-b));color:var(--on-color);box-shadow:0 6px 0 color-mix(in srgb,var(--chal-b) 58%,var(--shade)),0 18px 30px -18px var(--lift);transition:transform .1s}
+.challenge:active{transform:translateY(3px)}
+.challenge .clock{grid-row:span 2;width:60px;height:60px;border-radius:50%;background:var(--hl);color:var(--hl-ink);display:grid;place-items:center;font:400 24px/1 var(--f-display);box-shadow:0 4px 0 color-mix(in srgb,var(--hl) 55%,var(--shade))}
+.challenge strong{font:400 25px/1.1 var(--f-display);text-shadow:0 2px 0 color-mix(in srgb,var(--chal-b) 55%,var(--shade))}
+.challenge .d{font-size:15px}
+.challenge .rec{grid-row:span 2;text-align:center;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:color-mix(in srgb,var(--on-color) 20%,transparent);border-radius:16px;padding:8px 12px}
+.challenge .rec b{display:block;font:400 32px/1 var(--f-display);letter-spacing:0}
+.challenge .fist-tag{position:absolute;top:-11px;right:14px}
+.install{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border-radius:22px;border:3px dashed color-mix(in srgb,var(--primary) 45%,var(--line));background:var(--card);color:var(--ink);text-align:left}
+.install .devs{display:flex;gap:6px}
+.install .devs span{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:var(--on-color)}
+.install .devs svg{width:22px;height:22px;fill:currentColor}
+.install strong{font:400 19px/1.15 var(--f-display);display:block}
+.install small{color:var(--ink-soft);font-size:14px}
+.install .grow{flex:1;min-width:180px}
+
+/* ---------- learn ---------- */
+.topline{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.topline h2{font:400 clamp(28px,6vw,44px)/1 var(--f-display);margin:0;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
+.numpill{display:inline-grid;place-items:center;min-width:1.4em;padding:.04em .2em;border-radius:14px;background:var(--sc);color:var(--sc-tc);box-shadow:0 4px 0 color-mix(in srgb,var(--sc) 62%,var(--shade))}
+.topline .grow{flex:1}
+.learn-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:stretch}
+.stage{padding:20px;display:grid;grid-template-rows:auto 1fr auto;gap:14px;background:color-mix(in srgb,var(--sc) 9%,var(--card));border:3px solid var(--sc);border-radius:26px;box-shadow:0 6px 0 color-mix(in srgb,var(--sc) 55%,var(--shade))}
+.eq{font:400 clamp(46px,10vw,80px)/1 var(--f-display);display:flex;gap:.22em;justify-content:center;align-items:baseline;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.eq .x{color:var(--ink-soft);font-size:.8em}
+.eq .c{background:var(--sc);color:var(--sc-tc);border-radius:18px;padding:0 .16em;box-shadow:0 5px 0 color-mix(in srgb,var(--sc) 62%,var(--shade))}
+.dots{--ds:12px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-content:center;min-height:110px}
+.grp{display:grid;grid-template-columns:repeat(var(--cols),var(--ds));gap:calc(var(--ds)*.35);padding:calc(var(--ds)*.6);border-radius:14px;border:2px dashed color-mix(in srgb,var(--sc) 70%,transparent);background:var(--card);animation:pop .32s both}
+.dot{width:var(--ds);height:var(--ds);border-radius:50%;background:var(--sc);box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--sc) 60%,var(--shade))}
+@keyframes pop{from{transform:scale(.55);opacity:0}to{transform:none;opacity:1}}
+.caption{text-align:center;margin:0;font-weight:700;font-size:19px}
+.caption small{display:block;font-weight:400;font-size:15px;color:var(--ink-soft);overflow-wrap:anywhere}
+.rows{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.row{width:100%;display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;padding:9px 14px;border-radius:15px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:400 24px/1 var(--f-display);text-align:left;font-variant-numeric:tabular-nums;box-shadow:0 3px 0 var(--line)}
+.row .r-ans{color:var(--sc-ink)}
+.row[aria-current="true"]{border-color:var(--sc);background:var(--sc);color:var(--sc-tc);box-shadow:0 4px 0 color-mix(in srgb,var(--sc) 60%,var(--shade))}
+.row[aria-current="true"] .r-ans{color:inherit}
+.learn-actions{display:flex;gap:12px;flex-wrap:wrap}
+.learn-actions .btn.primary{font-size:19px;padding:16px 24px}
+.learn-actions .fist-tag{position:absolute;top:-11px;right:12px}
+@media (max-width:760px){
+  .learn-grid{grid-template-columns:1fr}
+  .rows{grid-template-columns:1fr 1fr}
+  .row{font-size:20px;padding:8px 10px}
+}
+
+/* ---------- quiz ---------- */
+.qmeta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pips{display:flex;gap:6px;flex-wrap:wrap}
+.pip{width:15px;height:15px;border-radius:50%;background:var(--card);border:2px solid var(--line)}
+.pip.now{border-color:var(--primary);background:var(--hl);transform:scale(1.25)}
+.pip.ok{background:var(--good);border-color:var(--good)}
+.pip.no{background:var(--bad);border-color:var(--bad)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--card);border:2px solid var(--line);font-weight:700;font-variant-numeric:tabular-nums}
+.chip b{font:400 20px/1 var(--f-display)}
+.chip.streak{background:linear-gradient(120deg,var(--chal-a),var(--chal-b));border-color:transparent;color:var(--on-color)}
+.qcard{position:relative;overflow:hidden;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:18px;padding:24px;background:var(--card);border:3px solid var(--sc);border-radius:28px;box-shadow:0 7px 0 color-mix(in srgb,var(--sc) 55%,var(--shade))}
+.qcard .mascot{width:clamp(70px,13vw,110px)}
+.q{font:400 clamp(44px,12vw,108px)/1 var(--f-display);display:flex;gap:.18em;align-items:baseline;justify-content:center;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.q .x{color:var(--ink-soft);font-size:.78em}
+.slot{min-width:1.5em;text-align:center;background:var(--hl);color:var(--hl-ink);border-radius:20px;padding:0 .14em;box-shadow:0 5px 0 color-mix(in srgb,var(--hl) 55%,var(--shade))}
+.slot.ok{background:var(--good);color:var(--on-color);box-shadow:0 5px 0 color-mix(in srgb,var(--good) 60%,var(--shade))}
+.fb{grid-column:1/-1;margin:0;min-height:1.5em;font-weight:700;font-size:19px;text-align:center}
+.fb.ok{color:var(--good)} .fb.no{color:var(--bad)}
+.timebar{position:absolute;left:0;top:0;height:9px;width:calc(var(--t,1)*100%);background:linear-gradient(90deg,var(--chal-a),var(--chal-b));transition:width .1s linear}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (min-width:880px){ .opts{grid-template-columns:repeat(4,minmax(0,1fr))} }
+.opt{--ob:var(--o1);--o:var(--ob);--otc:var(--on-color);font:400 clamp(40px,9vw,64px)/1 var(--f-display);padding:26px 8px 24px;border-radius:24px;border:0;background:var(--o);color:var(--otc);
+  box-shadow:0 7px 0 color-mix(in srgb,var(--o) 62%,var(--shade));text-shadow:0 3px 0 color-mix(in srgb,var(--o) 60%,var(--shade));transition:transform .1s,box-shadow .1s,opacity .2s,filter .2s;font-variant-numeric:tabular-nums}
+.opt::before{content:"";position:absolute;left:8px;right:8px;top:6px;height:38%;border-radius:18px 18px 50% 50%;background:linear-gradient(color-mix(in srgb,var(--on-color) 26%,transparent),transparent);pointer-events:none}
+.opt[data-finger="2"]{--ob:var(--o2)}
+.opt[data-finger="3"]{--ob:var(--o3);--otc:var(--on-light);text-shadow:0 3px 0 color-mix(in srgb,var(--o) 55%,var(--on-color))}
+.opt[data-finger="4"]{--ob:var(--o4)}
+.opt:not(:disabled):active{transform:translateY(4px);box-shadow:0 3px 0 color-mix(in srgb,var(--o) 62%,var(--shade))}
+.opt.dim,.opt.is-wrong{--o:color-mix(in srgb,var(--ob) 30%,var(--card));--otc:var(--ink-soft);text-shadow:none;box-shadow:0 7px 0 var(--line)}
+.opt.dim::before,.opt.is-wrong::before{display:none}
+.opt.is-right{outline:6px solid var(--good);outline-offset:3px;animation:win .5s ease}
+.opt.is-wrong{animation:shake .4s;outline:4px solid var(--bad);outline-offset:3px}
+.mark{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--card);text-shadow:none;z-index:2}
+.mark svg{width:20px;height:20px}
+.mark.ok{color:var(--good)} .mark.no{color:var(--bad)}
+.opt .fbadge{top:9px;left:9px;right:auto;font-size:15px;padding:4px 8px 4px 6px;background:var(--card);color:var(--ink)}
+.opt .fbadge svg{width:15px;height:18px}
+@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+@keyframes win{40%{transform:scale(1.07)}}
+@media (max-width:560px){
+  .btn .lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .topline{gap:8px}
+  .topline .btn{padding:10px 12px}
+  .hint{font-size:14.5px;padding:8px 12px}
+  .hint svg{width:22px;height:22px}
+  .qcard{grid-template-columns:1fr;padding:18px 14px;gap:8px}
+  .qcard .mascot{position:absolute;right:8px;bottom:6px;width:50px}
+  .fb{font-size:17px;padding-inline:44px}
+  .opts{gap:12px}
+  .opt{padding:18px 6px 16px;font-size:44px}
+  .opt .fbadge{top:6px;left:6px}
+  .mark{width:28px;height:28px;right:6px;top:6px}
+  .dots{min-height:80px}
+  .stage{padding:16px 12px}
+}
+
+/* ---------- result ---------- */
+.result{max-width:680px;width:100%;margin:0 auto;text-align:center;padding:0 20px 26px;display:grid;gap:12px;justify-items:center;overflow:hidden;border:3px solid var(--line);border-radius:30px}
+.result .ribbon{width:calc(100% + 40px);height:14px;background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c4),var(--c5),var(--c6),var(--c7),var(--c8),var(--c9),var(--c10))}
+.result .mascot{width:120px;margin-top:8px}
+.result h2{font:400 clamp(40px,9vw,62px)/1 var(--f-display);margin:0;letter-spacing:.01em;color:var(--primary)}
+.big-stars{display:flex;gap:8px}
+.big-stars .star svg{width:64px;height:64px;stroke-width:1}
+.big-stars .star.on{animation:pop .45s both}
+.big-stars .star:nth-child(2){animation-delay:.15s}.big-stars .star:nth-child(3){animation-delay:.3s}
+.score{font:400 60px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.score small{font-size:.45em;color:var(--ink-soft)}
+.result p{margin:0;font-size:18px;max-width:44ch}
+.review{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.review li{background:var(--bad-bg);border-radius:12px;padding:6px 12px;font-weight:700}
+.review li span{color:var(--ink-soft);font-weight:400}
+.res-actions{display:flex;flex-wrap:wrap;gap:14px 12px;justify-content:center;padding-top:8px}
+.res-actions .fbadge{top:-11px;right:-6px}
+
+/* ---------- sensor panel ---------- */
+.sensor{position:fixed;z-index:30;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:272px;
+  background:var(--card);border:3px solid var(--primary);border-radius:24px;box-shadow:0 6px 0 color-mix(in srgb,var(--primary) 55%,var(--shade)),0 22px 40px -18px var(--lift);padding:10px;display:grid;gap:8px}
+.sensor-h{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;color:var(--primary);text-transform:uppercase;letter-spacing:.08em}
+.sensor-h svg{width:18px;height:18px;fill:currentColor}
+.cam{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:16px;overflow:hidden;background:var(--card-2)}
+.cam video,.cam canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.fcount{position:absolute;left:8px;top:8px;display:flex;align-items:center;gap:6px;background:var(--hl);color:var(--hl-ink);font:400 26px/1 var(--f-display);padding:6px 10px;border-radius:12px;min-width:44px;justify-content:center;z-index:2}
+.fcount small{font:700 13px/1 var(--f-body)}
+.fcount svg{width:22px;height:26px;fill:currentColor}
+.cam-ph{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink-soft)}
+.cam-ph span{width:36%}
+.cam-ph svg{width:100%;height:auto;display:block;fill:currentColor;opacity:.3}
+.smsg{margin:0;font-size:14.5px;font-weight:700;line-height:1.35}
+.smsg.err{color:var(--bad)}
+.sensor .btn{padding:10px 14px;font-size:15px;width:100%}
+.mic{display:flex;align-items:center;gap:12px}
+.mic-dot{width:58px;height:58px;flex:none;border-radius:50%;border:0;background:var(--m-voice);color:var(--on-color);display:grid;place-items:center;box-shadow:0 4px 0 color-mix(in srgb,var(--m-voice) 60%,var(--shade))}
+.mic-dot svg{width:30px;height:30px}
+.sensor.listening .mic-dot{background:var(--bad);box-shadow:0 4px 0 color-mix(in srgb,var(--bad) 60%,var(--shade));animation:pulse 1.4s ease-out infinite}
+@keyframes pulse{0%{outline:0 solid color-mix(in srgb,var(--bad) 55%,transparent)}100%{outline:16px solid transparent}}
+.heard{margin:2px 0 0;font-size:17px;font-weight:700;min-height:1.4em;overflow-wrap:anywhere}
+.heard.interim{color:var(--ink-soft);font-style:italic}
+@media (max-width:899px){
+  .sensor{left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));width:auto;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:8px;border-radius:20px;
+    grid-template-columns:minmax(0,124px) minmax(0,1fr);align-items:center;column-gap:12px}
+  .sensor-h{display:none}
+  .sensor .cam-wrap{grid-row:span 2}
+  .smsg{font-size:13.5px}
+  .sensor .btn{padding:9px 12px}
+  .sensor.mic-mode{grid-template-columns:1fr}
+  .mic-dot{width:50px;height:50px}
+}
+@media (max-width:899px) and (min-width:560px){ .sensor{max-width:560px;margin-left:auto} }
+
+/* ---------- help sheet ---------- */
+.sheet-back{position:fixed;inset:0;z-index:60;background:var(--scrim);display:flex;align-items:flex-end;justify-content:center;padding-top:max(20px,env(safe-area-inset-top,0px))}
+.sheet{width:min(820px,100%);max-height:100%;overflow:auto;background:var(--bg);border-radius:28px 28px 0 0;
+  padding:18px max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:grid;gap:16px;box-shadow:0 -10px 40px -10px var(--lift)}
+@media (min-width:700px){ .sheet-back{align-items:center;padding:24px} .sheet{border-radius:28px;max-height:92vh} }
+.sheet-h{display:flex;align-items:center;gap:12px}
+.sheet-h h2{font:400 30px/1 var(--f-display);margin:0;flex:1}
+.sheet h3{font:400 20px/1.1 var(--f-display);margin:0 0 -6px}
+.urlbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:10px 12px}
+.urlbox code{flex:1;min-width:0;font:700 16px/1.3 var(--f-body);overflow-wrap:anywhere;user-select:all;color:var(--primary)}
+.urlbox .btn{padding:9px 14px;font-size:15px}
+.plats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:620px){ .plats{grid-template-columns:1fr} }
+.plat{--p:var(--c5);position:relative;background:var(--card);border:3px solid color-mix(in srgb,var(--p) 50%,var(--line));border-radius:20px;padding:14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:start}
+.plat .pi{grid-row:span 2;width:44px;height:44px;border-radius:14px;background:var(--p);color:var(--on-color);display:grid;place-items:center}
+.plat .pi svg{width:24px;height:24px;fill:currentColor}
+.plat strong{font:400 19px/1.15 var(--f-display)}
+.plat p{margin:0;font-size:15px;color:var(--ink)}
+.plat .you{position:absolute;top:-12px;right:12px;background:var(--hl);color:var(--hl-ink);font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase}
+.plat.mine{border-color:var(--p);box-shadow:0 5px 0 color-mix(in srgb,var(--p) 55%,var(--shade))}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.checks li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px 12px}
+.checks .st{grid-row:span 2;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:400 18px/1 var(--f-display);color:var(--on-color)}
+.checks .ok .st{background:var(--good)} .checks .bad .st{background:var(--bad)} .checks .warn .st{background:var(--c2)}
+.checks b{font-size:15.5px}
+.checks span{font-size:14px;color:var(--ink-soft)}
+
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
+@media (prefers-reduced-motion:reduce){ *,*::before,*::after{animation:none!important;transition:none!important} }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="bar">
+    <button class="brand" id="btnHome" aria-label="Pintar Sifir">
+      <span class="mini mascot"></span><span>Pintar <b>Sifir</b></span>
+    </button>
+    <div class="bar-right">
+      <div class="pill seg" role="group" aria-label="Mode">
+        <button data-set-mode="touch" aria-pressed="true"><span class="i-tap"></span><span class="t" data-i18n="seg.touch">Sentuh</span></button>
+        <button data-set-mode="gesture" aria-pressed="false"><span class="i-hand"></span><span class="t" data-i18n="seg.gesture">Tangan</span></button>
+        <button data-set-mode="voice" aria-pressed="false"><span class="i-mic"></span><span class="t" data-i18n="seg.voice">Suara</span></button>
+      </div>
+      <div class="pill lang" role="group" aria-label="Bahasa / Language">
+        <button data-lang="ms" aria-pressed="true" lang="ms">BM</button>
+        <button data-lang="en" aria-pressed="false" lang="en">EN</button>
+      </div>
+      <button class="icon-btn" id="btnHelp" aria-label="Pasang & bantuan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M9.4 9.3a2.7 2.7 0 0 1 5.2.9c0 1.8-2.6 2.3-2.6 3.9"/><circle cx="12" cy="17.2" r=".6" fill="currentColor"/></svg>
+      </button>
+      <button class="icon-btn" id="btnSound" aria-pressed="true" aria-label="Bunyi">
+        <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+        <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section class="screen" id="scrHome">
+      <div class="hero">
+        <span class="deco d1"></span><span class="deco d2"></span><span class="deco d5"></span><span class="deco x">×</span>
+        <div class="mascot" id="homeMascot"></div>
+        <div class="hero-t">
+          <h1 class="title">Pintar <span class="s">Sifir</span></h1>
+          <p class="sub" data-i18n="sub">Sifir 1 hingga 10 · Dwibahasa</p>
+        </div>
+        <p class="bubble" id="homeBubble"></p>
+        <div class="stats">
+          <div class="stat"><span class="si y" id="icStar"></span><div><b id="stStars">0<small>/30</small></b><span data-i18n="stats.stars">Bintang</span></div></div>
+          <div class="stat"><span class="si g" id="icMedal"></span><div><b id="stMastered">0<small>/10</small></b><span data-i18n="stats.mastered">Sifir dikuasai</span></div></div>
+          <div class="stat"><span class="si o" id="icTrophy"></span><div><b id="stBest">0</b><span data-i18n="stats.best">Rekod cabaran</span></div></div>
+        </div>
+      </div>
+
+      <h2 class="sec" data-i18n="modeTitle">Cara main</h2>
+      <div class="modes" role="group">
+        <button class="mode-card" data-set-mode="touch" aria-pressed="true">
+          <span class="ic i-tap"></span><strong data-i18n="modes.touch.0">Sentuh</strong><span class="d" data-i18n="modes.touch.1"></span>
+        </button>
+        <button class="mode-card" data-set-mode="gesture" aria-pressed="false">
+          <span class="ic i-hand"></span><strong data-i18n="modes.gesture.0">Isyarat Tangan</strong><span class="d" data-i18n="modes.gesture.1"></span>
+        </button>
+        <button class="mode-card" data-set-mode="voice" aria-pressed="false">
+          <span class="ic i-mic"></span><strong data-i18n="modes.voice.0">Arahan Suara</strong><span class="d" data-i18n="modes.voice.1"></span>
+        </button>
+      </div>
+
+      <div class="hint" data-hint="home"></div>
+
+      <h2 class="sec" data-i18n="pick">Pilih sifir</h2>
+      <div class="tiles" id="tiles"></div>
+
+      <button class="challenge" id="btnChallenge" data-finger="fist">
+        <span class="fist-tag"><span class="i-fist"></span><span data-i18n="fist">Genggam</span></span>
+        <span class="clock">60</span>
+        <strong data-i18n="chalTitle">Cabaran 60 saat</strong>
+        <span class="rec"><span data-i18n="rec">Rekod</span><b id="bestScore">0</b></span>
+        <span class="d" data-i18n="chalDesc"></span>
+      </button>
+
+      <button class="install" id="btnInstallCard">
+        <span class="devs" id="devIcons"></span>
+        <span class="grow"><strong data-i18n="installCta">Pasang di telefon & komputer</strong><small data-i18n="installSub"></small></span>
+      </button>
+    </section>
+
+    <!-- LEARN -->
+    <section class="screen" id="scrLearn" hidden>
+      <div class="topline">
+        <button class="btn ghost" id="learnBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span class="lbl" data-i18n="back">Menu</span></button>
+        <h2><span data-i18n="tableWord">Sifir</span> <span class="numpill" id="learnN">3</span></h2>
+        <span class="grow"></span>
+        <button class="btn" id="btnRecite"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg><span id="reciteLbl">Baca sifir</span></button>
+      </div>
+      <div class="hint" data-hint="learn"></div>
+      <div class="learn-grid">
+        <div class="stage" aria-live="polite">
+          <div class="eq"><span id="eqA">1</span><span class="x">×</span><span id="eqB">3</span><span class="x">=</span><span class="c" id="eqC">3</span></div>
+          <div class="dots" id="dots" aria-hidden="true"></div>
+          <p class="caption"><span id="caption"></span><small id="addition"></small></p>
+        </div>
+        <ol class="rows" id="rows"></ol>
+      </div>
+      <div class="learn-actions">
+        <button class="btn primary" id="btnStartQuiz" data-finger="fist">
+          <span class="fist-tag"><span class="i-fist"></span><span data-i18n="fist">Genggam</span></span>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 6 6.5.9-4.7 4.5 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.5l6.5-.9z"/></svg>
+          <span id="quizLabel"></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="screen" id="scrQuiz" hidden>
+      <div class="topline">
+        <button class="btn ghost" id="quizBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg><span class="lbl" data-i18n="exit">Keluar</span></button>
+        <h2 id="qTitle"></h2>
+        <span class="grow"></span>
+        <div class="qmeta">
+          <div class="pips" id="pips"></div>
+          <span class="chip" id="chTime" hidden><b id="chTimeN">60</b><span data-i18n="sec">saat</span></span>
+          <span class="chip" id="chScore" hidden><span data-i18n="correct">Betul</span> <b id="chScoreN">0</b></span>
+          <span class="chip streak" id="streak" hidden><b id="streakN">3</b><span data-i18n="inARow">berturut-turut</span></span>
+        </div>
+      </div>
+      <div class="hint" data-hint="quiz"></div>
+      <div class="qcard" id="qcard">
+        <div class="timebar" id="timebar" hidden></div>
+        <div class="mascot" id="qMascot"></div>
+        <div class="q" aria-live="polite"><span id="qA">4</span><span class="x">×</span><span id="qB">3</span><span class="x">=</span><span class="slot" id="slot">?</span></div>
+        <p class="fb" id="fb" aria-live="polite"></p>
+      </div>
+      <div class="opts" id="opts"></div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="screen" id="scrResult" hidden>
+      <div class="card result">
+        <div class="ribbon"></div>
+        <div class="mascot" id="rMascot" data-mood="happy"></div>
+        <h2 id="rTitle"></h2>
+        <div class="big-stars" id="rStars"></div>
+        <div class="score" id="rScore"></div>
+        <p id="rMsg"></p>
+        <ul class="review" id="rReview"></ul>
+        <div class="hint" data-hint="result"></div>
+        <div class="res-actions" id="rActions"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<aside class="sensor" id="sensor" hidden>
+  <div class="sensor-h" id="sensorH"></div>
+  <div id="camBox" class="cam-wrap" hidden>
+    <div class="cam">
+      <div class="cam-ph"><span class="i-hand"></span></div>
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="cv"></canvas>
+      <div class="fcount" id="fCount" hidden>–</div>
+    </div>
+  </div>
+  <div id="micBox" class="mic" hidden>
+    <button class="mic-dot" id="micBtn"><span class="i-mic"></span></button>
+    <div><p class="smsg" id="micState"></p><p class="heard" id="heard"></p></div>
+  </div>
+  <p class="smsg" id="camMsg"></p>
+  <button class="btn primary" id="sensorBtn" hidden></button>
+  <a class="btn primary" id="sensorLink" hidden target="_blank" rel="noopener"></a>
+</aside>
+
+<div class="sheet-back" id="helpSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="sheet-h">
+      <h2 id="helpTitle" data-i18n="help.title">Pasang & bantuan</h2>
+      <button class="icon-btn" id="helpClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <button class="btn primary" id="btnInstallNow" hidden></button>
+    <p class="smsg" id="installedMsg" hidden></p>
+    <h3 data-i18n="help.linkTitle">Pautan apps</h3>
+    <div class="urlbox"><code id="appUrl"></code><button class="btn" id="btnCopy"></button><a class="btn primary" id="btnOpenApp" target="_blank" rel="noopener"></a></div>
+    <h3 data-i18n="help.howTitle">Cara pasang</h3>
+    <div class="plats" id="plats"></div>
+    <h3 data-i18n="help.checkTitle">Semak peranti ini</h3>
+    <ul class="checks" id="checks"></ul>
+  </div>
+</div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const RM = matchMedia('(prefers-reduced-motion: reduce)');
+const app = $('#app'), body = document.body;
+const EMBEDDED = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+/* The app's own address when hosted; inside the Claude preview, point to the hosted copy. */
+const APP_URL = !EMBEDDED && location.protocol === 'https:' ? location.href.replace(/[#?].*$/, '').replace(/[^/]*$/, '') : 'https://akmahalili.github.io/Saja/';
+const UA = navigator.userAgent;
+const IS_IOS = /iP(hone|ad|od)/.test(UA) || (/Macintosh/.test(UA) && navigator.maxTouchPoints > 1);
+const IS_ANDROID = /Android/.test(UA);
+const IS_SAFARI = /Safari/.test(UA) && !/Chrome|Chromium|CriOS|Edg|FxiOS|Android/.test(UA);
+const PLATFORM = IS_IOS ? 'ios' : IS_ANDROID ? 'android' : /Windows/.test(UA) ? 'windows' : /Macintosh|Mac OS X/.test(UA) ? 'mac' : 'other';
+
+/* ================= storage (per-viewer only) ================= */
+const KEY = 'pintar-sifir-v1';
+const store = { stars: {}, best: 0, mode: 'touch', sound: true, lang: 'ms' };
+try { Object.assign(store, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} };
+
+const S = { screen: 'home', mode: 'touch', lang: store.lang === 'en' ? 'en' : 'ms', sifir: 3, row: 1, reciting: false, camState: 'off', micState: 'off', lastResult: null };
+let Q = null;
+
+/* ================= number words ================= */
+const UNIT = ['kosong','satu','dua','tiga','empat','lima','enam','tujuh','lapan','sembilan'];
+function ms(n) {
+  if (n < 10) return UNIT[n];
+  if (n === 10) return 'sepuluh';
+  if (n === 11) return 'sebelas';
+  if (n < 20) return UNIT[n - 10] + ' belas';
+  if (n < 100) { const t = Math.floor(n / 10), u = n % 10; return UNIT[t] + ' puluh' + (u ? ' ' + UNIT[u] : ''); }
+  if (n < 1000) { const h = Math.floor(n / 100), r = n % 100; return (h === 1 ? 'seratus' : UNIT[h] + ' ratus') + (r ? ' ' + ms(r) : ''); }
+  return String(n);
+}
+const EN_U = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+const EN_T = ['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+function en(n) {
+  if (n < 20) return EN_U[n];
+  if (n < 100) return EN_T[Math.floor(n / 10)] + (n % 10 ? '-' + EN_U[n % 10] : '');
+  if (n < 1000) { const h = Math.floor(n / 100), r = n % 100; return EN_U[h] + ' hundred' + (r ? ' and ' + en(r) : ''); }
+  return String(n);
+}
+
+/* Spoken number parser: Malay or English words, or digits. Returns the last number heard. */
+const W_UNIT = { kosong:0, sifar:0, satu:1, dua:2, tiga:3, empat:4, ampat:4, lima:5, enam:6, anam:6, tujuh:7, lapan:8, delapan:8, sembilan:9,
+  zero:0, one:1, two:2, three:3, four:4, for:4, fore:4, five:5, six:6, seven:7, eight:8, ate:8, nine:9 };
+const W_TEEN = { ten:10, eleven:11, twelve:12, thirteen:13, fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19 };
+const W_TENS = { twenty:20, thirty:30, forty:40, fourty:40, fifty:50, sixty:60, seventy:70, eighty:80, ninety:90 };
+function parseNumber(text) {
+  let t = ' ' + String(text).toLowerCase().replace(/[^a-z0-9\s]/g, ' ') + ' ';
+  t = t.replace(/sepuluh/g, ' satu puluh ').replace(/sebelas/g, ' satu belas ').replace(/seratus/g, ' satu ratus ');
+  t = t.replace(/(puluh|belas|ratus|hundred)/g, ' $1 ');
+  const runs = [];
+  let total = 0, cur = 0, inRun = false, last = '';
+  const flush = () => { if (inRun) runs.push(total + cur); total = 0; cur = 0; inRun = false; last = ''; };
+  for (const w of t.split(/\s+/).filter(Boolean)) {
+    if (/^\d+$/.test(w)) { flush(); runs.push(parseInt(w, 10)); continue; }
+    if (w in W_UNIT) {
+      if (last === 'unit' || last === 'end') flush();
+      inRun = true; cur += W_UNIT[w]; last = 'unit';
+    } else if (w in W_TEEN) {
+      if (last === 'unit' || last === 'end' || last === 'tens') flush();
+      inRun = true; cur += W_TEEN[w]; last = 'end';
+    } else if (w in W_TENS) {
+      if (last === 'unit' || last === 'end' || last === 'tens') flush();
+      inRun = true; cur += W_TENS[w]; last = 'tens';
+    } else if (w === 'puluh' && inRun && last === 'unit') {
+      total += cur * 10; cur = 0; last = 'mult';
+    } else if (w === 'belas' && inRun && last === 'unit') {
+      total += cur + 10; cur = 0; last = 'end';
+    } else if ((w === 'ratus' || w === 'hundred') && inRun && last === 'unit') {
+      total += cur * 100; cur = 0; last = 'mult';
+    } else if (w === 'and' && inRun) {
+      /* "one hundred and five" */
+    } else {
+      flush();
+    }
+  }
+  flush();
+  return runs.length ? runs[runs.length - 1] : null;
+}
+
+/* ================= words in both languages ================= */
+const I18N = {
+  ms: {
+    sub: 'Sifir 1 hingga 10 · Dwibahasa',
+    modeTitle: 'Cara main', pick: 'Pilih sifir', tileK: 'Sifir', tableWord: 'Sifir',
+    seg: { touch: 'Sentuh', gesture: 'Tangan', voice: 'Suara' },
+    modes: { touch: ['Sentuh', 'Sentuh jawapan pada skrin.'], gesture: ['Isyarat Tangan', 'Tunjuk jari ke kamera, tahan sekejap untuk pilih.'], voice: ['Arahan Suara', 'Sebut jawapan dengan kuat, contoh “dua puluh empat”.'] },
+    stats: { stars: 'Bintang', mastered: 'Sifir dikuasai', best: 'Rekod cabaran' },
+    chalTitle: 'Cabaran 60 saat', chalDesc: 'Sifir campur 2 hingga 10. Jawab seberapa banyak yang boleh!', rec: 'Rekod', fist: 'Genggam',
+    installCta: 'Pasang di telefon & komputer', installSub: 'Android, iPhone & iPad, Windows dan Mac. Tekan untuk panduan.',
+    back: 'Menu', exit: 'Keluar', read: 'Baca sifir', stop: 'Berhenti',
+    startQuiz: n => `Mula Kuiz Sifir ${n}`, quizTitle: n => `Kuiz Sifir <span class="numpill">${n}</span>`, chTitle: 'Cabaran 60 saat',
+    caption: (k, n) => `${k} kumpulan ${n} = ${k * n}`,
+    sec: 'saat', correct: 'Betul', inARow: 'berturut-turut',
+    praise: ['Betul!', 'Hebat!', 'Pandai!', 'Bagus!', 'Syabas!', 'Tepat sekali!', 'Bijak!'],
+    streakMsg: (p, s) => `${p} ${s} betul berturut-turut!`,
+    almost: (k, n, a) => `Hampir! ${k} × ${n} = ${a}`, youSaid: v => ` (kamu sebut ${v})`, noNum: 'Cil tak dengar nombor. Cuba sebut sekali lagi.',
+    resTitles: ['Jom cuba lagi!', 'Bagus!', 'Hebat!', 'Cemerlang!'],
+    res3: n => `Semua betul! Kamu sudah hafal Sifir ${n}.`,
+    res0: (s, n) => `Kamu jawab ${s} daripada 10 betul. Ulang kaji Sifir ${n} dahulu, kemudian cuba lagi.`,
+    resMid: s => `Kamu jawab ${s} daripada 10 betul. Cuba lagi untuk kumpul lebih banyak bintang.`,
+    chNew: 'Rekod baharu!', chGood: 'Hebat!', chOk: 'Bagus!',
+    chMsg: s => `Kamu jawab ${s} soalan betul dalam 60 saat.`, chBest: b => ` Rekod terbaik kamu: ${b}.`, correctUnit: 'betul',
+    again: 'Main lagi', learnNext: n => `Belajar Sifir ${n}`, review: n => `Ulang kaji Sifir ${n}`, menu: 'Menu utama', notX: v => `(bukan ${v})`,
+    hints: {
+      home: { touch: 'Sentuh satu sifir untuk mula belajar.', gesture: 'Tunjuk <b>1 hingga 10 jari</b> dan tahan untuk pilih sifir. <b>Genggam tangan</b> untuk Cabaran.', voice: 'Sebut <b>“sifir lima”</b> untuk belajar, <b>“kuiz lima”</b> untuk kuiz, atau <b>“cabaran”</b>.' },
+      learn: { touch: 'Sentuh satu baris untuk lihat gambar kumpulannya.', gesture: 'Tunjuk jari untuk pilih baris (4 jari = baris 4). <b>Genggam tangan</b> untuk mula kuiz.', voice: 'Sebut nombor, contoh <b>“empat”</b>. Sebut <b>“baca”</b> untuk dengar sifir, <b>“kuiz”</b> untuk mula kuiz.' },
+      quiz: { touch: 'Sentuh jawapan yang betul.', gesture: 'Tunjuk <b>1, 2, 3 atau 4 jari</b> dan tahan untuk pilih jawapan.', voice: 'Sebut jawapan dengan kuat, contoh <b>“dua puluh lapan”</b>. Sebut <b>“ulang”</b> untuk dengar soalan lagi.' },
+      result: { touch: 'Pilih apa yang kamu mahu buat seterusnya.', gesture: 'Tunjuk jari ikut nombor pada butang.', voice: 'Sebut <b>“main lagi”</b>, <b>“seterusnya”</b> atau <b>“menu”</b>.' }
+    },
+    bubble: { touch: 'Hai, saya Cil si kancil! Jom hafal sifir sambil bermain.', gesture: 'Hai, saya Cil! Angkat jari ke kamera, nanti saya kira.', voice: 'Hai, saya Cil! Cakap dengan kuat, saya sedang mendengar.' },
+    camera: 'Kamera', microphone: 'Mikrofon', fingers: 'jari',
+    showHand: 'Tunjuk tangan ke kamera.', hold: 'Tahan sekejap…', lower: 'Bagus! Turunkan tangan dahulu.', seen: v => `${v} jari dikesan.`, fistSeen: 'Genggam tangan dikesan.',
+    cam: {
+      off: 'Kamera belum dihidupkan. Tekan butang untuk mula.', starting: 'Membuka kamera…', loading: 'Memuatkan pengesan tangan… Kali pertama mungkin ambil masa sedikit.', ready: 'Tunjuk tangan ke kamera.',
+      denied: 'Akses kamera ditolak. Benarkan kamera untuk laman ini dalam tetapan pelayar, kemudian cuba lagi.', nocam: 'Kamera tidak dijumpai pada peranti ini.',
+      busy: 'Kamera sedang digunakan oleh apps lain. Tutup apps itu, kemudian cuba lagi.', fail: 'Pengesan tangan gagal dimuatkan. Semak sambungan internet, kemudian cuba lagi.',
+      embedded: 'Kamera disekat dalam paparan ini. Buka apps penuh untuk guna isyarat tangan.', insecure: 'Kamera hanya berfungsi melalui pautan https. Buka apps penuh.'
+    },
+    mic: {
+      off: ['Mikrofon belum dihidupkan.', 'Tekan butang untuk mula mendengar.'], starting: ['Menyediakan mikrofon…', ''], listen: ['Saya sedang mendengar…', ''],
+      tap: ['Tekan mikrofon dan bercakap.', ''], speaking: ['Cil sedang bercakap…', ''],
+      denied: ['Mikrofon tidak dibenarkan.', 'Benarkan mikrofon untuk laman ini dalam tetapan pelayar, kemudian cuba lagi.'],
+      dictation: ['Pengecaman suara dimatikan.', 'Pada iPhone, iPad atau Mac, hidupkan Siri dan Dikte (Dictation) dalam Tetapan.'],
+      network: ['Arahan suara perlukan internet.', 'Semak sambungan internet, kemudian cuba lagi.'],
+      nomic: ['Mikrofon tidak dijumpai.', 'Sambung mikrofon atau guna mod Sentuh.'],
+      nosupport: ['Pelayar ini tidak menyokong arahan suara.', 'Guna Google Chrome, Microsoft Edge atau Safari.'],
+      nosupportIos: ['Pelayar ini tidak menyokong arahan suara.', 'Pada iPhone dan iPad, buka apps ini dalam Safari.'],
+      embedded: ['Mikrofon disekat dalam paparan ini.', 'Buka apps penuh untuk guna arahan suara.'],
+      insecure: ['Mikrofon hanya berfungsi melalui pautan https.', 'Buka apps penuh.'],
+      lang: ['Bahasa Melayu tidak disokong untuk pengecaman suara di sini.', 'Tukar ke EN, atau cuba Google Chrome.']
+    },
+    btn: { camOn: 'Hidupkan kamera', micOn: 'Mula dengar', retry: 'Cuba lagi', open: 'Buka apps penuh' },
+    sound: ['Matikan bunyi', 'Hidupkan bunyi'], helpLbl: 'Pasang & bantuan',
+    help: {
+      title: 'Pasang & bantuan', linkTitle: 'Pautan apps', howTitle: 'Cara pasang', checkTitle: 'Semak peranti ini',
+      installNow: 'Pasang apps sekarang', installed: 'Apps ini sudah dipasang pada peranti ini.', copy: 'Salin', copied: 'Disalin!', open: 'Buka', you: 'Peranti anda',
+      plats: {
+        android: ['Android', 'Buka pautan dalam Chrome. Tekan menu ⋮, kemudian “Pasang apps” atau “Tambah ke skrin utama”.'],
+        ios: ['iPhone & iPad', 'Buka pautan dalam Safari. Tekan butang Kongsi, kemudian “Tambah ke Skrin Utama”. Untuk arahan suara, hidupkan Dikte: Tetapan → Umum → Papan Kekunci.'],
+        windows: ['Windows', 'Buka pautan dalam Chrome atau Edge. Klik ikon Pasang di hujung bar alamat.'],
+        mac: ['Mac', 'Chrome: klik ikon Pasang di bar alamat. Safari: menu Fail → Tambah ke Dock.']
+      },
+      checks: {
+        secure: ['Pautan selamat (https)', 'Ya', 'Tidak. Kamera dan mikrofon perlukan pautan https.'],
+        embedded: ['Paparan Claude', 'Kamera dan mikrofon disekat di sini. Tekan “Buka” untuk apps penuh.'],
+        camera: ['Kamera', 'Ada', 'Tiada kamera dijumpai', 'Disekat. Benarkan kamera dalam tetapan pelayar.'],
+        speech: ['Pengecaman suara', 'Disokong', 'Tidak disokong. Guna Chrome, Edge atau Safari.'],
+        ttsMs: ['Suara bacaan BM', 'Ada', 'Tiada. Apps akan senyap dalam BM, tetapi masih boleh dimainkan.'],
+        ttsEn: ['Suara bacaan EN', 'Ada', 'Tiada. Apps akan senyap dalam EN, tetapi masih boleh dimainkan.']
+      }
+    },
+    tts: {
+      q: (k, n) => `${ms(k)} darab ${ms(n)}?`, full: (k, n) => `${ms(k)} darab ${ms(n)}, sama dengan ${ms(k * n)}`,
+      recite: (k, n) => `${ms(k)} darab ${ms(n)}, ${ms(k * n)}`, table: n => `Sifir ${ms(n)}`, chStart: 'Cabaran bermula!'
+    },
+    sr: 'ms-MY'
+  },
+  en: {
+    sub: 'Times tables 1 to 10 · Bilingual',
+    modeTitle: 'How to play', pick: 'Choose a times table', tileK: 'Table', tableWord: 'Table',
+    seg: { touch: 'Touch', gesture: 'Hands', voice: 'Voice' },
+    modes: { touch: ['Touch', 'Tap the answer on the screen.'], gesture: ['Hand Gestures', 'Show your fingers to the camera and hold to choose.'], voice: ['Voice Commands', 'Say the answer out loud, like “twenty-four”.'] },
+    stats: { stars: 'Stars', mastered: 'Tables mastered', best: 'Challenge best' },
+    chalTitle: '60-second Challenge', chalDesc: 'Mixed tables 2 to 10. Answer as many as you can!', rec: 'Best', fist: 'Fist',
+    installCta: 'Install on phones & computers', installSub: 'Android, iPhone & iPad, Windows and Mac. Tap for the steps.',
+    back: 'Menu', exit: 'Exit', read: 'Read aloud', stop: 'Stop',
+    startQuiz: n => `Start Table ${n} Quiz`, quizTitle: n => `Table <span class="numpill">${n}</span> Quiz`, chTitle: '60-second Challenge',
+    caption: (k, n) => `${k} groups of ${n} = ${k * n}`,
+    sec: 'sec', correct: 'Correct', inARow: 'in a row',
+    praise: ['Correct!', 'Great!', 'Well done!', 'Super!', 'Brilliant!', 'Spot on!', 'Clever!'],
+    streakMsg: (p, s) => `${p} ${s} in a row!`,
+    almost: (k, n, a) => `Almost! ${k} × ${n} = ${a}`, youSaid: v => ` (you said ${v})`, noNum: 'Cil didn’t hear a number. Please say it again.',
+    resTitles: ['Let’s try again!', 'Good job!', 'Great!', 'Excellent!'],
+    res3: n => `All correct! You know Table ${n} by heart.`,
+    res0: (s, n) => `You got ${s} out of 10. Review Table ${n} first, then try again.`,
+    resMid: s => `You got ${s} out of 10. Play again to collect more stars.`,
+    chNew: 'New record!', chGood: 'Great!', chOk: 'Good job!',
+    chMsg: s => `You answered ${s} correctly in 60 seconds.`, chBest: b => ` Your best: ${b}.`, correctUnit: 'correct',
+    again: 'Play again', learnNext: n => `Learn Table ${n}`, review: n => `Review Table ${n}`, menu: 'Main menu', notX: v => `(not ${v})`,
+    hints: {
+      home: { touch: 'Tap a times table to start learning.', gesture: 'Show <b>1 to 10 fingers</b> and hold to pick a table. <b>Make a fist</b> for the Challenge.', voice: 'Say <b>“table five”</b> to learn, <b>“quiz five”</b> for a quiz, or <b>“challenge”</b>.' },
+      learn: { touch: 'Tap a row to see it as groups.', gesture: 'Show fingers to pick a row (4 fingers = row 4). <b>Make a fist</b> to start the quiz.', voice: 'Say a number, like <b>“four”</b>. Say <b>“read”</b> to hear the table, <b>“quiz”</b> to start the quiz.' },
+      quiz: { touch: 'Tap the right answer.', gesture: 'Show <b>1, 2, 3 or 4 fingers</b> and hold to choose.', voice: 'Say the answer out loud, like <b>“twenty-eight”</b>. Say <b>“repeat”</b> to hear the question again.' },
+      result: { touch: 'Choose what to do next.', gesture: 'Show the number of fingers on the button.', voice: 'Say <b>“play again”</b>, <b>“next”</b> or <b>“menu”</b>.' }
+    },
+    bubble: { touch: 'Hi, I’m Cil the mouse-deer! Let’s learn times tables while we play.', gesture: 'Hi, I’m Cil! Hold up your fingers to the camera and I’ll count them.', voice: 'Hi, I’m Cil! Speak up, I’m listening.' },
+    camera: 'Camera', microphone: 'Microphone', fingers: 'fingers',
+    showHand: 'Show your hand to the camera.', hold: 'Hold it…', lower: 'Nice! Lower your hand first.', seen: v => `${v} fingers seen.`, fistSeen: 'Fist seen.',
+    cam: {
+      off: 'The camera is off. Press the button to start.', starting: 'Opening the camera…', loading: 'Loading the hand detector… The first time can take a moment.', ready: 'Show your hand to the camera.',
+      denied: 'Camera access was denied. Allow the camera for this site in your browser settings, then try again.', nocam: 'No camera was found on this device.',
+      busy: 'Another app is using the camera. Close it, then try again.', fail: 'The hand detector failed to load. Check your internet connection, then try again.',
+      embedded: 'The camera is blocked in this preview. Open the full app to use hand gestures.', insecure: 'The camera only works over an https link. Open the full app.'
+    },
+    mic: {
+      off: ['The microphone is off.', 'Press the button to start listening.'], starting: ['Getting the microphone ready…', ''], listen: ['I’m listening…', ''],
+      tap: ['Tap the microphone and speak.', ''], speaking: ['Cil is talking…', ''],
+      denied: ['The microphone is not allowed.', 'Allow the microphone for this site in your browser settings, then try again.'],
+      dictation: ['Speech recognition is turned off.', 'On iPhone, iPad or Mac, turn on Siri and Dictation in Settings.'],
+      network: ['Voice commands need the internet.', 'Check your internet connection, then try again.'],
+      nomic: ['No microphone was found.', 'Connect a microphone or use Touch mode.'],
+      nosupport: ['This browser does not support voice commands.', 'Use Google Chrome, Microsoft Edge or Safari.'],
+      nosupportIos: ['This browser does not support voice commands.', 'On iPhone and iPad, open the app in Safari.'],
+      embedded: ['The microphone is blocked in this preview.', 'Open the full app to use voice commands.'],
+      insecure: ['The microphone only works over an https link.', 'Open the full app.'],
+      lang: ['English speech recognition is not available here.', 'Switch to BM, or try Google Chrome.']
+    },
+    btn: { camOn: 'Turn on camera', micOn: 'Start listening', retry: 'Try again', open: 'Open full app' },
+    sound: ['Turn sound off', 'Turn sound on'], helpLbl: 'Install & help',
+    help: {
+      title: 'Install & help', linkTitle: 'App link', howTitle: 'How to install', checkTitle: 'Check this device',
+      installNow: 'Install the app now', installed: 'The app is already installed on this device.', copy: 'Copy', copied: 'Copied!', open: 'Open', you: 'Your device',
+      plats: {
+        android: ['Android', 'Open the link in Chrome. Tap the ⋮ menu, then “Install app” or “Add to Home screen”.'],
+        ios: ['iPhone & iPad', 'Open the link in Safari. Tap Share, then “Add to Home Screen”. For voice commands, turn on Dictation: Settings → General → Keyboard.'],
+        windows: ['Windows', 'Open the link in Chrome or Edge. Click the Install icon at the end of the address bar.'],
+        mac: ['Mac', 'Chrome: click the Install icon in the address bar. Safari: File menu → Add to Dock.']
+      },
+      checks: {
+        secure: ['Secure link (https)', 'Yes', 'No. The camera and microphone need an https link.'],
+        embedded: ['Claude preview', 'The camera and microphone are blocked here. Press “Open” for the full app.'],
+        camera: ['Camera', 'Available', 'No camera found', 'Blocked. Allow the camera in your browser settings.'],
+        speech: ['Speech recognition', 'Supported', 'Not supported. Use Chrome, Edge or Safari.'],
+        ttsMs: ['Malay reading voice', 'Available', 'Missing. The app stays silent in BM but still works.'],
+        ttsEn: ['English reading voice', 'Available', 'Missing. The app stays silent in EN but still works.']
+      }
+    },
+    tts: {
+      q: (k, n) => `${en(k)} times ${en(n)}?`, full: (k, n) => `${en(k)} times ${en(n)} equals ${en(k * n)}`,
+      recite: (k, n) => `${en(k)} times ${en(n)} is ${en(k * n)}`, table: n => `The ${en(n)} times table`, chStart: 'The challenge starts now!'
+    },
+    sr: 'en-US'
+  }
+};
+const L = () => I18N[S.lang];
+const pathGet = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o);
+
+/* ================= icons ================= */
+function handSVG(n) {
+  const xs = [5, 9.1, 13.2, 17.3], tops = [3.2, 1.6, 2.8, 5.4];
+  let s = '<svg viewBox="0 0 24 28" aria-hidden="true">';
+  s += '<rect x="4.2" y="12" width="16.6" height="14" rx="5.6"/>';
+  xs.forEach((x, i) => {
+    const up = n >= i + 1, y = up ? tops[i] : 9.6;
+    s += `<rect x="${x}" y="${y}" width="3.5" height="${(up ? 17 : 15.4) - y}" rx="1.75"/>`;
+  });
+  s += n >= 5
+    ? '<rect x="1.3" y="9.5" width="3.6" height="10.5" rx="1.8" transform="rotate(-30 3.1 19)"/>'
+    : '<rect x="2.6" y="14" width="3.6" height="7.5" rx="1.8" transform="rotate(-12 4.4 20)"/>';
+  return s + '</svg>';
+}
+const handsIcon = n => n <= 5 ? handSVG(n) : handSVG(5) + handSVG(n - 5);
+const MIC = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8.6" y="2.5" width="6.8" height="12" rx="3.4" fill="currentColor"/><path d="M5.2 11a6.8 6.8 0 0 0 13.6 0M12 18v3.2M8.4 21.2h7.2" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>';
+const TAP = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 11.5V5.2a1.6 1.6 0 0 1 3.2 0v5.6m0-1.3a1.6 1.6 0 0 1 3.2 0v1.6m0-.6a1.6 1.6 0 0 1 3.2 0v3.6a6.2 6.2 0 0 1-6.2 6.2h-.8a5.2 5.2 0 0 1-4-1.9l-3.3-4a1.5 1.5 0 0 1 2.2-2l2.5 2.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 5.5l-1.6-1.2M7.8 3.2l-.5-1.8M4.6 8.6l-1.9.1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.9 6 6.5.9-4.7 4.5 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.5l6.5-.9z"/></svg>';
+const MEDAL = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M7 2h4l2 5H9zM13 2h4l-2 5h-2.2z" opacity=".75"/><circle cx="12" cy="15" r="6.5"/><path d="M12 11.6l1 2.1 2.3.3-1.7 1.6.4 2.3-2-1.1-2 1.1.4-2.3-1.7-1.6 2.3-.3z" fill="var(--c4)"/></svg>';
+const TROPHY = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M7 3h10v5.5a5 5 0 0 1-10 0z"/><path d="M7 5H3.8v1.5A3.5 3.5 0 0 0 7.3 10M17 5h3.2v1.5a3.5 3.5 0 0 1-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10.6 13h2.8v3.5h-2.8zM7.5 17.5h9V21h-9z"/></svg>';
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const CROSS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>';
+const DEV = {
+  android: '<svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.6"/><rect x="10" y="18.2" width="4" height="1.4" rx=".7" fill="var(--card)"/></svg>',
+  ios: '<svg viewBox="0 0 24 24"><rect x="4" y="2.5" width="16" height="19" rx="3"/><circle cx="12" cy="18.6" r="1" fill="var(--card)"/></svg>',
+  windows: '<svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><rect x="8" y="18.5" width="8" height="2" rx="1"/></svg>',
+  mac: '<svg viewBox="0 0 24 24"><rect x="4" y="4.5" width="16" height="11" rx="1.8"/><path d="M1.5 17h21l-1.2 2.5H2.7z"/></svg>'
+};
+const DEV_COLOR = { android: 'var(--c5)', ios: 'var(--c7)', windows: 'var(--c6)', mac: 'var(--c9)' };
+const starsHTML = k => [0, 1, 2].map(i => `<span class="star${i < k ? ' on' : ''}">${STAR}</span>`).join('');
+const KANCIL = `<svg class="kancil" viewBox="0 0 120 120" aria-hidden="true">
+  <g class="ears">
+    <ellipse cx="35" cy="36" rx="11" ry="25" transform="rotate(-24 35 36)" fill="var(--kancil)"/>
+    <ellipse cx="35.5" cy="38" rx="5.5" ry="16" transform="rotate(-24 35.5 38)" fill="var(--kancil-2)"/>
+    <ellipse cx="85" cy="36" rx="11" ry="25" transform="rotate(24 85 36)" fill="var(--kancil)"/>
+    <ellipse cx="84.5" cy="38" rx="5.5" ry="16" transform="rotate(24 84.5 38)" fill="var(--kancil-2)"/>
+  </g>
+  <path d="M60 38c26 0 35 19 34 37-1 21-17 34-34 34S27 96 26 75c-1-18 8-37 34-37z" fill="var(--kancil)"/>
+  <path d="M60 44l5 12h-10z" fill="var(--kancil-2)" opacity=".75"/>
+  <ellipse cx="60" cy="91" rx="21" ry="15" fill="var(--kancil-2)"/>
+  <circle cx="36" cy="82" r="5.5" fill="var(--cheek)"/><circle cx="84" cy="82" r="5.5" fill="var(--cheek)"/>
+  <g class="eyes-open">
+    <circle cx="46" cy="68" r="7.6" fill="var(--kancil-ink)"/><circle cx="48.6" cy="65.4" r="2.5" fill="var(--eye-hi)"/>
+    <circle cx="74" cy="68" r="7.6" fill="var(--kancil-ink)"/><circle cx="76.6" cy="65.4" r="2.5" fill="var(--eye-hi)"/>
+  </g>
+  <g class="eyes-happy" fill="none" stroke="var(--kancil-ink)" stroke-width="4" stroke-linecap="round">
+    <path d="M39 70q7-9 14 0"/><path d="M67 70q7-9 14 0"/>
+  </g>
+  <ellipse cx="60" cy="83" rx="6.6" ry="4.8" fill="var(--kancil-ink)"/>
+  <path class="mouth-smile" d="M52 93q8 7 16 0" fill="none" stroke="var(--kancil-ink)" stroke-width="3" stroke-linecap="round"/>
+  <ellipse class="mouth-o" cx="60" cy="96" rx="4" ry="4.6" fill="var(--kancil-ink)"/>
+</svg>`;
+$$('.mascot').forEach(m => { m.innerHTML = KANCIL; });
+$$('.i-hand').forEach(e => { e.innerHTML = handSVG(5); });
+$$('.i-fist').forEach(e => { e.innerHTML = handSVG(0); });
+$$('.i-mic').forEach(e => { e.innerHTML = MIC; });
+$$('.i-tap').forEach(e => { e.innerHTML = TAP; });
+$('#icStar').innerHTML = STAR.replace('<svg', '<svg fill="currentColor"');
+$('#icMedal').innerHTML = MEDAL; $('#icTrophy').innerHTML = TROPHY;
+$('#devIcons').innerHTML = ['android', 'ios', 'windows', 'mac'].map(p => `<span style="background:${DEV_COLOR[p]}">${DEV[p]}</span>`).join('');
+
+const setMood = (el, m) => { el.dataset.mood = ''; void el.offsetWidth; el.dataset.mood = m; };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const LIGHT = new Set([3, 4]);
+function setSifirColor(n) {
+  app.style.setProperty('--sc', `var(--c${n})`);
+  app.style.setProperty('--sc-tc', LIGHT.has(n) ? 'var(--on-light)' : 'var(--on-color)');
+}
+
+/* ================= sound effects ================= */
+let AC = null;
+function audio() {
+  try {
+    if (!AC) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; AC = new C(); }
+    if (AC.state === 'suspended') AC.resume();
+  } catch (e) { return null; }
+  return AC;
+}
+function tone(f, t, d, type = 'triangle', g = .2) {
+  const a = audio(); if (!a) return;
+  const o = a.createOscillator(), v = a.createGain(), s = a.currentTime + t;
+  o.type = type; o.frequency.setValueAtTime(f, s);
+  v.gain.setValueAtTime(.0001, s); v.gain.exponentialRampToValueAtTime(g, s + .015); v.gain.exponentialRampToValueAtTime(.0001, s + d);
+  o.connect(v).connect(a.destination); o.start(s); o.stop(s + d + .05);
+}
+function sfx(k) {
+  if (!store.sound) return;
+  try {
+    if (k === 'ok') { tone(660, 0, .14); tone(990, .1, .25); }
+    else if (k === 'no') { tone(250, 0, .16, 'square', .06); tone(185, .13, .26, 'square', .06); }
+    else if (k === 'tap') tone(560, 0, .08, 'sine', .12);
+    else if (k === 'tick') tone(1180, 0, .05, 'sine', .05);
+    else if (k === 'win') [523, 659, 784, 1047].forEach((f, i) => tone(f, i * .12, .32));
+  } catch (e) {}
+}
+
+/* ================= speech output (TTS) ================= */
+const TTS = { ok: 'speechSynthesis' in window, ms: null, en: null, id: 0 };
+function pickVoices() {
+  if (!TTS.ok) return;
+  const vs = speechSynthesis.getVoices();
+  TTS.ms = vs.find(v => /^ms/i.test(v.lang)) || vs.find(v => /^id/i.test(v.lang)) || null;
+  TTS.en = vs.find(v => /^en[-_](GB|MY|SG|AU|IE)/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null;
+}
+if (TTS.ok) { pickVoices(); try { speechSynthesis.addEventListener('voiceschanged', pickVoices); } catch (e) {} }
+/* iOS only allows speech after a real tap: speak an empty line on the first touch. */
+addEventListener('pointerdown', () => {
+  audio();
+  if (TTS.ok) { try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) {} pickVoices(); }
+}, { once: true, capture: true });
+function say(text, done) {
+  const id = ++TTS.id;
+  const voice = S.lang === 'en' ? TTS.en : TTS.ms;
+  if (!store.sound || !TTS.ok || !voice) { if (done) setTimeout(() => { if (id === TTS.id) done(); }, 1000); return; }
+  try { speechSynthesis.cancel(); } catch (e) {}
+  const u = new SpeechSynthesisUtterance(text);
+  u.voice = voice; u.lang = voice.lang; u.rate = .95; u.pitch = 1.08;
+  voicePause();
+  let fin = false;
+  const end = () => {
+    if (fin || id !== TTS.id) return; fin = true;
+    V.speaking = false; voiceResume();
+    if (done) done();
+  };
+  u.onend = end; u.onerror = end;
+  V.speaking = true;
+  try { speechSynthesis.speak(u); } catch (e) { end(); }
+  setTimeout(end, 1500 + text.length * 110);
+}
+function hush() { TTS.id++; try { speechSynthesis.cancel(); } catch (e) {} if (V.speaking) { V.speaking = false; voiceResume(); } }
+
+/* ================= confetti ================= */
+const cf = { cv: $('#confetti'), parts: [], raf: 0 };
+cf.ctx = cf.cv.getContext('2d');
+function burst(x, y, n = 36, spread = 1) {
+  if (RM.matches) return;
+  const cs = getComputedStyle(document.documentElement);
+  const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => cs.getPropertyValue('--c' + i).trim());
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2, sp = (3 + Math.random() * 6) * spread;
+    cf.parts.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 4 * spread, r: 5 + Math.random() * 6, c: cols[i % cols.length], rot: Math.random() * 6, vr: (Math.random() - .5) * .4, life: 70 + Math.random() * 40 });
+  }
+  if (!cf.raf) cf.raf = requestAnimationFrame(cfStep);
+}
+function cfStep() {
+  const c = cf.cv, d = devicePixelRatio || 1;
+  if (c.width !== innerWidth * d || c.height !== innerHeight * d) { c.width = innerWidth * d; c.height = innerHeight * d; }
+  const g = cf.ctx; g.setTransform(d, 0, 0, d, 0, 0); g.clearRect(0, 0, innerWidth, innerHeight);
+  cf.parts = cf.parts.filter(p => p.life > 0);
+  for (const p of cf.parts) {
+    p.vy += .28; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
+    g.save(); g.translate(p.x, p.y); g.rotate(p.rot); g.globalAlpha = Math.min(1, p.life / 30);
+    g.fillStyle = p.c; g.fillRect(-p.r / 2, -p.r / 3, p.r, p.r * .66); g.restore();
+  }
+  cf.raf = cf.parts.length ? requestAnimationFrame(cfStep) : 0;
+  if (!cf.raf) g.clearRect(0, 0, innerWidth, innerHeight);
+}
+const burstFrom = (el, n, spread) => { const r = el.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, n, spread); };
+
+/* ================= screens ================= */
+const screens = { home: $('#scrHome'), learn: $('#scrLearn'), quiz: $('#scrQuiz'), result: $('#scrResult') };
+function show(name) {
+  for (const [k, el] of Object.entries(screens)) el.hidden = k !== name;
+  if (name !== 'learn' && S.reciting) stopRecite();
+  if (name !== 'quiz' && Q) { stopTimer(); clearTimeout(Q.timer); }
+  S.screen = name; body.dataset.screen = name;
+  clearHold();
+  renderHints();
+  window.scrollTo(0, 0);
+}
+function renderHints() {
+  const ic = S.mode === 'gesture' ? handSVG(5) : S.mode === 'voice' ? MIC : TAP;
+  $$('.hint').forEach(h => { h.innerHTML = ic + '<span>' + L().hints[h.dataset.hint][S.mode] + '</span>'; });
+  $('#homeBubble').textContent = L().bubble[S.mode];
+}
+
+/* ---------- language ---------- */
+function applyLang() {
+  const T = L();
+  document.documentElement.lang = S.lang;
+  $$('[data-i18n]').forEach(el => { const v = pathGet(T, el.dataset.i18n); if (typeof v === 'string') el.textContent = v; });
+  $$('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === S.lang)));
+  $('#btnHelp').setAttribute('aria-label', T.helpLbl);
+  syncSound();
+  renderHome(); renderHints();
+  if (S.screen === 'learn') { relabelLearn(); selectRow(S.row, false); }
+  if (Q) renderQuizTitle();
+  if (S.screen === 'result' && S.lastResult) renderResult();
+  $('#reciteLbl').textContent = S.reciting ? T.stop : T.read;
+  if (S.mode === 'gesture') camUI(S.camState);
+  if (S.mode === 'voice') { micUI(S.micState); if (V.rec) { V.rec.lang = T.sr; if (V.on) { try { V.rec.abort(); } catch (e) {} } } }
+  setSensorHead();
+  if (!$('#helpSheet').hidden) renderHelp();
+}
+function setLang(l) { if (l === S.lang) return; hush(); S.lang = l; store.lang = l; save(); applyLang(); }
+
+/* ---------- home ---------- */
+function renderHome() {
+  const T = L(), t = $('#tiles'); t.innerHTML = '';
+  for (let n = 1; n <= 10; n++) {
+    const b = document.createElement('button');
+    const st = store.stars[n] || 0;
+    b.className = 'tile' + (LIGHT.has(n) ? ' lt' : ''); b.dataset.finger = n;
+    b.style.setProperty('--c', `var(--c${n})`);
+    b.setAttribute('aria-label', `${T.tileK} ${n}, ${st} ★`);
+    b.innerHTML = `<span class="fbadge">${handsIcon(n)}${n}</span><span class="tile-k">${T.tileK}</span><span class="tile-n">${n}</span><span class="stars">${starsHTML(st)}</span>`;
+    b.addEventListener('click', () => { sfx('tap'); openLearn(n); });
+    t.append(b);
+  }
+  const total = Object.values(store.stars).reduce((a, b) => a + b, 0);
+  const mastered = Object.values(store.stars).filter(v => v >= 3).length;
+  $('#stStars').innerHTML = `${total}<small>/30</small>`;
+  $('#stMastered').innerHTML = `${mastered}<small>/10</small>`;
+  $('#stBest').textContent = store.best || 0;
+  $('#bestScore').textContent = store.best || 0;
+}
+function goHome() {
+  if (Q) { stopTimer(); clearTimeout(Q.timer); Q = null; }
+  hush(); renderHome(); show('home');
+}
+
+/* ---------- learn ---------- */
+function relabelLearn() {
+  $('#quizLabel').textContent = L().startQuiz(S.sifir);
+}
+function openLearn(n) {
+  S.sifir = n; setSifirColor(n);
+  $('#learnN').textContent = n;
+  relabelLearn();
+  const rows = $('#rows'); rows.innerHTML = '';
+  for (let k = 1; k <= 10; k++) {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.className = 'row'; b.dataset.finger = k; b.dataset.k = k;
+    b.innerHTML = `<span>${k} × ${n} =</span><span class="r-ans">${k * n}</span>`;
+    b.addEventListener('click', () => { if (S.reciting) stopRecite(); selectRow(k); });
+    li.append(b); rows.append(li);
+  }
+  show('learn');
+  selectRow(1, false);
+  say(L().tts.table(n));
+}
+function selectRow(k, speak = true) {
+  const n = S.sifir; S.row = k;
+  $$('.row').forEach(r => r.setAttribute('aria-current', String(+r.dataset.k === k)));
+  $('#eqA').textContent = k; $('#eqB').textContent = n; $('#eqC').textContent = k * n;
+  const dots = $('#dots'); dots.innerHTML = '';
+  const tot = k * n; dots.style.setProperty('--ds', (tot <= 20 ? 18 : tot <= 40 ? 15 : tot <= 70 ? 12 : 10) + 'px');
+  for (let g = 0; g < k; g++) {
+    const grp = document.createElement('div');
+    grp.className = 'grp'; grp.style.setProperty('--cols', Math.min(n, 5)); grp.style.animationDelay = (g * 45) + 'ms';
+    for (let i = 0; i < n; i++) { const d = document.createElement('span'); d.className = 'dot'; grp.append(d); }
+    dots.append(grp);
+  }
+  $('#caption').textContent = L().caption(k, n);
+  $('#addition').textContent = Array(k).fill(n).join(' + ') + ' = ' + (k * n);
+  if (speak) { sfx('tap'); say(L().tts.full(k, n)); }
+}
+let reciteTok = 0;
+function toggleRecite() {
+  if (S.reciting) return stopRecite();
+  S.reciting = true; $('#reciteLbl').textContent = L().stop;
+  const tok = ++reciteTok; let k = 1;
+  const step = () => {
+    if (tok !== reciteTok || S.screen !== 'learn') return;
+    if (k > 10) { stopRecite(); return; }
+    const kk = k++;
+    selectRow(kk, false);
+    say(L().tts.recite(kk, S.sifir), () => setTimeout(step, 250));
+  };
+  step();
+}
+function stopRecite() { S.reciting = false; reciteTok++; $('#reciteLbl').textContent = L().read; hush(); }
+
+/* ---------- quiz ---------- */
+function makeOptions(k, n) {
+  const ans = k * n, set = new Set([ans]);
+  const c = shuffle([(k + 1) * n, (k - 1) * n, k * (n + 1), k * (n - 1), ans + 1, ans - 1, ans + 2, ans - 2, ans + 10, ans - 10, (k + 2) * n]
+    .filter(v => v > 0 && v !== ans));
+  for (const v of c) { if (set.size >= 4) break; set.add(v); }
+  let extra = 3; while (set.size < 4) set.add(ans + extra++);
+  return shuffle([...set]);
+}
+function renderQuizTitle() {
+  $('#qTitle').innerHTML = Q.kind === 'ch' ? L().chTitle : L().quizTitle(Q.n);
+}
+function resetQuizChrome(ch) {
+  $('#streak').hidden = true;
+  $('#pips').hidden = ch; $('#chTime').hidden = !ch; $('#chScore').hidden = !ch; $('#timebar').hidden = !ch;
+  $('#chScoreN').textContent = 0;
+}
+function startQuiz(n) {
+  if (Q) { stopTimer(); clearTimeout(Q.timer); }
+  S.sifir = n; setSifirColor(n);
+  Q = { kind: 'sifir', n, order: shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]), i: -1, score: 0, streak: 0, wrong: [], marks: [] };
+  renderQuizTitle(); resetQuizChrome(false);
+  show('quiz'); nextQ();
+}
+function startChallenge() {
+  if (Q) { stopTimer(); clearTimeout(Q.timer); }
+  Q = { kind: 'ch', i: -1, score: 0, streak: 0, wrong: [], marks: [], end: performance.now() + 60000 };
+  renderQuizTitle(); resetQuizChrome(true);
+  show('quiz'); nextQ(); startTimer();
+  say(L().tts.chStart);
+}
+function nextQ() {
+  if (!Q) return;
+  Q.i++;
+  if (Q.kind === 'sifir' && Q.i >= Q.order.length) return finish();
+  if (Q.kind === 'ch' && performance.now() >= Q.end) return finish();
+  let k, n;
+  if (Q.kind === 'sifir') { n = Q.n; k = Q.order[Q.i]; }
+  else {
+    do { n = 2 + Math.floor(Math.random() * 9); k = 1 + Math.floor(Math.random() * 10); } while (Q.last === k + 'x' + n);
+    Q.last = k + 'x' + n; setSifirColor(n);
+  }
+  Object.assign(Q, { k, n2: n, ans: k * n, answered: false, opts: makeOptions(k, n) });
+  $('#qA').textContent = k; $('#qB').textContent = n;
+  const slot = $('#slot'); slot.textContent = '?'; slot.className = 'slot';
+  const fb = $('#fb'); fb.textContent = ''; fb.className = 'fb';
+  $('#qMascot').dataset.mood = '';
+  const box = $('#opts'); box.innerHTML = '';
+  Q.opts.forEach((v, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt'; b.dataset.finger = i + 1; b.dataset.v = v;
+    b.setAttribute('aria-label', `${i + 1}: ${v}`);
+    b.innerHTML = `<span class="fbadge">${handSVG(i + 1)}${i + 1}</span>${v}`;
+    b.addEventListener('click', () => answer(v, b));
+    box.append(b);
+  });
+  renderPips();
+  if (Q.kind === 'sifir') readQ();
+}
+function readQ() { if (Q && !Q.answered) say(L().tts.q(Q.k, Q.n2)); }
+function renderPips() {
+  if (Q.kind !== 'sifir') return;
+  $('#pips').innerHTML = Q.order.map((_, i) => `<span class="pip${Q.marks[i] === true ? ' ok' : Q.marks[i] === false ? ' no' : ''}${i === Q.i ? ' now' : ''}"></span>`).join('');
+}
+function answer(v, btn) {
+  if (!Q || Q.answered) return;
+  Q.answered = true; clearHold();
+  const T = L(), ok = v === Q.ans, ch = Q.kind === 'ch';
+  $$('.opt').forEach(b => {
+    b.disabled = true;
+    if (+b.dataset.v === Q.ans) { b.classList.add('is-right'); b.insertAdjacentHTML('beforeend', `<span class="mark ok">${CHECK}</span>`); }
+    else if (b !== btn) b.classList.add('dim');
+  });
+  const slot = $('#slot'), fb = $('#fb'), m = $('#qMascot');
+  slot.textContent = Q.ans; slot.classList.add('ok');
+  Q.marks[Q.i] = ok;
+  if (ok) {
+    Q.score++; Q.streak++;
+    fb.className = 'fb ok';
+    const p = T.praise[Math.floor(Math.random() * T.praise.length)];
+    fb.textContent = Q.streak >= 3 ? T.streakMsg(p, Q.streak) : p;
+    setMood(m, 'happy'); sfx('ok');
+    burstFrom(btn || slot, Q.streak >= 3 ? 50 : 30, .8);
+    if (!ch) say(p);
+  } else {
+    Q.streak = 0;
+    if (btn) { btn.classList.add('is-wrong'); btn.insertAdjacentHTML('beforeend', `<span class="mark no">${CROSS}</span>`); }
+    fb.className = 'fb no';
+    fb.textContent = T.almost(Q.k, Q.n2, Q.ans) + (v != null && !btn ? T.youSaid(v) : '');
+    Q.wrong.push({ k: Q.k, n: Q.n2, ans: Q.ans, got: v });
+    setMood(m, 'sad'); sfx('no');
+    if (!ch) say(T.tts.full(Q.k, Q.n2));
+  }
+  $('#streak').hidden = Q.streak < 2; $('#streakN').textContent = Q.streak;
+  if (ch) $('#chScoreN').textContent = Q.score;
+  renderPips();
+  Q.timer = setTimeout(nextQ, ok ? (ch ? 700 : 1400) : (ch ? 1500 : 2800));
+}
+function startTimer() {
+  stopTimer();
+  const tb = $('#timebar'), tt = $('#chTimeN');
+  Q.tick = setInterval(() => {
+    if (!Q) return;
+    const left = Math.max(0, Q.end - performance.now());
+    tb.style.setProperty('--t', (left / 60000).toFixed(4));
+    tt.textContent = Math.ceil(left / 1000);
+    if (left <= 0) { stopTimer(); clearTimeout(Q.timer); finish(); }
+  }, 100);
+}
+function stopTimer() { if (Q && Q.tick) { clearInterval(Q.tick); Q.tick = null; } }
+
+/* ---------- result ---------- */
+function finish() {
+  if (!Q) return;
+  stopTimer(); clearTimeout(Q.timer);
+  const ch = Q.kind === 'ch', sc = Q.score;
+  const R = { ch, sc, n: Q.n, wrong: Q.wrong.slice(), stars: 0, best: false };
+  if (!ch) {
+    R.stars = sc >= 10 ? 3 : sc >= 8 ? 2 : sc >= 5 ? 1 : 0;
+    if (R.stars > (store.stars[Q.n] || 0)) store.stars[Q.n] = R.stars;
+  } else {
+    R.best = sc > (store.best || 0) && sc > 0;
+    if (R.best) store.best = sc;
+  }
+  save();
+  S.lastResult = R;
+  const { title, msg } = renderResult();
+  show('result');
+  setMood($('#rMascot'), ch || R.stars >= 1 ? 'happy' : 'sad');
+  sfx('win');
+  if (ch ? sc > 0 : R.stars >= 1) setTimeout(() => burst(innerWidth / 2, innerHeight * .3, R.stars === 3 || R.best ? 130 : 70, 1.3), 150);
+  say(`${title} ${msg}`);
+}
+function renderResult() {
+  const R = S.lastResult, T = L();
+  let title, msg;
+  if (!R.ch) {
+    title = T.resTitles[R.stars];
+    msg = R.stars === 3 ? T.res3(R.n) : R.stars === 0 ? T.res0(R.sc, R.n) : T.resMid(R.sc);
+  } else {
+    title = R.best ? T.chNew : R.sc >= 10 ? T.chGood : T.chOk;
+    msg = T.chMsg(R.sc) + (R.best ? '' : T.chBest(store.best || 0));
+  }
+  $('#rTitle').textContent = title;
+  $('#rMsg').textContent = msg;
+  const rs = $('#rStars'); rs.hidden = R.ch; rs.innerHTML = starsHTML(R.stars);
+  $('#rScore').innerHTML = R.ch ? `${R.sc}<small> ${T.correctUnit}</small>` : `${R.sc}<small>/10</small>`;
+  const rv = $('#rReview');
+  rv.innerHTML = R.wrong.slice(0, 8).map(w => `<li>${w.k} × ${w.n} = ${w.ans}${w.got != null ? ` <span>${T.notX(w.got)}</span>` : ''}</li>`).join('');
+  rv.hidden = !R.wrong.length;
+  const nx = R.n % 10 + 1;
+  const acts = R.ch
+    ? [['again', T.again, startChallenge], ['menu', T.menu, goHome]]
+    : [['again', T.again, () => startQuiz(R.n)],
+       R.stars >= 2 ? ['next', T.learnNext(nx), () => openLearn(nx)] : ['next', T.review(R.n), () => openLearn(R.n)],
+       ['menu', T.menu, goHome]];
+  const box = $('#rActions'); box.innerHTML = '';
+  acts.forEach(([act, label, fn], i) => {
+    const b = document.createElement('button');
+    b.className = 'btn' + (i === 0 ? ' primary' : ''); b.dataset.finger = i + 1; b.dataset.act = act;
+    b.innerHTML = `<span class="fbadge">${handSVG(i + 1)}${i + 1}</span>${label}`;
+    b.addEventListener('click', () => { sfx('tap'); fn(); });
+    box.append(b);
+  });
+  return { title, msg };
+}
+
+/* ================= mode switching & sensor panel ================= */
+const sensor = $('#sensor'), camBox = $('#camBox'), micBox = $('#micBox'), sMsg = $('#camMsg'), sBtn = $('#sensorBtn'), sLink = $('#sensorLink');
+sLink.href = APP_URL;
+function setSensorHead() {
+  $('#sensorH').innerHTML = S.mode === 'gesture' ? handSVG(5) + L().camera : MIC + L().microphone;
+}
+function setMode(m, start = true) {
+  if (S.mode === 'gesture' && m !== 'gesture') gestureStop();
+  if (S.mode === 'voice' && m !== 'voice') voiceStop();
+  S.mode = m; store.mode = m; save();
+  body.dataset.mode = m;
+  $$('[data-set-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.setMode === m)));
+  sensor.hidden = m === 'touch';
+  body.classList.toggle('has-sensor', m !== 'touch');
+  camBox.hidden = m !== 'gesture'; micBox.hidden = m !== 'voice';
+  sensor.classList.toggle('mic-mode', m === 'voice');
+  setSensorHead();
+  renderHints();
+  if (m === 'gesture') { start ? gestureStart() : camUI('off'); }
+  if (m === 'voice') { start ? voiceStart() : micUI('off'); }
+}
+function smsg(text, err) { sMsg.textContent = text; sMsg.classList.toggle('err', !!err); sMsg.hidden = !text; }
+function sbtn(kind) {
+  /* kind: '' | 'camOn' | 'micOn' | 'retry' | 'open' */
+  sBtn.hidden = !kind || kind === 'open'; sLink.hidden = kind !== 'open';
+  if (kind === 'open') sLink.textContent = L().btn.open;
+  else if (kind) sBtn.textContent = L().btn[kind];
+}
+sBtn.addEventListener('click', () => { audio(); if (S.mode === 'gesture') gestureStart(); else if (S.mode === 'voice') voiceStart(); });
+
+/* ================= hand gestures (MediaPipe Hand Landmarker) ================= */
+const CDN = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
+const MODEL_CDN = 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
+const SOURCES = [];
+if (/^https?:$/.test(location.protocol) && !EMBEDDED) {
+  const base = new URL('mediapipe/', location.href).href;
+  SOURCES.push({ lib: base + 'vision_bundle.mjs', wasm: base + 'wasm', model: base + 'hand_landmarker.task' });
+}
+SOURCES.push({ lib: CDN + '/vision_bundle.mjs', wasm: CDN + '/wasm', model: MODEL_CDN });
+const video = $('#video'), cv = $('#cv'), cctx = cv.getContext('2d'), fCount = $('#fCount');
+const G = { lm: null, stream: null, on: false, loading: false, raf: 0, lastT: 0, hist: [], lock: null, target: null, t0: 0, colA: '#FFD23F', colB: '#6C3CF0', errs: 0 };
+const CONN = [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
+
+/* Count raised fingers on one hand from 3D world landmarks (metres, so distance and angle do not matter). */
+const d3 = (a, b) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
+function countFingers(p) {
+  let n = 0;
+  for (const [pip, tip] of [[6, 8], [10, 12], [14, 16], [18, 20]]) if (d3(p[0], p[tip]) > d3(p[0], p[pip]) * 1.1) n++;
+  if (d3(p[4], p[17]) > d3(p[3], p[17]) && d3(p[4], p[9]) / d3(p[0], p[9]) > 0.62) n++;
+  return n;
+}
+function camUI(state) {
+  S.camState = state;
+  const t = L().cam[state];
+  const err = ['denied', 'nocam', 'busy', 'fail', 'embedded', 'insecure'].includes(state);
+  smsg(t, err);
+  sbtn(state === 'off' ? 'camOn' : state === 'embedded' || state === 'insecure' ? 'open' : err && state !== 'nocam' ? 'retry' : '');
+  fCount.hidden = state !== 'ready';
+}
+async function loadDetector() {
+  const delegates = IS_IOS || IS_SAFARI ? ['CPU'] : ['GPU', 'CPU'];
+  for (const src of SOURCES) {
+    try {
+      const vision = await import(src.lib);
+      const files = await vision.FilesetResolver.forVisionTasks(src.wasm);
+      for (const d of delegates) {
+        try {
+          return await vision.HandLandmarker.createFromOptions(files, {
+            baseOptions: { modelAssetPath: src.model, delegate: d }, runningMode: 'VIDEO', numHands: 2,
+            minHandDetectionConfidence: .6, minHandPresenceConfidence: .5, minTrackingConfidence: .5
+          });
+        } catch (e) { /* try the next delegate */ }
+      }
+    } catch (e) { /* try the next source */ }
+  }
+  throw new Error('detector');
+}
+async function gestureStart() {
+  if (G.on || G.loading) return;
+  if (!window.isSecureContext) { camUI(EMBEDDED ? 'embedded' : 'insecure'); return; }
+  G.loading = true; camUI('starting');
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw { name: EMBEDDED ? 'NotAllowedError' : 'NotFoundError' };
+    G.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false });
+  } catch (e) {
+    G.loading = false;
+    const n = e && e.name;
+    camUI(n === 'NotFoundError' || n === 'OverconstrainedError' ? 'nocam' : n === 'NotReadableError' || n === 'AbortError' ? 'busy' : EMBEDDED ? 'embedded' : 'denied');
+    return;
+  }
+  if (S.mode !== 'gesture') { stopStream(); G.loading = false; return; }
+  video.srcObject = G.stream;
+  try { await video.play(); } catch (e) {}
+  const cs = getComputedStyle(document.documentElement);
+  G.colA = cs.getPropertyValue('--hl').trim() || G.colA; G.colB = cs.getPropertyValue('--primary').trim() || G.colB;
+  if (!G.lm) {
+    camUI('loading');
+    try { G.lm = await loadDetector(); }
+    catch (e) { G.loading = false; stopStream(); camUI('fail'); return; }
+  }
+  G.loading = false;
+  if (S.mode !== 'gesture') { stopStream(); return; }
+  G.on = true; G.hist = []; G.prevT = 0; G.errs = 0; camUI('ready'); fCount.innerHTML = '–';
+  loop();
+}
+function stopStream() { if (G.stream) G.stream.getTracks().forEach(t => t.stop()); G.stream = null; video.srcObject = null; }
+function gestureStop() {
+  G.on = false; cancelAnimationFrame(G.raf); stopStream(); clearHold(); G.hist = []; G.lock = null;
+  cctx.clearRect(0, 0, cv.width, cv.height);
+}
+function loop() {
+  if (!G.on) return;
+  G.raf = requestAnimationFrame(loop);
+  const now = performance.now();
+  if (video.readyState < 2 || now - G.lastT < 50) return;
+  G.lastT = now;
+  let res;
+  try { res = G.lm.detectForVideo(video, now); G.errs = 0; }
+  catch (e) { if (++G.errs > 30) { gestureStop(); G.lm = null; camUI('fail'); } return; }
+  G.frames = (G.frames || 0) + 1;
+  drawHands(res);
+  const hands = res.worldLandmarks && res.worldLandmarks.length ? res.worldLandmarks : [];
+  const v = hands.length ? hands.reduce((s, p) => s + countFingers(p), 0) : -1;
+  /* Smooth over ~0.3 s whatever the device speed: fast devices look at more frames, slow ones at 3. */
+  G.dt = G.prevT ? G.dt * .85 + Math.min(1000, now - G.prevT) * .15 : 60; G.prevT = now;
+  G.hist.push(v); if (G.hist.length > 7) G.hist.shift();
+  const N = Math.max(3, Math.min(7, Math.round(300 / G.dt)));
+  const win = G.hist.slice(-N), freq = {}; let best = null, bc = 0;
+  for (const x of win) { freq[x] = (freq[x] || 0) + 1; if (freq[x] > bc) { bc = freq[x]; best = x; } }
+  if (win.length >= Math.min(3, N) && bc >= Math.ceil(win.length * .66)) gestureUpdate(best, now);
+}
+function drawHands(res) {
+  const w = video.videoWidth, h = video.videoHeight; if (!w) return;
+  if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+  cctx.clearRect(0, 0, w, h);
+  for (const lm of res.landmarks || []) {
+    cctx.lineWidth = Math.max(3, w / 130); cctx.lineCap = 'round'; cctx.strokeStyle = G.colA;
+    cctx.beginPath();
+    for (const [a, b] of CONN) { cctx.moveTo(lm[a].x * w, lm[a].y * h); cctx.lineTo(lm[b].x * w, lm[b].y * h); }
+    cctx.stroke();
+    cctx.fillStyle = G.colB;
+    for (const p of lm) { cctx.beginPath(); cctx.arc(p.x * w, p.y * h, Math.max(3, w / 110), 0, Math.PI * 2); cctx.fill(); }
+  }
+}
+function findTarget(v) {
+  const scr = screens[S.screen]; if (!scr || v < 0 || !$('#helpSheet').hidden) return null;
+  const el = scr.querySelector(v === 0 ? '[data-finger="fist"]' : `[data-finger="${v}"]`);
+  return el && !el.disabled && el.offsetParent ? el : null;
+}
+function gestureUpdate(v, now) {
+  const T = L();
+  fCount.innerHTML = v < 0 ? '–' : v === 0 ? `${handSVG(0)}<small>${T.fist}</small>` : `${v}<small>${T.fingers}</small>`;
+  if (G.lock !== null) {
+    if (v === G.lock) { smsg(T.lower); return; }
+    G.lock = null;
+  }
+  const t = findTarget(v);
+  if (t !== G.target) { clearHold(); if (t) { G.target = t; G.t0 = now; t.classList.add('holding'); sfx('tick'); } }
+  if (!G.target) { smsg(v < 0 ? T.showHand : v === 0 ? T.fistSeen : T.seen(v)); return; }
+  const need = v === 0 ? 1100 : 850;
+  const p = Math.min(1, (now - G.t0) / need);
+  G.target.style.setProperty('--hold', p.toFixed(3));
+  smsg(T.hold);
+  if (p >= 1) { const el = G.target; clearHold(); G.lock = v; el.click(); }
+}
+function clearHold() {
+  if (G.target) { G.target.classList.remove('holding'); G.target.style.removeProperty('--hold'); }
+  G.target = null;
+}
+
+/* ================= voice commands (Web Speech API) ================= */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const V = { rec: null, want: false, on: false, starting: false, speaking: false, fails: 0, gotResult: false };
+function recStart(showStarting) {
+  if (!V.rec || V.on || V.starting) return;
+  V.starting = true;
+  try { V.rec.lang = L().sr; V.rec.start(); if (showStarting) micUI('starting'); }
+  catch (e) { V.starting = false; micUI('tap'); }
+}
+const heardEl = $('#heard'), micStateEl = $('#micState');
+function micUI(state) {
+  S.micState = state;
+  const [st, msg] = L().mic[state === 'nosupport' && IS_IOS ? 'nosupportIos' : state];
+  const err = ['denied', 'dictation', 'network', 'nomic', 'nosupport', 'embedded', 'insecure', 'lang'].includes(state);
+  micStateEl.textContent = st;
+  smsg(msg, err);
+  sbtn(state === 'off' ? 'micOn' : state === 'embedded' || state === 'insecure' ? 'open' : err && state !== 'nosupport' && state !== 'nomic' ? 'retry' : '');
+  sensor.classList.toggle('listening', state === 'listen');
+}
+function heard(text, interim) { heardEl.textContent = text ? `“${text}”` : ''; heardEl.classList.toggle('interim', !!interim); }
+function buildRec() {
+  const r = new SR();
+  /* One phrase per session works the same on Chrome, Edge, Android and Safari; we restart after each phrase. */
+  r.continuous = false; r.interimResults = true; r.maxAlternatives = 3;
+  r.onstart = () => { V.on = true; V.starting = false; V.gotResult = false; if (!V.speaking) micUI('listen'); };
+  r.onresult = e => {
+    if (V.speaking) return;
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const res = e.results[i];
+      heard(res[0].transcript.trim(), !res.isFinal);
+      if (res.isFinal) {
+        V.fails = 0; V.gotResult = true;
+        const alts = []; for (let j = 0; j < res.length; j++) alts.push(res[j].transcript.trim());
+        onVoice(alts);
+      }
+    }
+  };
+  r.onerror = e => {
+    const er = e.error; V.starting = false;
+    if (er === 'not-allowed') { V.want = false; micUI(EMBEDDED ? 'embedded' : 'denied'); }
+    else if (er === 'service-not-allowed') { V.want = false; micUI(EMBEDDED ? 'embedded' : (IS_IOS || IS_SAFARI) ? 'dictation' : 'denied'); }
+    else if (er === 'audio-capture') { V.want = false; micUI('nomic'); }
+    else if (er === 'language-not-supported') { V.want = false; micUI('lang'); }
+    else if (er === 'network') { if (++V.fails >= 3) { V.want = false; micUI('network'); } }
+  };
+  r.onend = () => {
+    V.on = false; V.starting = false;
+    if (V.want && S.mode === 'voice' && !V.speaking && !document.hidden) {
+      setTimeout(() => { if (V.want && !V.speaking && S.mode === 'voice') recStart(false); }, 250);
+    } else if (S.mode === 'voice' && S.micState === 'listen') micUI(V.want ? 'tap' : 'off');
+  };
+  return r;
+}
+function voiceStart() {
+  if (!SR) { micUI('nosupport'); return; }
+  if (!window.isSecureContext) { micUI(EMBEDDED ? 'embedded' : 'insecure'); return; }
+  if (!V.rec) V.rec = buildRec();
+  V.rec.lang = L().sr;
+  V.want = true; V.fails = 0;
+  if (V.speaking) { micUI('speaking'); return; }
+  recStart(true);
+}
+function voiceStop() { V.want = false; if (V.rec && V.on) { try { V.rec.abort(); } catch (e) {} } sensor.classList.remove('listening'); }
+/* While Cil speaks, stop listening so the app does not hear itself (and Android does not cut the speech off). */
+function voicePause() {
+  if (S.mode !== 'voice' || !V.want) return;
+  if (V.rec && V.on) { try { V.rec.abort(); } catch (e) {} }
+  micUI('speaking');
+}
+function voiceResume() {
+  if (S.mode !== 'voice' || !V.want || !V.rec) return;
+  setTimeout(() => { if (V.want && !V.speaking && S.mode === 'voice') recStart(true); }, 200);
+}
+$('#micBtn').addEventListener('click', () => {
+  audio(); hush();
+  if (V.on) { try { V.rec.abort(); } catch (e) {} setTimeout(voiceStart, 250); } else voiceStart();
+});
+
+const KW = {
+  challenge: ['cabaran', 'cabar', 'challenge', 'challenges'],
+  quiz: ['kuiz', 'kuis', 'quiz', 'quizz', 'uji', 'ujian', 'test'],
+  home: ['menu', 'kembali', 'balik', 'keluar', 'utama', 'home', 'back', 'exit'],
+  start: ['kuiz', 'kuis', 'quiz', 'mula', 'start', 'test', 'uji'],
+  read: ['baca', 'nyanyi', 'dengar', 'berhenti', 'read', 'sing', 'listen', 'stop'],
+  stop: ['menu', 'berhenti', 'keluar', 'stop', 'home', 'exit'],
+  repeat: ['ulang', 'ulangi', 'semula', 'repeat', 'again', 'pardon'],
+  next: ['seterusnya', 'next', 'belajar', 'learn'],
+  again: ['lagi', 'ulang', 'semula', 'main', 'again', 'play', 'retry', 'replay']
+};
+function onVoice(alts) {
+  const norm = alts.map(a => ' ' + a.toLowerCase().replace(/[^a-z0-9\s]/g, ' ') + ' ');
+  const has = key => norm.some(t => KW[key].some(w => t.includes(' ' + w + ' ')));
+  const nums = alts.map(parseNumber).filter(v => v != null);
+  const click = sel => { const b = screens[S.screen].querySelector(sel); if (b) { b.click(); return true; } return false; };
+  if (!$('#helpSheet').hidden) return;
+  switch (S.screen) {
+    case 'home':
+      if (has('challenge')) return startChallenge();
+      if (nums.length && nums[0] >= 1 && nums[0] <= 10) { sfx('tap'); return has('quiz') ? startQuiz(nums[0]) : openLearn(nums[0]); }
+      break;
+    case 'learn':
+      if (has('home')) return goHome();
+      if (has('start')) return startQuiz(S.sifir);
+      if (has('read')) return toggleRecite();
+      if (nums.length && nums[0] >= 1 && nums[0] <= 10) { if (S.reciting) stopRecite(); return selectRow(nums[0]); }
+      break;
+    case 'quiz':
+      if (has('stop')) return goHome();
+      if (has('repeat')) return readQ();
+      if (nums.length && Q && !Q.answered) {
+        const v = nums.includes(Q.ans) ? Q.ans : nums[0];
+        return answer(v, $$('.opt').find(b => +b.dataset.v === v));
+      }
+      if (Q && !Q.answered) { $('#fb').className = 'fb'; $('#fb').textContent = L().noNum; }
+      return;
+    case 'result':
+      if (has('home')) return click('[data-act="menu"]');
+      if (has('next')) return click('[data-act="next"]');
+      if (has('again')) return click('[data-act="again"]');
+      break;
+  }
+}
+
+/* ================= install & help ================= */
+let installEvt = null;
+const STANDALONE = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; if (!$('#helpSheet').hidden) renderHelp(); });
+addEventListener('appinstalled', () => { installEvt = null; if (!$('#helpSheet').hidden) renderHelp(); });
+async function renderHelp() {
+  const T = L(), H = T.help;
+  $$('#helpSheet [data-i18n]').forEach(el => { const v = pathGet(T, el.dataset.i18n); if (typeof v === 'string') el.textContent = v; });
+  $('#helpClose').setAttribute('aria-label', T.exit);
+  const ib = $('#btnInstallNow');
+  ib.hidden = !installEvt; ib.textContent = H.installNow;
+  const im = $('#installedMsg'); im.hidden = !STANDALONE; im.textContent = H.installed;
+  $('#appUrl').textContent = APP_URL;
+  $('#btnCopy').textContent = H.copy;
+  const ob = $('#btnOpenApp'); ob.href = APP_URL; ob.textContent = H.open; ob.hidden = !EMBEDDED && location.href.startsWith(APP_URL);
+  $('#plats').innerHTML = ['android', 'ios', 'windows', 'mac'].map(p => {
+    const [name, text] = H.plats[p];
+    return `<div class="plat${p === PLATFORM ? ' mine' : ''}" style="--p:${DEV_COLOR[p]}">${p === PLATFORM ? `<span class="you">${H.you}</span>` : ''}<span class="pi">${DEV[p]}</span><strong>${name}</strong><p>${text}</p></div>`;
+  }).join('');
+  const C = H.checks, rows = [];
+  const add = (cls, label, detail) => rows.push(`<li class="${cls}"><span class="st">${cls === 'ok' ? '✓' : cls === 'bad' ? '✕' : '!'}</span><b>${label}</b><span>${detail}</span></li>`);
+  if (EMBEDDED) add('warn', C.embedded[0], C.embedded[1]);
+  add(window.isSecureContext && !EMBEDDED ? 'ok' : 'bad', C.secure[0], window.isSecureContext && !EMBEDDED ? C.secure[1] : C.secure[2]);
+  let camState = navigator.mediaDevices && navigator.mediaDevices.getUserMedia ? 'ok' : 'none';
+  if (camState === 'ok' && navigator.permissions && navigator.permissions.query) {
+    try { const p = await navigator.permissions.query({ name: 'camera' }); if (p.state === 'denied') camState = 'blocked'; } catch (e) {}
+  }
+  if (EMBEDDED) camState = 'blocked';
+  add(camState === 'ok' ? 'ok' : 'bad', C.camera[0], camState === 'ok' ? C.camera[1] : camState === 'none' ? C.camera[2] : C.camera[3]);
+  add(SR && !EMBEDDED ? 'ok' : 'bad', C.speech[0], SR && !EMBEDDED ? C.speech[1] : C.speech[2]);
+  pickVoices();
+  add(TTS.ms ? 'ok' : 'warn', C.ttsMs[0], TTS.ms ? `${C.ttsMs[1]} (${TTS.ms.name})` : C.ttsMs[2]);
+  add(TTS.en ? 'ok' : 'warn', C.ttsEn[0], TTS.en ? `${C.ttsEn[1]} (${TTS.en.name})` : C.ttsEn[2]);
+  $('#checks').innerHTML = rows.join('');
+}
+function openHelp() { renderHelp(); $('#helpSheet').hidden = false; $('#helpClose').focus(); }
+function closeHelp() { $('#helpSheet').hidden = true; }
+$('#btnHelp').addEventListener('click', openHelp);
+$('#btnInstallCard').addEventListener('click', openHelp);
+$('#helpClose').addEventListener('click', closeHelp);
+$('#helpSheet').addEventListener('click', e => { if (e.target.id === 'helpSheet') closeHelp(); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#helpSheet').hidden) closeHelp(); });
+$('#btnInstallNow').addEventListener('click', async () => {
+  if (!installEvt) return;
+  try { installEvt.prompt(); await installEvt.userChoice; } catch (e) {}
+  installEvt = null; renderHelp();
+});
+$('#btnCopy').addEventListener('click', async () => {
+  const b = $('#btnCopy');
+  try { await navigator.clipboard.writeText(APP_URL); b.textContent = L().help.copied; }
+  catch (e) { const r = document.createRange(); r.selectNodeContents($('#appUrl')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  setTimeout(() => { b.textContent = L().help.copy; }, 1600);
+});
+
+/* ================= wire up ================= */
+$$('[data-set-mode]').forEach(b => b.addEventListener('click', () => { audio(); sfx('tap'); setMode(b.dataset.setMode, true); }));
+$$('[data-lang]').forEach(b => b.addEventListener('click', () => { sfx('tap'); setLang(b.dataset.lang); }));
+$('#btnHome').addEventListener('click', goHome);
+$('#learnBack').addEventListener('click', goHome);
+$('#quizBack').addEventListener('click', goHome);
+$('#btnRecite').addEventListener('click', toggleRecite);
+$('#btnStartQuiz').addEventListener('click', () => { sfx('tap'); startQuiz(S.sifir); });
+$('#btnChallenge').addEventListener('click', () => { sfx('tap'); startChallenge(); });
+const sndBtn = $('#btnSound');
+function syncSound() { sndBtn.setAttribute('aria-pressed', String(!!store.sound)); sndBtn.setAttribute('aria-label', L().sound[store.sound ? 0 : 1]); }
+sndBtn.addEventListener('click', () => { store.sound = !store.sound; save(); syncSound(); if (!store.sound) hush(); else sfx('tap'); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && S.mode === 'voice' && V.want && !V.on && !V.speaking) voiceResume(); });
+
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost') && !EMBEDDED && document.querySelector('link[rel="manifest"]')) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+applyLang();
+setMode(['touch', 'gesture', 'voice'].includes(store.mode) ? store.mode : 'touch', false);
+show('home');
+
+window.__pintar = { parseNumber, countFingers, ms, en, makeOptions, onVoice, setLang, openHelp, state: () => ({ S, Q }), dbg: () => ({ frames: G.frames, hist: G.hist.slice(), lock: G.lock }) };
+})();
+</script>
+</body>
+</html>
