@@ -504,16 +504,17 @@ button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--bg:#0F1522;--pat-op:0;--card:#172033;--card-2:#1F2A40;--line:#2B3753;--ink:#EEF2FA;--ink-soft:#A3AEC6;--primary:#8C73FF;--lift:rgba(0,0,0,.5)} }
 :root[data-theme="dark"]{--bg:#0F1522;--pat-op:0;--card:#172033;--card-2:#1F2A40;--line:#2B3753;--ink:#EEF2FA;--ink-soft:#A3AEC6;--primary:#8C73FF;--lift:rgba(0,0,0,.5)}
 body::after{display:none}
-.hero{background:var(--card);color:var(--ink);border:2px solid var(--line);box-shadow:0 14px 34px -24px var(--lift)}
+/* the banner is the one coloured surface (violet to pink); everything else stays white */
+.hero{background:linear-gradient(125deg,var(--hero-a),var(--hero-b) 55%,var(--hero-c));color:var(--on-color);border:0;box-shadow:0 16px 32px -20px color-mix(in srgb,var(--hero-a) 65%,transparent)}
 .hero .deco{display:none}
-.hero .mascot{filter:drop-shadow(0 8px 10px var(--lift))}
-.title{text-shadow:none;color:var(--ink)}
+.hero .mascot{filter:drop-shadow(0 8px 10px color-mix(in srgb,var(--hero-a) 60%,var(--shade)))}
+.title{color:var(--on-color);text-shadow:0 3px 0 color-mix(in srgb,var(--hero-a) 65%,var(--shade))}
 .title .tx{box-shadow:none}
-.sub{color:var(--primary);opacity:1}
-.bubble{background:var(--card-2);box-shadow:none}
-.bubble::before{background:var(--card-2)}
-.stat{background:var(--card-2);border-color:var(--line)}
-.stat .si.c{background:var(--card);border:2px solid var(--line)}
+.sub{color:var(--on-color);opacity:.95}
+.bubble{background:var(--card);box-shadow:none}
+.bubble::before{background:var(--card)}
+.stat{background:color-mix(in srgb,var(--on-color) 16%,transparent);border-color:color-mix(in srgb,var(--on-color) 30%,transparent)}
+.stat .si.c{background:var(--on-color);border:0}
 .hero[data-bg]:not([data-bg=""]){color:var(--on-color);border-color:transparent}
 .hero[data-bg]:not([data-bg=""]) .title,.hero[data-bg]:not([data-bg=""]) .sub{color:var(--on-color);text-shadow:0 2px 4px rgba(0,0,0,.35)}
 .hero[data-bg]:not([data-bg=""]) .stat{background:color-mix(in srgb,var(--on-color) 16%,transparent);border-color:color-mix(in srgb,var(--on-color) 30%,transparent)}
