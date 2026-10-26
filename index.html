@@ -372,9 +372,6 @@ button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
 .mic{display:flex;align-items:center;gap:12px}
 .mic-dot{width:58px;height:58px;flex:none;border-radius:50%;border:0;background:var(--m-voice);color:var(--on-color);display:grid;place-items:center;box-shadow:0 4px 0 color-mix(in srgb,var(--m-voice) 60%,var(--shade))}
 .mic-dot svg{width:30px;height:30px}
-.sensor.tapmode .mic-dot{width:72px;height:72px;animation:ready 1.8s ease-in-out infinite}
-.sensor.tapmode .mic-dot svg{width:36px;height:36px}
-@keyframes ready{0%,100%{box-shadow:0 4px 0 color-mix(in srgb,var(--m-voice) 60%,var(--shade)),0 0 0 0 color-mix(in srgb,var(--m-voice) 45%,transparent)}50%{box-shadow:0 4px 0 color-mix(in srgb,var(--m-voice) 60%,var(--shade)),0 0 0 12px transparent}}
 .sensor.listening .mic-dot{background:var(--bad);box-shadow:0 4px 0 color-mix(in srgb,var(--bad) 60%,var(--shade));animation:pulse 1.4s ease-out infinite}
 @keyframes pulse{0%{outline:0 solid color-mix(in srgb,var(--bad) 55%,transparent)}100%{outline:16px solid transparent}}
 .heard{margin:2px 0 0;font-size:17px;font-weight:700;min-height:1.4em;overflow-wrap:anywhere}
@@ -388,7 +385,6 @@ button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
   .sensor .btn{padding:9px 12px}
   .sensor.mic-mode{grid-template-columns:1fr}
   .mic-dot{width:50px;height:50px}
-  .sensor.tapmode .mic-dot{width:64px;height:64px}
 }
 @media (max-width:899px) and (min-width:560px){ .sensor{max-width:560px;margin-left:auto} }
 
@@ -415,19 +411,10 @@ button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
 .voicebox{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px}
 .voicebox select{flex:1 1 220px;min-width:0;font:700 15px var(--f-body);color:var(--ink);background:var(--card-2);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
 .voicebox .btn{padding:10px 16px;font-size:15px}
-#listenPill button[aria-pressed="true"],#srLangPill button[aria-pressed="true"],#pitchPill button[aria-pressed="true"],#ratePill button[aria-pressed="true"]{background:var(--c12);color:var(--on-color)}
+#pitchPill button[aria-pressed="true"],#ratePill button[aria-pressed="true"]{background:var(--c12);color:var(--on-color)}
 .vrow{display:flex;align-items:center;gap:8px}
 .vl{font-weight:700;font-size:14px;color:var(--ink-soft)}
-.hearlog{flex-basis:100%;list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.hearlog li{background:var(--card-2);border-radius:12px;padding:8px 12px;font-size:15px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
-.hearlog li b{font-weight:700}
-.hearlog li .n{margin-left:auto;font:400 20px/1 var(--f-display);color:var(--good)}
-.hearlog li .n.none{font:700 14px var(--f-body);color:var(--bad)}
-.hearlog li.wait{color:var(--ink-soft);font-style:italic}
-.hearlog li.bad{background:var(--bad-bg);color:var(--bad);font-weight:700}
-.hearlog li small{flex-basis:100%;color:var(--ink-soft)}
 .vnote{flex-basis:100%;margin:0;font-size:14px;color:var(--ink-soft)}
-.ver{margin:0;text-align:center;color:var(--ink-soft);font-size:13px;font-weight:700;letter-spacing:.04em}
 .checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .checks li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px 12px}
 .checks .st{grid-row:span 2;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:400 18px/1 var(--f-display);color:var(--on-color)}
@@ -972,17 +959,8 @@ body::after{display:none}
       <button class="btn primary" id="btnTestVoice"></button>
       <p class="vnote" id="voiceNote"></p>
     </div>
-    <h3 data-i18n="help.hearTitle">Uji pendengaran</h3>
-    <div class="voicebox">
-      <div class="vrow"><span class="vl" id="listenLbl"></span><div class="pill" id="listenPill" role="group"><button data-ls="tap"></button><button data-ls="auto"></button></div></div>
-      <div class="vrow"><span class="vl" id="srLangLbl"></span><div class="pill" id="srLangPill" role="group"><button data-sl="auto"></button><button data-sl="ms">BM</button><button data-sl="en">EN</button></div></div>
-      <button class="btn primary" id="btnHearTest"></button>
-      <p class="vnote" id="hearNote"></p>
-      <ol class="hearlog" id="hearLog" aria-live="polite"></ol>
-    </div>
     <h3 data-i18n="help.checkTitle">Semak peranti ini</h3>
     <ul class="checks" id="checks"></ul>
-    <p class="ver" id="appVer"></p>
   </div>
 </div>
 <div class="sheet-back" id="whoSheet" hidden>
@@ -1024,8 +1002,6 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const RM = matchMedia('(prefers-reduced-motion: reduce)');
 const app = $('#app'), body = document.body;
-/* Shown under Help, so a teacher can check which version is on a device or on the website. */
-const APP_VERSION = '26.10.2026 (20:49)';
 const EMBEDDED = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
 /* The app's own address when hosted; inside the Claude preview, point to the hosted copy. */
 const APP_URL = !EMBEDDED && location.protocol === 'https:' ? location.href.replace(/[#?].*$/, '').replace(/[^/]*$/, '') : 'https://akmahalili.github.io/timesy/';
@@ -1037,7 +1013,7 @@ const PLATFORM = IS_IOS ? 'ios' : IS_ANDROID ? 'android' : /Windows/.test(UA) ? 
 
 /* ================= storage (per-viewer only) ================= */
 const KEY = 'timesy-v1';
-const store = { mode: 'touch', sound: true, lang: 'ms', pitch: 'child', rate: 'slow', voiceMs: '', voiceEn: '', srLang: 'auto', listen: '', profiles: [], current: '' };
+const store = { mode: 'touch', sound: true, lang: 'ms', pitch: 'child', rate: 'slow', voiceMs: '', voiceEn: '', profiles: [], current: '' };
 try { Object.assign(store, JSON.parse(localStorage.getItem(KEY) || localStorage.getItem('pintar-sifir-v1') || '{}')); } catch (e) {}
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} };
 /* A light/dark choice made in the app wins over the device setting. */
@@ -1138,36 +1114,6 @@ function parseNumber(text) {
   return runs.length ? runs[runs.length - 1] : null;
 }
 
-/* Short number words are easy to mishear: "two" comes back as "to", "three" as "free", "eight" as "ate",
-   and a Malay recogniser writes English numbers the way they sound ("wan", "tu", "tri"). For short answers only,
-   read these sound-alikes as numbers. The result is used only when it matches one of the choices on screen. */
-const SOUNDS = {
-  won: 1, wan: 1, wun: 1, juan: 1,
-  to: 2, too: 2, tu: 2, tou: 2, tew: 2,
-  tree: 3, free: 3, tri: 3, thri: 3, sri: 3,
-  far: 4, fo: 4, foe: 4, faw: 4, fore: 4,
-  fife: 5, faif: 5, fai: 5,
-  sex: 6, sick: 6, sicks: 6, siks: 6, seeks: 6, sik: 6,
-  sevan: 7, sevin: 7,
-  eat: 8, et: 8, eit: 8, ait: 8, hate: 8, eighth: 8,
-  nain: 9, nein: 9, nyne: 9,
-  tan: 10, tenn: 10,
-  enem: 6, nam: 6, lepan: 8, lapang: 8, duo: 2,
-  dirty: 30, tirty: 30, forteen: 14, fiveteen: 15
-};
-const FILLER = new Set(['number', 'nombor', 'nomber', 'jawapan', 'answer', 'is', 'the', 'its', 'it', 's', 'ialah', 'dia', 'ni', 'itu', 'saya', 'rasa', 'i', 'think', 'uh', 'um', 'eh', 'a']);
-function looseNumber(text) {
-  const words = String(text).toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w && !FILLER.has(w));
-  if (!words.length || words.length > 3) return null;
-  return parseNumber(words.map(w => (w in SOUNDS ? String(SOUNDS[w]) : w)).join(' '));
-}
-/* The best number in what was heard: a clear number first, otherwise a sound-alike, but only one that is allowed. */
-function pickNumber(alts, valid) {
-  const strict = alts.map(parseNumber).filter(v => v != null);
-  if (!valid) return strict.length ? strict[0] : alts.map(looseNumber).find(v => v != null) ?? null;
-  return strict.find(v => valid.includes(v)) ?? alts.map(looseNumber).find(v => v != null && valid.includes(v)) ?? null;
-}
-
 /* ================= words in both languages ================= */
 const I18N = {
   ms: {
@@ -1203,9 +1149,9 @@ const I18N = {
     hints: {
       home: { touch: 'Sentuh satu tahap di peta untuk mula belajar.', gesture: 'Tunjuk <b>1–10 jari</b> dan tahan untuk pilih sifir. <b>11</b> = 1 jari setiap tangan. <b>12</b> = 1 jari (kiri) + 2 jari (kanan). <b>Genggam tangan</b> untuk Cabaran.', voice: 'Sebut <b>“sifir lima”</b> untuk belajar, <b>“kuiz lima”</b> untuk kuiz, <b>“cabaran”</b> atau <b>“belon”</b>.' },
       learn: { touch: 'Sentuh satu baris dan lihat lobak merah jatuh ke dalam bakul.', gesture: 'Tunjuk jari untuk pilih baris (4 jari = baris 4). Baris <b>11</b> = 1 + 1 jari, baris <b>12</b> = 1 + 2 jari (dua tangan). <b>Genggam tangan</b> untuk mula kuiz.', voice: 'Sebut nombor, contoh <b>“empat”</b>. Sebut <b>“baca”</b> untuk dengar sifir, <b>“kuiz”</b> untuk mula kuiz.' },
-      quiz: { touch: 'Sentuh jawapan yang betul.', gesture: 'Tunjuk <b>1, 2, 3 atau 4 jari</b> dan tahan untuk pilih jawapan.', voice: 'Terus sebut jawapan sebaik soalan keluar, contoh <b>“dua puluh lapan”</b>. Nombor pendek susah didengar? Sebut <b>“nombor lapan”</b>.' },
+      quiz: { touch: 'Sentuh jawapan yang betul.', gesture: 'Tunjuk <b>1, 2, 3 atau 4 jari</b> dan tahan untuk pilih jawapan.', voice: 'Terus sebut jawapan sebaik soalan keluar, contoh <b>“dua puluh lapan”</b>. Sebut <b>“ulang”</b> untuk dengar soalan.' },
       result: { touch: 'Pilih apa yang kamu mahu buat seterusnya.', gesture: 'Tunjuk jari ikut nombor pada butang.', voice: 'Sebut <b>“main lagi”</b>, <b>“seterusnya”</b> atau <b>“menu”</b>.' },
-      balloon: { touch: 'Sentuh belon yang ada jawapan betul sebelum ia terbang!', gesture: 'Tunjuk <b>1–4 jari</b> ikut nombor pada belon, dan tahan sekejap.', voice: 'Sebut jawapan dengan kuat, contoh <b>“dua puluh empat”</b> atau <b>“nombor lapan”</b>.' }
+      balloon: { touch: 'Sentuh belon yang ada jawapan betul sebelum ia terbang!', gesture: 'Tunjuk <b>1–4 jari</b> ikut nombor pada belon, dan tahan sekejap.', voice: 'Sebut jawapan dengan kuat, contoh <b>“dua puluh empat”</b>.' }
     },
     bubble: { touch: 'Hai, saya Timesy si arnab! Jom hafal sifir sambil bermain.', gesture: 'Hai, saya Timesy! Angkat jari ke kamera, nanti saya kira.', voice: 'Hai, saya Timesy! Cakap dengan kuat, saya sedang mendengar.' },
     camera: 'Kamera', microphone: 'Mikrofon', fingers: 'jari',
@@ -1218,7 +1164,7 @@ const I18N = {
     },
     mic: {
       off: ['Mikrofon belum dihidupkan.', 'Tekan butang untuk mula mendengar.'], starting: ['Menyediakan mikrofon…', ''], listen: ['Saya sedang mendengar…', ''],
-      tap: ['Tekan mikrofon, kemudian sebut jawapan.', ''], speaking: ['Timesy sedang bercakap…', ''],
+      tap: ['Tekan mikrofon dan bercakap.', ''], speaking: ['Timesy sedang bercakap…', ''],
       denied: ['Mikrofon tidak dibenarkan.', 'Benarkan mikrofon untuk laman ini dalam tetapan pelayar, kemudian cuba lagi.'],
       dictation: ['Pengecaman suara dimatikan.', 'Pada iPhone, iPad atau Mac, hidupkan Siri dan Dikte (Dictation) dalam Tetapan.'],
       network: ['Arahan suara perlukan internet.', 'Semak sambungan internet, kemudian cuba lagi.'],
@@ -1235,11 +1181,7 @@ const I18N = {
       title: 'Pasang & bantuan', linkTitle: 'Pautan apps', howTitle: 'Cara pasang', checkTitle: 'Semak peranti ini',
       voiceTitle: 'Suara Timesy', voiceAuto: 'Automatik (disyorkan)', pitchChild: 'Kanak-kanak', pitchNormal: 'Biasa', pitchLbl: 'Nada', rateLbl: 'Kelajuan', rateSlow: 'Perlahan', rateNormal: 'Biasa', test: 'Uji suara',
       voiceNone: 'Tiada suara BM pada peranti ini. Apps masih boleh dimainkan tanpa suara bacaan.',
-      hearTitle: 'Uji pendengaran', listenLbl: 'Cara dengar', listenTap: 'Tekan & sebut', listenAuto: 'Sentiasa dengar', srLangLbl: 'Bahasa jawapan', srAuto: 'Ikut apps', hearBtn: 'Mula uji', hearStop: 'Berhenti',
-      hearSay: 'Sebut satu nombor sekarang, contoh “eight” atau “lapan”…', hearNone: 'tiada nombor', hearAlt: 'Tekaan lain:', hearErr: e => `Tidak dengar apa-apa (${e}). Cuba lagi, lebih dekat dengan mikrofon.`, hearNo: 'Pengecaman suara tiada di sini. Buka Timesy melalui pautan https dalam Chrome atau Safari.',
-      hearNote: 'Ujian ini menunjukkan apa yang enjin suara dengar dan nombor yang Timesy baca. Untuk jawapan dalam bahasa Inggeris, pilih Bahasa jawapan: EN. Pada telefon, pilih Tekan & sebut.',
       voiceNote: 'Suara kanak-kanak dibuat dengan menaikkan nada suara yang ada pada peranti. Pada Microsoft Edge, suara EN “Ana” ialah suara kanak-kanak sebenar.',
-      version: v => `Timesy · versi ${v}`,
       installNow: 'Pasang apps sekarang', installed: 'Apps ini sudah dipasang pada peranti ini.', copy: 'Salin', copied: 'Disalin!', open: 'Buka', you: 'Peranti anda',
       plats: {
         android: ['Android', 'Buka pautan dalam Chrome. Tekan menu ⋮, kemudian “Pasang apps” atau “Tambah ke skrin utama”.'],
@@ -1296,9 +1238,9 @@ const I18N = {
     hints: {
       home: { touch: 'Tap a level on the map to start learning.', gesture: 'Show <b>1–10 fingers</b> and hold to pick a table. <b>11</b> = 1 finger on each hand. <b>12</b> = 1 finger (left) + 2 fingers (right). <b>Make a fist</b> for the Challenge.', voice: 'Say <b>“table five”</b> to learn, <b>“quiz five”</b> for a quiz, <b>“challenge”</b> or <b>“balloons”</b>.' },
       learn: { touch: 'Tap a row and watch the carrots drop into the baskets.', gesture: 'Show fingers to pick a row (4 fingers = row 4). Row <b>11</b> = 1 + 1 fingers, row <b>12</b> = 1 + 2 fingers (two hands). <b>Make a fist</b> to start the quiz.', voice: 'Say a number, like <b>“four”</b>. Say <b>“read”</b> to hear the table, <b>“quiz”</b> to start the quiz.' },
-      quiz: { touch: 'Tap the right answer.', gesture: 'Show <b>1, 2, 3 or 4 fingers</b> and hold to choose.', voice: 'Say the answer as soon as the question appears, like <b>“twenty-eight”</b>. Short number not heard? Say <b>“number eight”</b>.' },
+      quiz: { touch: 'Tap the right answer.', gesture: 'Show <b>1, 2, 3 or 4 fingers</b> and hold to choose.', voice: 'Say the answer as soon as the question appears, like <b>“twenty-eight”</b>. Say <b>“repeat”</b> to hear the question.' },
       result: { touch: 'Choose what to do next.', gesture: 'Show the number of fingers on the button.', voice: 'Say <b>“play again”</b>, <b>“next”</b> or <b>“menu”</b>.' },
-      balloon: { touch: 'Tap the balloon with the right answer before it floats away!', gesture: 'Show <b>1–4 fingers</b> to match the number on a balloon, and hold.', voice: 'Say the answer out loud, like <b>“twenty-four”</b> or <b>“number eight”</b>.' }
+      balloon: { touch: 'Tap the balloon with the right answer before it floats away!', gesture: 'Show <b>1–4 fingers</b> to match the number on a balloon, and hold.', voice: 'Say the answer out loud, like <b>“twenty-four”</b>.' }
     },
     bubble: { touch: 'Hi, I’m Timesy the bunny! Let’s learn times tables while we play.', gesture: 'Hi, I’m Timesy! Hold up your fingers to the camera and I’ll count them.', voice: 'Hi, I’m Timesy! Speak up, I’m listening.' },
     camera: 'Camera', microphone: 'Microphone', fingers: 'fingers',
@@ -1311,7 +1253,7 @@ const I18N = {
     },
     mic: {
       off: ['The microphone is off.', 'Press the button to start listening.'], starting: ['Getting the microphone ready…', ''], listen: ['I’m listening…', ''],
-      tap: ['Tap the microphone, then say the answer.', ''], speaking: ['Timesy is talking…', ''],
+      tap: ['Tap the microphone and speak.', ''], speaking: ['Timesy is talking…', ''],
       denied: ['The microphone is not allowed.', 'Allow the microphone for this site in your browser settings, then try again.'],
       dictation: ['Speech recognition is turned off.', 'On iPhone, iPad or Mac, turn on Siri and Dictation in Settings.'],
       network: ['Voice commands need the internet.', 'Check your internet connection, then try again.'],
@@ -1328,11 +1270,7 @@ const I18N = {
       title: 'Install & help', linkTitle: 'App link', howTitle: 'How to install', checkTitle: 'Check this device',
       voiceTitle: 'Timesy’s voice', voiceAuto: 'Automatic (recommended)', pitchChild: 'Child', pitchNormal: 'Normal', pitchLbl: 'Pitch', rateLbl: 'Speed', rateSlow: 'Slow', rateNormal: 'Normal', test: 'Test voice',
       voiceNone: 'No English voice on this device. The app still works without reading aloud.',
-      hearTitle: 'Listening test', listenLbl: 'Listening', listenTap: 'Tap & speak', listenAuto: 'Always on', srLangLbl: 'Answer language', srAuto: 'Same as app', hearBtn: 'Start test', hearStop: 'Stop',
-      hearSay: 'Say a number now, like “eight” or “lapan”…', hearNone: 'no number', hearAlt: 'Other guesses:', hearErr: e => `Nothing was heard (${e}). Try again, closer to the microphone.`, hearNo: 'Speech recognition is not available here. Open Timesy from its https link in Chrome or Safari.',
-      hearNote: 'This test shows what the speech engine heard and the number Timesy reads from it. For answers in English, choose Answer language: EN. On phones, choose Tap & speak.',
       voiceNote: 'The child voice is made by raising the pitch of the voices on this device. In Microsoft Edge, the English voice “Ana” is a real child voice.',
-      version: v => `Timesy · version ${v}`,
       installNow: 'Install the app now', installed: 'The app is already installed on this device.', copy: 'Copy', copied: 'Copied!', open: 'Open', you: 'Your device',
       plats: {
         android: ['Android', 'Open the link in Chrome. Tap the ⋮ menu, then “Install app” or “Add to Home screen”.'],
@@ -1611,7 +1549,7 @@ function applyLang() {
   if (S.screen === 'result' && S.lastResult) renderResult();
   $('#reciteLbl').textContent = S.reciting ? T.stop : T.read;
   if (S.mode === 'gesture') camUI(S.camState);
-  if (S.mode === 'voice') { micUI(S.micState); if (V.rec) { V.rec.lang = srLang(); if (V.on) { try { V.rec.abort(); } catch (e) {} } } }
+  if (S.mode === 'voice') { micUI(S.micState); if (V.rec) { V.rec.lang = T.sr; if (V.on) { try { V.rec.abort(); } catch (e) {} } } }
   setSensorHead();
   if (!$('#helpSheet').hidden) renderHelp();
   if (!$('#whoSheet').hidden) renderWho();
@@ -1764,7 +1702,6 @@ function nextQ() {
   });
   renderPips();
   if (Q.kind !== 'ch' && S.mode !== 'voice') readQ();
-  setTimeout(listenOnce, 150);
 }
 function readQ() { if (Q && !Q.answered) say(L().tts.q(Q.k, Q.n2)); }
 function renderPips() {
@@ -2102,17 +2039,11 @@ function clearHold() {
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 const V = { rec: null, want: false, on: false, starting: false, speaking: false, fails: 0, gotResult: false, session: 0, prev: '', acted: '', lastInterim: '', stableT: 0 };
 /* Keep one listening session open where browsers handle it well (Chrome, Edge, Android); Safari restarts after each phrase. */
-const CONT = !IS_IOS && !IS_SAFARI && !IS_ANDROID;
-/* Phones listen best when the child taps the microphone just before speaking: a fresh start does not clip
-   short words like "two" or "eight", and the phone does not beep over and over. Computers keep listening. */
-if (store.listen !== 'tap' && store.listen !== 'auto') store.listen = IS_ANDROID || IS_IOS ? 'tap' : 'auto';
-const TAPMODE = () => store.listen === 'tap';
-/* The language the microphone listens for can differ from the screen language (BM screens, English answers). */
-const srLang = () => store.srLang === 'ms' ? 'ms-MY' : store.srLang === 'en' ? 'en-US' : L().sr;
+const CONT = !IS_IOS && !IS_SAFARI;
 function recStart(showStarting) {
   if (!V.rec || V.on || V.starting) return;
   V.starting = true;
-  try { V.rec.lang = srLang(); V.rec.continuous = CONT && !TAPMODE(); V.rec.start(); if (showStarting) micUI('starting'); }
+  try { V.rec.lang = L().sr; V.rec.start(); if (showStarting) micUI('starting'); }
   catch (e) { V.starting = false; micUI('tap'); }
 }
 const heardEl = $('#heard'), micStateEl = $('#micState');
@@ -2150,7 +2081,7 @@ function liveAnswers() {
 function voiceInterim(text, idx) {
   const key = V.session + ':' + idx;
   if (V.acted === key || !text) return;
-  const valid = liveAnswers(), v = valid ? pickNumber([text], valid) : parseNumber(text);
+  const valid = liveAnswers(), v = parseNumber(text);
   if (valid && v != null && valid.includes(v) && !canGrow(v, valid)) { V.acted = key; clearTimeout(V.stableT); onVoice([text], 'quick'); return; }
   V.lastInterim = text; clearTimeout(V.stableT);
   V.stableT = setTimeout(() => {
@@ -2165,7 +2096,7 @@ const newWords = t => {
 };
 function buildRec() {
   const r = new SR();
-  r.continuous = CONT; r.interimResults = true; r.maxAlternatives = 5;
+  r.continuous = CONT; r.interimResults = true; r.maxAlternatives = 3;
   r.onstart = () => { V.on = true; V.starting = false; V.gotResult = false; V.session++; V.prev = ''; V.lastInterim = ''; if (!V.speaking) micUI('listen'); };
   r.onresult = e => {
     if (V.speaking) return;
@@ -2190,10 +2121,9 @@ function buildRec() {
   };
   r.onend = () => {
     V.on = false; V.starting = false;
-    if (V.want && S.mode === 'voice' && !V.speaking && !document.hidden && !TAPMODE()) {
+    if (V.want && S.mode === 'voice' && !V.speaking && !document.hidden) {
       setTimeout(() => { if (V.want && !V.speaking && S.mode === 'voice') recStart(false); }, 60);
-    } else if (S.mode === 'voice' && V.want && !V.speaking) micUI('tap');
-    else if (S.mode === 'voice' && S.micState === 'listen') micUI('off');
+    } else if (S.mode === 'voice' && S.micState === 'listen') micUI(V.want ? 'tap' : 'off');
   };
   return r;
 }
@@ -2201,9 +2131,8 @@ function voiceStart() {
   if (!SR) { micUI('nosupport'); return; }
   if (!window.isSecureContext) { micUI(EMBEDDED ? 'embedded' : 'insecure'); return; }
   if (!V.rec) V.rec = buildRec();
-  V.rec.lang = srLang();
+  V.rec.lang = L().sr;
   V.want = true; V.fails = 0;
-  sensor.classList.toggle('tapmode', TAPMODE());
   if (V.speaking) { micUI('speaking'); return; }
   recStart(true);
 }
@@ -2216,13 +2145,7 @@ function voicePause() {
 }
 function voiceResume() {
   if (S.mode !== 'voice' || !V.want || !V.rec) return;
-  if (TAPMODE()) { micUI('tap'); if (liveAnswers()) setTimeout(listenOnce, 60); return; }
   setTimeout(() => { if (V.want && !V.speaking && S.mode === 'voice') recStart(true); }, 60);
-}
-/* In tap mode, listen once each time a new question or balloon round appears; the child can tap to listen again. */
-function listenOnce() {
-  if (S.mode !== 'voice' || !V.want || !TAPMODE() || V.on || V.starting || V.speaking || !V.rec) return;
-  recStart(true);
 }
 $('#micBtn').addEventListener('click', () => {
   audio(); hush();
@@ -2241,8 +2164,7 @@ const KW = {
   again: ['lagi', 'ulang', 'semula', 'main', 'again', 'play', 'retry', 'replay'],
   review: ['ulang kaji', 'ulangkaji', 'latihan', 'review', 'practice', 'practise'],
   closet: ['almari', 'closet', 'wardrobe', 'kedai', 'shop'],
-  balloon: ['belon', 'balloon', 'balloons', 'pop'],
-  table: ['sifir', 'table', 'times', 'kuiz', 'kuis', 'quiz']
+  balloon: ['belon', 'balloon', 'balloons', 'pop']
 };
 /* Returns true when the words led to an action. */
 function onVoice(alts, how = 'final') { return voiceAct(alts, how) !== false; }
@@ -2260,8 +2182,7 @@ function voiceAct(alts, how) {
       if (has('closet')) return openCloset();
       if (has('challenge')) return startChallenge();
       if (has('balloon')) return startBalloon();
-      { const t = nums.length ? nums[0] : has('table') ? pickNumber(alts.map(a => a.replace(/\b(sifir|table|times|kuiz|kuis|quiz)\b/gi, ' ')), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) : null;
-        if (t >= 1 && t <= 12) { sfx('tap'); return has('quiz') ? startQuiz(t) : openLearn(t); } }
+      if (nums.length && nums[0] >= 1 && nums[0] <= 12) { sfx('tap'); return has('quiz') ? startQuiz(nums[0]) : openLearn(nums[0]); }
       break;
     case 'learn':
       if (has('home')) return goHome();
@@ -2272,20 +2193,20 @@ function voiceAct(alts, how) {
     case 'quiz':
       if (has('stop')) return goHome();
       if (has('repeat')) return readQ();
-      if (Q && !Q.answered && Q.opts) {
-        const pick = pickNumber(alts, Q.opts);
-        const v = nums.includes(Q.ans) ? Q.ans : pick != null ? pick : nums[0];
-        if (v != null && !(partial && !Q.opts.includes(v))) return answer(v, $$('.opt').find(b => +b.dataset.v === v));
+      if (nums.length && Q && !Q.answered) {
+        const v = nums.includes(Q.ans) ? Q.ans : nums[0];
+        if (partial && !Q.opts.includes(v)) return false;
+        return answer(v, $$('.opt').find(b => +b.dataset.v === v));
       }
       if (partial) return false;
       if (Q && !Q.answered) { $('#fb').className = 'fb'; $('#fb').textContent = L().noNum; }
       return;
     case 'balloon':
       if (has('stop')) return goHome();
-      if (Q && Q.kind === 'balloon' && !Q.answered) {
-        const live = BL.balloons.filter(b => !b.popped && !b.gone), vals = live.map(b => b.v);
-        const v = live.some(b => b.v === Q.ans) && nums.includes(Q.ans) ? Q.ans : pickNumber(alts, vals);
-        if (v == null && !nums.length) { if (partial) return false; break; }
+      if (nums.length && Q && Q.kind === 'balloon' && !Q.answered) {
+        if (quick && !nums.some(x => BL.balloons.some(b => !b.popped && !b.gone && b.v === x))) return false;
+        const live = BL.balloons.filter(b => !b.popped && !b.gone);
+        const v = live.some(b => b.v === Q.ans) && nums.includes(Q.ans) ? Q.ans : nums.find(x => live.some(b => b.v === x));
         if (v != null) return blPop(live.find(b => b.v === v));
         if (partial) return false;
         const msg = $('#blMsg'); msg.className = 'bl-msg no'; msg.innerHTML = `<span>${esc(L().bl.noBalloon(nums[0]))}</span>`;
@@ -2327,10 +2248,6 @@ async function renderHelp() {
   $('#pitchLbl').textContent = H.pitchLbl; $('#rateLbl').textContent = H.rateLbl;
   $('#btnTestVoice').textContent = H.test; $('#btnTestVoice').disabled = !vCur;
   $('#voiceNote').textContent = vList.length ? H.voiceNote : (S.lang === 'en' ? H.voiceNone : H.voiceNone);
-  $('#listenLbl').textContent = H.listenLbl; $('#srLangLbl').textContent = H.srLangLbl; $('#hearNote').textContent = H.hearNote;
-  $$('#listenPill button').forEach(b => { b.textContent = b.dataset.ls === 'tap' ? H.listenTap : H.listenAuto; b.setAttribute('aria-pressed', String(store.listen === b.dataset.ls)); });
-  $$('#srLangPill button').forEach(b => { if (b.dataset.sl === 'auto') b.textContent = H.srAuto; b.setAttribute('aria-pressed', String((store.srLang || 'auto') === b.dataset.sl)); });
-  $('#btnHearTest').textContent = HT ? H.hearStop : H.hearBtn;
   $('#plats').innerHTML = ['android', 'ios', 'windows', 'mac'].map(p => {
     const [name, text] = H.plats[p];
     return `<div class="plat${p === PLATFORM ? ' mine' : ''}" style="--p:${DEV_COLOR[p]}">${p === PLATFORM ? `<span class="you">${H.you}</span>` : ''}<span class="pi">${DEV[p]}</span><strong>${name}</strong><p>${text}</p></div>`;
@@ -2350,7 +2267,6 @@ async function renderHelp() {
   add(TTS.ms ? 'ok' : 'warn', C.ttsMs[0], TTS.ms ? `${C.ttsMs[1]} (${TTS.ms.name})` : C.ttsMs[2]);
   add(TTS.en ? 'ok' : 'warn', C.ttsEn[0], TTS.en ? `${C.ttsEn[1]} (${TTS.en.name})` : C.ttsEn[2]);
   $('#checks').innerHTML = rows.join('');
-  $('#appVer').textContent = H.version(APP_VERSION);
 }
 /* ---------- sheets (help, players, closet) ---------- */
 const anySheet = () => $$('.sheet-back').some(x => !x.hidden);
@@ -2482,49 +2398,6 @@ $('#voiceSel').addEventListener('change', e => {
 $$('#pitchPill button').forEach(b => b.addEventListener('click', () => { store.pitch = b.dataset.pitch; save(); renderHelp(); audio(); say(L().tts.test); }));
 $$('#ratePill button').forEach(b => b.addEventListener('click', () => { store.rate = b.dataset.rate; save(); renderHelp(); audio(); say(L().tts.test); }));
 $('#btnTestVoice').addEventListener('click', () => { audio(); say(L().tts.test); });
-$$('#listenPill button').forEach(b => b.addEventListener('click', () => {
-  store.listen = b.dataset.ls; save(); renderHelp();
-  sensor.classList.toggle('tapmode', TAPMODE());
-  if (V.rec && V.on) { try { V.rec.abort(); } catch (e) {} }
-}));
-$$('#srLangPill button').forEach(b => b.addEventListener('click', () => {
-  store.srLang = b.dataset.sl; save(); renderHelp();
-  if (V.rec) { V.rec.lang = srLang(); if (V.on) { try { V.rec.abort(); } catch (e) {} } }
-}));
-/* Listening test: shows every guess the speech engine makes and the number Timesy reads from it. */
-let HT = null;
-function hearLine(cls, html) { const li = document.createElement('li'); if (cls) li.className = cls; li.innerHTML = html; $('#hearLog').prepend(li); return li; }
-$('#btnHearTest').addEventListener('click', () => {
-  const H = L().help;
-  if (HT) { try { HT.abort(); } catch (e) {} return; }
-  if (!SR || !window.isSecureContext || EMBEDDED) { hearLine('bad', esc(H.hearNo)); return; }
-  audio(); hush();
-  const resume = S.mode === 'voice' && V.want;
-  if (V.rec && V.on) { V.want = false; try { V.rec.abort(); } catch (e) {} }
-  const r = new SR(); HT = r;
-  r.lang = srLang(); r.continuous = false; r.interimResults = true; r.maxAlternatives = 5;
-  let live = hearLine('wait', esc(H.hearSay)), got = false;
-  r.onresult = e => {
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      const res = e.results[i];
-      if (!res.isFinal) { live.textContent = `“${res[0].transcript.trim()}” …`; continue; }
-      got = true;
-      const alts = []; for (let j = 0; j < res.length; j++) alts.push(res[j].transcript.trim());
-      const n = pickNumber(alts, null);
-      live.className = '';
-      live.innerHTML = `<b>“${esc(alts[0])}”</b><span class="n${n == null ? ' none' : ''}">${n == null ? esc(H.hearNone) : '→ ' + n}</span>` +
-        (alts.length > 1 ? `<small>${esc(H.hearAlt)} ${alts.slice(1).map(a => '“' + esc(a) + '”').join(', ')}</small>` : '');
-    }
-  };
-  r.onerror = e => { if (e.error !== 'aborted') { got = true; live.className = 'bad'; live.textContent = H.hearErr(e.error); } };
-  r.onend = () => {
-    HT = null; if (!got) { live.className = 'bad'; live.textContent = H.hearErr('no-speech'); }
-    renderHelp();
-    if (resume) { V.want = true; if (!TAPMODE()) voiceStart(); else micUI('tap'); }
-  };
-  try { r.start(); } catch (e) { HT = null; }
-  renderHelp();
-});
 $('#btnInstallNow').addEventListener('click', async () => {
   if (!installEvt) return;
   try { installEvt.prompt(); await installEvt.userChoice; } catch (e) {}
@@ -2859,7 +2732,7 @@ function blRound() {
   Object.assign(Q, { k, n2: n, ans: k * n, answered: false }); Q.i++;
   $('#blA').textContent = k; $('#blB').textContent = n;
   $('#blSlot').textContent = '?'; $('#blSlot').className = 'slot';
-  blSay(''); $('#blMascot').dataset.mood = ''; setTimeout(listenOnce, 150);
+  blSay(''); $('#blMascot').dataset.mood = '';
   BL.balloons.forEach(b => b.el.remove()); BL.balloons = [];
   const W = blField.clientWidth, H = blField.clientHeight, bw = W < 480 ? 74 : 92, bh = bw * 1.7, secs = blCrossSecs();
   makeOptions(k, n).forEach((v, i) => {
@@ -2973,7 +2846,7 @@ setMode(['touch', 'gesture', 'voice'].includes(store.mode) ? store.mode : 'touch
 show('home');
 if (store.profiles.length > 1) openWho();
 
-window.__pintar = { canGrow, V, looseNumber, pickNumber, parseNumber, countFingers, handsValue, rankVoice, ms, en, makeOptions, onVoice, setLang, openHelp, P, store, weakFacts, reviewSet, startReview, openWho, openCloset, renderHome, renderDress, startBalloon, blPop, BL, MAP, mapGoal, layoutMap, comboFx, save, state: () => ({ S, Q }), dbg: () => ({ frames: G.frames, hist: G.hist.slice(), lock: G.lock }) };
+window.__pintar = { canGrow, V, parseNumber, countFingers, handsValue, rankVoice, ms, en, makeOptions, onVoice, setLang, openHelp, P, store, weakFacts, reviewSet, startReview, openWho, openCloset, renderHome, renderDress, startBalloon, blPop, BL, MAP, mapGoal, layoutMap, comboFx, save, state: () => ({ S, Q }), dbg: () => ({ frames: G.frames, hist: G.hist.slice(), lock: G.lock }) };
 })();
 </script>
 </body>
