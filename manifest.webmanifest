@@ -1,7 +1,7 @@
 {
-  "name": "Pintar Sifir",
-  "short_name": "Pintar Sifir",
-  "description": "Apps sifir 1–10 dwibahasa (BM/EN) untuk murid sekolah rendah, dengan sentuhan, isyarat tangan dan arahan suara.",
+  "name": "Timesy",
+  "short_name": "Timesy",
+  "description": "Timesy: apps sifir 1–12 dwibahasa (BM/EN) untuk murid sekolah rendah, dengan sentuhan, isyarat tangan dan arahan suara.",
   "lang": "ms",
   "start_url": "./",
   "scope": "./",
@@ -9,10 +9,26 @@
   "orientation": "any",
   "background_color": "#F4EFFF",
   "theme_color": "#6C3CF0",
-  "categories": ["education", "kids"],
+  "categories": [
+    "education",
+    "kids"
+  ],
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

@@ -1,6 +1,6 @@
-/* Pintar Sifir service worker: the app opens offline after the first visit.
+/* Timesy service worker: the app opens offline after the first visit.
    Pages are network-first (so updates arrive); files and the hand detector are cache-first. */
-const CACHE = 'pintar-sifir-v2';
+const CACHE = 'timesy-v3';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png'];
 
 self.addEventListener('install', e => {
