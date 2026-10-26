@@ -554,6 +554,177 @@ body::after{display:none}
 .result h2{color:var(--ink)}
 .sensor{border-width:2px;border-color:var(--line);box-shadow:0 18px 40px -18px var(--lift)}
 .btn.primary{box-shadow:0 4px 0 color-mix(in srgb,var(--primary) 55%,var(--shade))}
+/* ================= fun & motion: map, baskets, balloons, combos, 3D ================= */
+:root{
+  --map-sea:#BDE6FB;--map-sea-2:#9AD6F6;--map-g1:#E6F7DA;--map-g2:#CBECBC;--map-path:#F5E0B4;--map-path-edge:#E3C68E;--map-done:#FFD23F;
+  --map-tree:#5DBB63;--map-tree-2:#3E9B4B;--map-trunk:#9B6B3D;--map-rock:#C3CAD4;--map-flower:#FF8FB8;
+  --sky-a:#86D5FF;--sky-b:#CBEFFF;--sky-c:#F1FBFF;--cloud:rgba(255,255,255,.92);
+  --wood-a:#D99A52;--wood-b:#C3843F;--wood-c:#8E5C27;--wood-rim:#EDBB7C;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --map-sea:#123A57;--map-sea-2:#0E2E46;--map-g1:#1D3B2D;--map-g2:#163024;--map-path:#5E5137;--map-path-edge:#4A3F2A;--map-done:#C9A227;
+  --map-tree:#2F7A43;--map-tree-2:#245F34;--map-trunk:#6B4A2B;--map-rock:#4A5568;--map-flower:#C2668E;
+  --sky-a:#0C1E44;--sky-b:#173A70;--sky-c:#21508C;--cloud:rgba(255,255,255,.14) } }
+:root[data-theme="dark"]{
+  --map-sea:#123A57;--map-sea-2:#0E2E46;--map-g1:#1D3B2D;--map-g2:#163024;--map-path:#5E5137;--map-path-edge:#4A3F2A;--map-done:#C9A227;
+  --map-tree:#2F7A43;--map-tree-2:#245F34;--map-trunk:#6B4A2B;--map-rock:#4A5568;--map-flower:#C2668E;
+  --sky-a:#0C1E44;--sky-b:#173A70;--sky-c:#21508C;--cloud:rgba(255,255,255,.14)}
+
+/* adventure map */
+.map-note{margin:-6px 0 0;color:var(--ink-soft);font-size:15px;font-weight:700}
+.map{position:relative;height:330px;border-radius:30px;border:10px solid var(--map-sea);background:radial-gradient(120% 90% at 28% 18%,var(--map-g1),var(--map-g2));box-shadow:0 0 0 4px var(--map-sea-2),0 20px 34px -24px var(--lift)}
+.map-path{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.map-path .p-edge{fill:none;stroke:var(--map-path-edge);stroke-width:32;stroke-linecap:round;stroke-linejoin:round}
+.map-path .p-base{fill:none;stroke:var(--map-path);stroke-width:25;stroke-linecap:round;stroke-linejoin:round}
+.map-path .p-done{fill:none;stroke:var(--map-done);stroke-width:25;stroke-linecap:round;stroke-linejoin:round}
+.map-path .p-dash{fill:none;stroke:rgba(255,255,255,.8);stroke-width:4;stroke-linecap:round;stroke-dasharray:1 13}
+.map-path .tr{fill:var(--map-tree)}.map-path .tr2{fill:var(--map-tree-2)}.map-path .tk{fill:var(--map-trunk)}.map-path .rk{fill:var(--map-rock)}.map-path .fl{fill:var(--map-flower)}.map-path .fc{fill:#FFD23F}
+.map-nodes{position:absolute;inset:0}
+.node{--c:var(--c1);position:absolute;left:0;top:0;width:var(--nd,72px);margin:calc(var(--nd,72px) / -2) 0 0 calc(var(--nd,72px) / -2);display:grid;justify-items:center;gap:5px;padding:0;border:0;background:none;color:var(--on-color);z-index:2}
+.node .nd{width:var(--nd,72px);height:var(--nd,72px);border-radius:50%;display:grid;place-items:center;align-content:center;gap:1px;background:radial-gradient(circle at 34% 28%,color-mix(in srgb,var(--c) 62%,#fff),var(--c) 62%);border:4px solid #fff;box-shadow:0 6px 0 color-mix(in srgb,var(--c) 58%,var(--shade)),0 14px 18px -10px rgba(0,0,0,.4);transition:transform .15s}
+.node .nk{font:700 9.5px/1 var(--f-body);letter-spacing:.08em;text-transform:uppercase;opacity:.92}
+.node .nn{font:400 calc(var(--nd,72px) * .42)/1 var(--f-display);text-shadow:0 2px 0 color-mix(in srgb,var(--c) 50%,var(--shade))}
+.node.lt{color:var(--on-light)}.node.lt .nn{text-shadow:none}
+.node .stars{background:var(--card);box-shadow:0 3px 8px -3px rgba(0,0,0,.3)}
+.node .star svg{width:12px;height:12px}
+.node.done .nd{border-color:#FFD23F;box-shadow:0 6px 0 #C99200,0 0 0 5px color-mix(in srgb,#FFD23F 40%,transparent),0 14px 18px -10px rgba(0,0,0,.4)}
+.node .flag{position:absolute;top:-20px;right:-8px;width:28px;height:28px}
+.node .flag svg{width:100%;height:100%;display:block}
+.node.goal .nd{animation:goalPulse 1.6s ease-in-out infinite}
+@keyframes goalPulse{0%,100%{box-shadow:0 6px 0 color-mix(in srgb,var(--c) 58%,var(--shade)),0 0 0 0 color-mix(in srgb,var(--c) 60%,transparent)}60%{box-shadow:0 6px 0 color-mix(in srgb,var(--c) 58%,var(--shade)),0 0 0 14px transparent}}
+@media (hover:hover){ .node:hover .nd{transform:translateY(-4px) scale(1.07)} }
+.node:active .nd{transform:translateY(3px) scale(.96)}
+.node .fbadge{top:-12px;left:-12px;right:auto}
+.node.holding{outline:none!important}
+.node.holding .nd{box-shadow:0 0 0 6px var(--hl),0 6px 0 color-mix(in srgb,var(--c) 58%,var(--shade))}
+.map-me{position:absolute;left:0;top:0;width:var(--me,52px);z-index:3;pointer-events:none;will-change:transform}
+.map-me .mascot{width:100%;pointer-events:auto;box-shadow:0 0 0 3px #fff,0 10px 14px -6px rgba(0,0,0,.45);animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -6px}}
+@media (max-width:620px){ .map{border-width:8px;border-radius:26px} }
+
+/* games row */
+.games{align-items:stretch}
+.games > *{min-width:0}
+.challenge,.bl-card,.feature,.mode-card{position:relative}
+.bl-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 14px;align-items:center;text-align:left;padding:16px 18px;border-radius:24px;background:var(--card);color:var(--ink);border:2px solid var(--line);border-left:10px solid var(--c8);box-shadow:0 8px 18px -14px var(--lift)}
+.bl-card:active{transform:translateY(3px)}
+.bl-card .bl-ic{grid-row:span 2;width:60px;height:60px;border-radius:50%;background:color-mix(in srgb,var(--c7) 14%,var(--card));display:grid;place-items:center}
+.bl-card .bl-ic svg{width:44px;height:44px;animation:floaty 3s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(2px)}50%{transform:translateY(-4px)}}
+.bl-card strong{font:400 25px/1.1 var(--f-display)}
+.bl-card .d{font-size:15px;color:var(--ink-soft)}
+.bl-card .rec{grid-row:span 2;text-align:center;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--card-2);border-radius:16px;padding:8px 12px}
+.bl-card .rec b{display:block;font:400 32px/1 var(--f-display);letter-spacing:0}
+
+/* learn: carrots drop into baskets */
+.baskets{display:flex;flex-wrap:wrap;gap:16px 12px;justify-content:center;align-content:center;min-height:130px;padding-top:4px}
+.basket{position:relative;display:grid;justify-items:center;align-content:end;animation:pop .3s both}
+.basket::before{content:"";position:absolute;z-index:0;left:9%;right:9%;bottom:calc(var(--cs) * .75 + 6px);height:14px;border-radius:50%;background:var(--wood-c)}
+.basket::after{content:"";position:absolute;z-index:-1;left:10%;right:10%;bottom:-7px;height:10px;border-radius:50%;background:rgba(20,30,60,.16);filter:blur(2px)}
+.bk-items{position:relative;z-index:1;display:grid;grid-template-columns:repeat(var(--cols),var(--cs));gap:1px 2px;padding:0 9px;justify-content:center}
+.ct{width:var(--cs);height:calc(var(--cs) * 1.15);background:var(--carrot) center/contain no-repeat;transform:rotate(var(--r,0deg));animation:drop .62s cubic-bezier(.25,1.45,.5,1) both;animation-delay:var(--d,0s)}
+@keyframes drop{0%{transform:translateY(-170px) rotate(-50deg);opacity:0}18%{opacity:1}64%{transform:translateY(0) rotate(var(--r,0deg))}80%{transform:translateY(-8px) rotate(var(--r,0deg))}100%{transform:translateY(0) rotate(var(--r,0deg))}}
+.bk-front{position:relative;z-index:2;margin-top:calc(var(--cs) * -.3);width:calc(100% + 8px);height:calc(var(--cs) * .75 + 14px);clip-path:polygon(0 0,100% 0,91% 100%,9% 100%);display:grid;place-items:center;
+  background:linear-gradient(var(--wood-rim) 0 5px,transparent 5px),repeating-linear-gradient(90deg,transparent 0 7px,rgba(0,0,0,.13) 7px 8px),repeating-linear-gradient(180deg,var(--wood-a) 0 5px,var(--wood-b) 5px 10px)}
+.bk-front span{font:700 11px/1 var(--f-body);color:#fff;background:var(--wood-c);border-radius:999px;padding:2px 7px;margin-top:5px}
+.eq .c.bump{animation:bump .45s ease}
+@keyframes bump{40%{transform:scale(1.28)}}
+
+/* flying carrots, sparkles, chip bumps */
+.fly{position:fixed;z-index:67;left:0;top:0;width:36px;height:36px;margin:-18px 0 0 -18px;pointer-events:none}
+.fly svg{width:100%;height:100%;display:block;filter:drop-shadow(0 4px 4px rgba(0,0,0,.25));animation:spin .75s linear}
+.fly b{position:absolute;left:32px;top:-10px;font:400 22px/1 var(--f-display);color:var(--c2);text-shadow:0 2px 0 var(--card),0 -2px 0 var(--card),2px 0 0 var(--card),-2px 0 0 var(--card)}
+@keyframes spin{to{transform:rotate(540deg)}}
+.chip.bump{animation:bump .45s ease}
+.spark{position:fixed;z-index:68;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;pointer-events:none}
+.spark svg{width:100%;height:100%;display:block}
+
+/* Timesy reactions */
+.mascot{perspective:700px}
+.mascot:not(.mini){cursor:pointer}
+.mascot[data-mood="happy"] .dress{animation:hopspin .9s cubic-bezier(.3,.7,.35,1)}
+.mascot[data-mood="sad"] .dress{animation:headshake .7s ease;filter:saturate(.75)}
+.mascot.head[data-mood="happy"]{animation:headHop .75s cubic-bezier(.3,.7,.35,1)}
+.mascot.head[data-mood="happy"] .dress{animation:spinY .75s ease}
+.mascot.head[data-mood="sad"] .dress{animation:headshake .7s ease}
+.mascot .dress.poke{animation:poke .9s ease}
+@keyframes hopspin{0%{transform:none}14%{transform:translateY(3%) scale(1.07,.9)}45%{transform:translateY(-20%) rotateY(180deg)}74%{transform:translateY(0) rotateY(360deg)}86%{transform:rotateY(360deg) scale(1.07,.93)}100%{transform:rotateY(360deg)}}
+@keyframes headHop{0%,100%{transform:none}40%{transform:translateY(-22%)}72%{transform:translateY(0) scale(1.08,.92)}}
+@keyframes spinY{to{transform:rotateY(360deg)}}
+@keyframes headshake{0%,100%{transform:none}15%{transform:translateX(-7%) rotate(-8deg)}30%{transform:translateX(6%) rotate(7deg)}45%{transform:translateX(-5%) rotate(-5deg)}60%{transform:translateX(4%) rotate(4deg)}78%{transform:translateX(-2%) rotate(-2deg)}}
+@keyframes poke{0%{transform:none}10%{transform:scale(1.1,.86)}26%{transform:translateY(-12%) rotate(-9deg)}42%{transform:translateY(0) rotate(8deg)}58%{transform:rotate(-6deg)}74%{transform:rotate(4deg)}100%{transform:none}}
+
+/* combo stamp, fire, shake */
+.stamp{--s1:#FFD23F;--s2:#4A1D00;position:fixed;z-index:66;left:50%;top:40%;translate:-50% -50%;display:grid;justify-items:center;pointer-events:none}
+.stamp.lv1{--s1:#FF9A1F}.stamp.lv2{--s1:#FF5FA2;--s2:#4A0A2A}.stamp.lv3{--s1:#7CF0FF;--s2:#06304A}
+.stamp .rays{position:absolute;top:50%;left:50%;width:min(380px,92vw);aspect-ratio:1;max-width:100vw;translate:-50% -50%;border-radius:50%;
+  background:repeating-conic-gradient(color-mix(in srgb,var(--s1) 70%,transparent) 0 9deg,transparent 9deg 22deg);
+  -webkit-mask:radial-gradient(circle,#000 22%,transparent 68%);mask:radial-gradient(circle,#000 22%,transparent 68%);animation:raySpin 2.4s linear infinite,rayIn .35s ease-out both}
+.stamp b{position:relative;font:400 clamp(54px,13vw,112px)/1 var(--f-display);color:var(--s1);-webkit-text-stroke:7px var(--s2);paint-order:stroke fill;text-shadow:0 8px 0 var(--s2);white-space:nowrap;animation:stampIn .55s cubic-bezier(.2,1.6,.4,1) both;rotate:-7deg}
+.stamp small{position:relative;margin-top:10px;font:700 19px/1 var(--f-body);color:#fff;background:var(--s2);padding:6px 16px;border-radius:999px;animation:stampIn .5s .12s cubic-bezier(.2,1.6,.4,1) both}
+.stamp.out{animation:stampOut .4s ease-in forwards}
+@keyframes stampIn{0%{transform:scale(2.8);opacity:0}60%{transform:scale(.9);opacity:1}100%{transform:scale(1)}}
+@keyframes stampOut{to{opacity:0;transform:scale(.7) translateY(-30px)}}
+@keyframes raySpin{to{rotate:360deg}}
+@keyframes rayIn{from{opacity:0;scale:.3}}
+.app.shake-s{animation:shakeS .35s ease}
+.app.shake-l{animation:shakeL .55s ease}
+@keyframes shakeS{20%{transform:translate(-4px,2px)}40%{transform:translate(4px,-2px)}60%{transform:translate(-3px,1px)}80%{transform:translate(2px,0)}}
+@keyframes shakeL{10%{transform:translate(-9px,4px) rotate(-.6deg)}25%{transform:translate(9px,-4px) rotate(.6deg)}40%{transform:translate(-7px,3px)}55%{transform:translate(6px,-2px)}70%{transform:translate(-4px,2px)}85%{transform:translate(2px,-1px)}}
+.chip.streak .flame{display:none;width:20px;height:20px}
+.chip.streak .flame svg{width:100%;height:100%;display:block}
+.chip.streak.fire{background:linear-gradient(120deg,#FF8A00,#FF3B3B);color:#fff;border-color:transparent;box-shadow:0 0 0 3px color-mix(in srgb,#FF8A00 30%,transparent),0 0 18px color-mix(in srgb,#FF6A00 60%,transparent);animation:fireGlow .9s ease-in-out infinite alternate}
+.chip.streak.fire .flame{display:inline-block;animation:flicker .45s ease-in-out infinite alternate;transform-origin:50% 90%}
+@keyframes flicker{from{transform:scale(1,1) rotate(-4deg)}to{transform:scale(1.12,1.25) rotate(4deg)}}
+@keyframes fireGlow{from{box-shadow:0 0 0 3px color-mix(in srgb,#FF8A00 30%,transparent),0 0 10px color-mix(in srgb,#FF6A00 40%,transparent)}to{box-shadow:0 0 0 4px color-mix(in srgb,#FF8A00 40%,transparent),0 0 24px color-mix(in srgb,#FF6A00 75%,transparent)}}
+
+/* balloon pop */
+.sky{position:relative;height:clamp(400px,64vh,600px);border-radius:28px;overflow:hidden;border:2px solid var(--line);background:linear-gradient(180deg,var(--sky-a),var(--sky-b) 62%,var(--sky-c));box-shadow:0 10px 24px -18px var(--lift)}
+.bl-field{position:absolute;inset:0;z-index:2}
+.bl-q{position:absolute;z-index:4;top:14px;left:50%;translate:-50% 0;display:flex;gap:.18em;align-items:baseline;white-space:nowrap;background:var(--card);color:var(--ink);border-radius:22px;padding:8px 18px;font:400 clamp(34px,8vw,58px)/1 var(--f-display);box-shadow:0 10px 22px -12px var(--lift);font-variant-numeric:tabular-nums}
+.bl-q .x{color:var(--ink-soft);font-size:.78em}
+.bl-q .slot{padding:0 .12em}
+.bl-msg{position:absolute;z-index:4;top:calc(30px + clamp(34px,8vw,58px) + 12px);left:12px;right:12px;margin:0;text-align:center;font-weight:700;font-size:18px;min-height:1.4em}
+.bl-msg span{display:inline-block;background:var(--card);border-radius:999px;padding:4px 14px;box-shadow:0 6px 14px -10px var(--lift)}
+.bl-msg.ok span{color:var(--good)}.bl-msg.no span{color:var(--bad)}
+.bl-msg:empty{visibility:hidden}
+.bl-me{position:absolute;z-index:5;left:12px;top:12px;width:70px}
+.cloud{position:absolute;z-index:1;width:130px;height:42px;border-radius:42px;background:var(--cloud);animation:drift 46s linear infinite}
+.cloud::before,.cloud::after{content:"";position:absolute;background:inherit;border-radius:50%}
+.cloud::before{width:58px;height:58px;left:18px;top:-28px}
+.cloud::after{width:46px;height:46px;left:62px;top:-20px}
+.cloud.c1{top:30%;left:-140px}.cloud.c2{top:58%;left:-140px;animation-duration:62s;animation-delay:-30s;scale:.8}.cloud.c3{top:14%;left:-140px;animation-duration:54s;animation-delay:-14s;scale:.65}
+@keyframes drift{to{transform:translateX(calc(100vw + 300px))}}
+.balloon{--bw:92px;position:absolute;left:0;top:0;width:var(--bw);height:calc(var(--bw) * 1.7);padding:0;border:0;background:none;color:#fff;will-change:transform;touch-action:manipulation;z-index:2}
+.balloon.lt{color:#3A2A00}
+.balloon svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 8px 8px rgba(20,30,60,.2));transition:transform .2s ease-out,opacity .2s}
+.balloon .str{stroke:rgba(40,50,80,.45)}
+.balloon .bv{position:absolute;left:0;right:0;top:calc(var(--bw) * .3);text-align:center;font:400 calc(var(--bw) * .42)/1 var(--f-display);pointer-events:none;text-shadow:0 2px 0 rgba(0,0,0,.18);transition:opacity .15s}
+.balloon.lt .bv{text-shadow:none}
+.balloon .fbadge{top:-6px;left:50%;right:auto;translate:-50% 0}
+.balloon.pop svg{transform:scale(1.6);opacity:0}
+.balloon.pop .bv,.balloon.pop .fbadge{opacity:0}
+.balloon.reveal svg{filter:drop-shadow(0 0 6px var(--good)) drop-shadow(0 0 14px var(--good))}
+.balloon.reveal::before{content:"";position:absolute;inset:-8px;bottom:40%;border-radius:50%;border:4px dashed var(--good);animation:raySpin 6s linear infinite}
+.balloon.holding{outline:none!important}
+.balloon.holding svg{filter:drop-shadow(0 0 0 var(--hl)) drop-shadow(0 0 10px var(--hl)) drop-shadow(0 0 4px var(--hl))}
+.chip.lives{gap:2px;padding:5px 10px}
+.chip.lives svg{width:21px;height:21px;fill:#F03E5A}
+.chip.lives svg.lost{fill:var(--line)}
+.chip.lives.hit{animation:shake .45s}
+@media (max-width:560px){ .balloon{--bw:74px} .bl-me{width:46px;left:8px;top:8px} .bl-msg{font-size:16px} .bl-q{padding:6px 12px} }
+
+/* 3D tilt: follows the mouse, a finger press, or the tilt of a phone */
+.hero,.map{transform:perspective(1200px) rotateX(var(--prx,var(--drx,0deg))) rotateY(var(--pry,var(--dry,0deg)));transition:transform .3s ease-out}
+.challenge,.bl-card,.feature,.mode-card{transform:perspective(800px) rotateX(var(--prx,0deg)) rotateY(var(--pry,0deg));transition:transform .2s ease-out}
+.opt:not(:disabled){transform:perspective(800px) rotateX(var(--prx,0deg)) rotateY(var(--pry,0deg));transition:transform .2s ease-out,box-shadow .2s}
+.hero{overflow:visible;transform-style:preserve-3d}
+.hero .mascot{transform:translateZ(44px)}
+.hero .hero-t{transform:translateZ(26px)}
+.hero .bubble{transform:translateZ(18px)}
+.hero .stats{transform:translateZ(10px)}
+:is(.hero,.map,.challenge,.bl-card,.feature,.mode-card,.opt) > .glare{position:absolute;inset:0;z-index:6;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.34),transparent 58%)}
+.tilting > .glare{opacity:1}
 @media (prefers-reduced-motion:reduce){ *,*::before,*::after{animation:none!important;transition:none!important} }
 </style>
 </head>
@@ -622,9 +793,16 @@ body::after{display:none}
 
       <div class="hint" data-hint="home"></div>
 
-      <h2 class="sec" data-i18n="pick">Pilih sifir</h2>
-      <div class="tiles" id="tiles"></div>
+      <h2 class="sec" data-i18n="pick">Pulau Sifir</h2>
+      <p class="map-note" data-i18n="mapNote"></p>
+      <div class="map" id="map">
+        <svg class="map-path" id="mapPath" aria-hidden="true"></svg>
+        <div class="map-nodes" id="tiles"></div>
+        <div class="map-me" id="mapMe"><div class="mascot head" id="mapMascot"></div></div>
+      </div>
 
+      <h2 class="sec" data-i18n="gamesTitle">Permainan</h2>
+      <div class="duo games">
       <button class="challenge" id="btnChallenge" data-finger="fist">
         <span class="fist-tag"><span class="i-fist"></span><span data-i18n="fist">Genggam</span></span>
         <span class="clock">60</span>
@@ -632,6 +810,13 @@ body::after{display:none}
         <span class="rec"><span data-i18n="rec">Rekod</span><b id="bestScore">0</b></span>
         <span class="d" data-i18n="chalDesc"></span>
       </button>
+      <button class="bl-card" id="btnBalloon">
+        <span class="bl-ic" id="blIcon"></span>
+        <strong data-i18n="bl.title">Pop Belon</strong>
+        <span class="rec"><span data-i18n="rec">Rekod</span><b id="blBest">0</b></span>
+        <span class="d" data-i18n="bl.desc"></span>
+      </button>
+      </div>
 
       <div class="duo">
         <button class="feature review" id="btnReview"><span class="fi" id="icReview"></span><strong data-i18n="rv.title">Ulang Kaji Pintar</strong><span class="d" id="reviewInfo"></span></button>
@@ -656,7 +841,7 @@ body::after{display:none}
       <div class="learn-grid">
         <div class="stage" aria-live="polite">
           <div class="eq"><span id="eqA">1</span><span class="x">×</span><span id="eqB">3</span><span class="x">=</span><span class="c" id="eqC">3</span></div>
-          <div class="dots" id="dots" aria-hidden="true"></div>
+          <div class="baskets" id="dots" aria-hidden="true"></div>
           <p class="caption"><span id="caption"></span><small id="addition"></small></p>
         </div>
         <ol class="rows" id="rows"></ol>
@@ -680,7 +865,7 @@ body::after{display:none}
           <div class="pips" id="pips"></div>
           <span class="chip" id="chTime" hidden><b id="chTimeN">60</b><span data-i18n="sec">saat</span></span>
           <span class="chip" id="chScore" hidden><span data-i18n="correct">Betul</span> <b id="chScoreN">0</b></span>
-          <span class="chip streak" id="streak" hidden><b id="streakN">3</b><span data-i18n="inARow">berturut-turut</span></span>
+          <span class="chip streak" id="streak" hidden><span class="flame"></span><b id="streakN">3</b><span data-i18n="inARow">berturut-turut</span></span>
           <span class="chip carrot" id="qCarrots"><span class="ci"></span><b id="qCarrotsN">0</b></span>
         </div>
       </div>
@@ -692,6 +877,29 @@ body::after{display:none}
         <p class="fb" id="fb" aria-live="polite"></p>
       </div>
       <div class="opts" id="opts"></div>
+    </section>
+
+    <!-- BALLOON POP -->
+    <section class="screen" id="scrBalloon" hidden>
+      <div class="topline">
+        <button class="btn ghost" id="blBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg><span class="lbl" data-i18n="exit">Keluar</span></button>
+        <h2 data-i18n="bl.title">Pop Belon</h2>
+        <span class="grow"></span>
+        <div class="qmeta">
+          <span class="chip lives" id="blLives"></span>
+          <span class="chip"><span data-i18n="bl.score">Skor</span> <b id="blScore">0</b></span>
+          <span class="chip streak" id="blStreak" hidden><span class="flame"></span><b id="blStreakN">0</b><span data-i18n="inARow">berturut-turut</span></span>
+          <span class="chip carrot" id="blCarrots"><span class="ci"></span><b id="blCarrotsN">0</b></span>
+        </div>
+      </div>
+      <div class="hint" data-hint="balloon"></div>
+      <div class="sky" id="sky">
+        <span class="cloud c1"></span><span class="cloud c2"></span><span class="cloud c3"></span>
+        <div class="bl-q" aria-live="polite"><span id="blA">4</span><span class="x">×</span><span id="blB">3</span><span class="x">=</span><span class="slot" id="blSlot">?</span></div>
+        <p class="bl-msg" id="blMsg" aria-live="polite"></p>
+        <div class="bl-field" id="blField"></div>
+        <div class="bl-me"><div class="mascot head" id="blMascot"></div></div>
+      </div>
     </section>
 
     <!-- RESULT -->
@@ -812,13 +1020,13 @@ const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } c
 if (store.theme === 'light' || store.theme === 'dark') document.documentElement.dataset.theme = store.theme;
 /* Players: each child on a shared device keeps their own stars, carrots, closet and question history. */
 function newProfile(name, color) {
-  return { id: 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name: name || '', color: color || 9, stars: {}, best: 0, facts: {}, carrots: 0, owned: [], wear: { hat: '', face: '', bg: '' } };
+  return { id: 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name: name || '', color: color || 9, stars: {}, best: 0, facts: {}, carrots: 0, owned: [], wear: { hat: '', face: '', bg: '' }, balloonBest: 0, mapPos: 0 };
 }
 if (!Array.isArray(store.profiles) || !store.profiles.length) {
   const first = newProfile('', 9); first.stars = store.stars || {}; first.best = store.best || 0;
   store.profiles = [first]; store.current = first.id;
 }
-store.profiles.forEach(p => { p.stars = p.stars || {}; p.facts = p.facts || {}; p.owned = p.owned || []; p.carrots = p.carrots || 0; p.best = p.best || 0; p.wear = Object.assign({ hat: '', face: '', bg: '' }, p.wear); });
+store.profiles.forEach(p => { p.stars = p.stars || {}; p.facts = p.facts || {}; p.owned = p.owned || []; p.carrots = p.carrots || 0; p.best = p.best || 0; p.balloonBest = p.balloonBest || 0; p.mapPos = p.mapPos || 0; p.wear = Object.assign({ hat: '', face: '', bg: '' }, p.wear); });
 delete store.stars; delete store.best;
 const P = () => store.profiles.find(p => p.id === store.current) || store.profiles[0];
 const initial = p => { const n = (p.name || '').trim(); return n ? [...n][0].toUpperCase() : String(store.profiles.indexOf(p) + 1); };
@@ -908,19 +1116,23 @@ function parseNumber(text) {
 const I18N = {
   ms: {
     sub: 'Sifir 1 hingga 12 · Dwibahasa',
-    modeTitle: 'Cara main', pick: 'Pilih sifir', tileK: 'Sifir', tableWord: 'Sifir',
+    modeTitle: 'Cara main', pick: 'Pulau Sifir', mapNote: 'Dapatkan 3 bintang untuk menguasai satu sifir. Timesy akan melompat ke tahap seterusnya!', gamesTitle: 'Permainan', tileK: 'Sifir', tableWord: 'Sifir',
     seg: { touch: 'Sentuh', gesture: 'Tangan', voice: 'Suara' },
     modes: { touch: ['Sentuh', 'Sentuh jawapan pada skrin.'], gesture: ['Isyarat Tangan', 'Tunjuk jari ke kamera, tahan sekejap untuk pilih.'], voice: ['Arahan Suara', 'Sebut jawapan dengan kuat, contoh “dua puluh empat”.'] },
     stats: { stars: 'Bintang', mastered: 'Sifir dikuasai', best: 'Rekod cabaran', carrots: 'Lobak merah' },
     who: { title: 'Siapa bermain?', add: 'Tambah pemain', addTitle: 'Pemain baharu', editTitle: 'Ubah pemain', edit: 'Ubah', nameLbl: 'Nama', namePh: 'Contoh: Aisyah', colorLbl: 'Warna', save: 'Simpan', cancel: 'Batal', del: 'Padam pemain', delConfirm: n => `Padam ${n}? Semua bintang dan lobak merah ${n} akan hilang.`, delYes: 'Ya, padam', player: i => `Pemain ${i}`, hello: n => `Hai ${n}! Jom main.`, reset: 'Padam semua pemain di peranti ini', resetNote: 'Nama dan markah disimpan dalam peranti ini sahaja. Orang lain yang buka pautan Timesy di peranti mereka tidak nampak data ini.', resetMsg: 'Semua nama, bintang, lobak merah dan barang almari di peranti ini akan dipadam. Timesy akan bermula semula seperti baharu.', resetYes: 'Ya, padam semua', resetDone: 'Semua pemain sudah dipadam. Timesy bermula semula.' },
     rv: { title: 'Ulang Kaji Pintar', btn: 'Ulang kaji pintar', weak: n => `${n} soalan perlu latihan`, none: 'Tiada soalan sukar. Hebat!', empty: 'Main kuiz dahulu. Timesy akan ingat soalan yang sukar.', titles: ['Teruskan berlatih!', 'Bagus!', 'Hebat!', 'Cemerlang!'], resMsg: (s, left) => `Kamu jawab ${s} daripada 12 betul. ` + (left ? `Masih ada ${left} soalan untuk dilatih.` : 'Semua soalan sukar sudah dikuasai!') },
     carrotsEarned: n => `Kamu dapat ${n} lobak merah!`,
+    map: { next: n => `Yay! Jom ke Sifir ${n}!`, allDone: 'Hebat! Semua 12 sifir sudah dikuasai. Kamu juara!' },
+    combo: ['HEBAT!', 'SUPER!', 'LUAR BIASA!', 'JUARA!'], streakSmall: n => `${n} betul berturut-turut`,
+    poke: ['Hehe, geli!', 'Jom kira sama-sama!', 'Saya suka lobak merah!', 'Kamu pandai!', 'Lompat, lompat!'],
+    bl: { title: 'Pop Belon', desc: 'Pecahkan belon jawapan yang betul sebelum ia terbang!', score: 'Skor', lives: 'Nyawa', unit: 'belon', start: 'Belon datang!', wrong: (k, n, a) => `Alamak! ${k} × ${n} = ${a}`, miss: (k, n, a) => `Terlepas! ${k} × ${n} = ${a}`, noBalloon: v => `Tiada belon ${v}. Cuba lagi!`, titleNew: 'Rekod baharu!', good: 'Hebat!', ok: 'Bagus!', msg: s => `Kamu pecahkan ${s} belon yang betul.`, best: b => ` Rekod terbaik kamu: ${b}.` },
     closet: { title: 'Almari Timesy', sub: 'Jawab soalan dengan betul untuk kumpul lobak merah. Tekan barang untuk beli, pakai atau tanggalkan.', hats: 'Topi & hiasan kepala', face: 'Muka', bg: 'Latar', wear: 'Pakai', worn: 'Dipakai', need: n => `Perlu ${n} lagi`, bought: n => `${n} sudah dibeli!`, short: n => `Kumpul ${n} lobak merah lagi untuk beli barang ini.`, info: (c, o) => `${c} lobak merah · ${o} barang` },
     chalTitle: 'Cabaran 60 saat', chalDesc: 'Sifir campur 2 hingga 12. Jawab seberapa banyak yang boleh!', rec: 'Rekod', fist: 'Genggam',
     installCta: 'Pasang di telefon & komputer', installSub: 'Android, iPhone & iPad, Windows dan Mac. Tekan untuk panduan.',
     back: 'Menu', exit: 'Keluar', read: 'Baca sifir', stop: 'Berhenti',
     startQuiz: n => `Mula Kuiz Sifir ${n}`, quizTitle: n => `Kuiz Sifir <span class="numpill">${n}</span>`, chTitle: 'Cabaran 60 saat',
-    caption: (k, n) => `${k} kumpulan ${n} = ${k * n}`,
+    caption: (k, n) => `${k} bakul, setiap satu ${n} lobak merah = ${k * n}`,
     sec: 'saat', correct: 'Betul', inARow: 'berturut-turut',
     praise: ['Betul!', 'Hebat!', 'Pandai!', 'Bagus!', 'Syabas!', 'Tepat sekali!', 'Bijak!'],
     streakMsg: (p, s) => `${p} ${s} betul berturut-turut!`,
@@ -933,10 +1145,11 @@ const I18N = {
     chMsg: s => `Kamu jawab ${s} soalan betul dalam 60 saat.`, chBest: b => ` Rekod terbaik kamu: ${b}.`, correctUnit: 'betul',
     again: 'Main lagi', learnNext: n => `Belajar Sifir ${n}`, review: n => `Ulang kaji Sifir ${n}`, menu: 'Menu utama', notX: v => `(bukan ${v})`,
     hints: {
-      home: { touch: 'Sentuh satu sifir untuk mula belajar.', gesture: 'Tunjuk <b>1–10 jari</b> dan tahan untuk pilih sifir. <b>11</b> = 1 jari setiap tangan. <b>12</b> = 1 jari (kiri) + 2 jari (kanan). <b>Genggam tangan</b> untuk Cabaran.', voice: 'Sebut <b>“sifir lima”</b> untuk belajar, <b>“kuiz lima”</b> untuk kuiz, atau <b>“cabaran”</b>.' },
-      learn: { touch: 'Sentuh satu baris untuk lihat gambar kumpulannya.', gesture: 'Tunjuk jari untuk pilih baris (4 jari = baris 4). Baris <b>11</b> = 1 + 1 jari, baris <b>12</b> = 1 + 2 jari (dua tangan). <b>Genggam tangan</b> untuk mula kuiz.', voice: 'Sebut nombor, contoh <b>“empat”</b>. Sebut <b>“baca”</b> untuk dengar sifir, <b>“kuiz”</b> untuk mula kuiz.' },
+      home: { touch: 'Sentuh satu tahap di peta untuk mula belajar.', gesture: 'Tunjuk <b>1–10 jari</b> dan tahan untuk pilih sifir. <b>11</b> = 1 jari setiap tangan. <b>12</b> = 1 jari (kiri) + 2 jari (kanan). <b>Genggam tangan</b> untuk Cabaran.', voice: 'Sebut <b>“sifir lima”</b> untuk belajar, <b>“kuiz lima”</b> untuk kuiz, <b>“cabaran”</b> atau <b>“belon”</b>.' },
+      learn: { touch: 'Sentuh satu baris dan lihat lobak merah jatuh ke dalam bakul.', gesture: 'Tunjuk jari untuk pilih baris (4 jari = baris 4). Baris <b>11</b> = 1 + 1 jari, baris <b>12</b> = 1 + 2 jari (dua tangan). <b>Genggam tangan</b> untuk mula kuiz.', voice: 'Sebut nombor, contoh <b>“empat”</b>. Sebut <b>“baca”</b> untuk dengar sifir, <b>“kuiz”</b> untuk mula kuiz.' },
       quiz: { touch: 'Sentuh jawapan yang betul.', gesture: 'Tunjuk <b>1, 2, 3 atau 4 jari</b> dan tahan untuk pilih jawapan.', voice: 'Sebut jawapan dengan kuat, contoh <b>“dua puluh lapan”</b>. Sebut <b>“ulang”</b> untuk dengar soalan lagi.' },
-      result: { touch: 'Pilih apa yang kamu mahu buat seterusnya.', gesture: 'Tunjuk jari ikut nombor pada butang.', voice: 'Sebut <b>“main lagi”</b>, <b>“seterusnya”</b> atau <b>“menu”</b>.' }
+      result: { touch: 'Pilih apa yang kamu mahu buat seterusnya.', gesture: 'Tunjuk jari ikut nombor pada butang.', voice: 'Sebut <b>“main lagi”</b>, <b>“seterusnya”</b> atau <b>“menu”</b>.' },
+      balloon: { touch: 'Sentuh belon yang ada jawapan betul sebelum ia terbang!', gesture: 'Tunjuk <b>1–4 jari</b> ikut nombor pada belon, dan tahan sekejap.', voice: 'Sebut jawapan dengan kuat, contoh <b>“dua puluh empat”</b>.' }
     },
     bubble: { touch: 'Hai, saya Timesy si arnab! Jom hafal sifir sambil bermain.', gesture: 'Hai, saya Timesy! Angkat jari ke kamera, nanti saya kira.', voice: 'Hai, saya Timesy! Cakap dengan kuat, saya sedang mendengar.' },
     camera: 'Kamera', microphone: 'Mikrofon', fingers: 'jari',
@@ -992,19 +1205,23 @@ const I18N = {
   },
   en: {
     sub: 'Times tables 1 to 12 · Bilingual',
-    modeTitle: 'How to play', pick: 'Choose a times table', tileK: 'Table', tableWord: 'Table',
+    modeTitle: 'How to play', pick: 'Times Table Island', mapNote: 'Get 3 stars to master a table. Timesy hops to the next level!', gamesTitle: 'Games', tileK: 'Table', tableWord: 'Table',
     seg: { touch: 'Touch', gesture: 'Hands', voice: 'Voice' },
     modes: { touch: ['Touch', 'Tap the answer on the screen.'], gesture: ['Hand Gestures', 'Show your fingers to the camera and hold to choose.'], voice: ['Voice Commands', 'Say the answer out loud, like “twenty-four”.'] },
     stats: { stars: 'Stars', mastered: 'Tables mastered', best: 'Challenge best', carrots: 'Carrots' },
     who: { title: 'Who’s playing?', add: 'Add player', addTitle: 'New player', editTitle: 'Edit player', edit: 'Edit', nameLbl: 'Name', namePh: 'For example: Aisyah', colorLbl: 'Colour', save: 'Save', cancel: 'Cancel', del: 'Delete player', delConfirm: n => `Delete ${n}? All of ${n}’s stars and carrots will be lost.`, delYes: 'Yes, delete', player: i => `Player ${i}`, hello: n => `Hi ${n}! Let’s play.`, reset: 'Delete all players on this device', resetNote: 'Names and scores are saved on this device only. People who open the Timesy link on their own device cannot see them.', resetMsg: 'All names, stars, carrots and closet items on this device will be deleted. Timesy will start fresh.', resetYes: 'Yes, delete all', resetDone: 'All players were deleted. Timesy has started fresh.' },
     rv: { title: 'Smart Review', btn: 'Smart review', weak: n => `${n} question${n === 1 ? '' : 's'} to practise`, none: 'No tricky questions. Great job!', empty: 'Play a quiz first. Timesy will remember the tricky questions.', titles: ['Keep practising!', 'Good job!', 'Great!', 'Excellent!'], resMsg: (s, left) => `You got ${s} out of 12. ` + (left ? `${left} question${left === 1 ? '' : 's'} still to practise.` : 'You have mastered all the tricky questions!') },
     carrotsEarned: n => `You earned ${n} carrot${n === 1 ? '' : 's'}!`,
+    map: { next: n => `Yay! On to Table ${n}!`, allDone: 'Amazing! You have mastered all 12 tables. You’re a champion!' },
+    combo: ['GREAT!', 'SUPER!', 'AMAZING!', 'CHAMPION!'], streakSmall: n => `${n} in a row`,
+    poke: ['Hehe, that tickles!', 'Let’s count together!', 'I love carrots!', 'You’re so clever!', 'Hop, hop!'],
+    bl: { title: 'Balloon Pop', desc: 'Pop the balloon with the right answer before it floats away!', score: 'Score', lives: 'Lives', unit: 'balloons', start: 'Here come the balloons!', wrong: (k, n, a) => `Oops! ${k} × ${n} = ${a}`, miss: (k, n, a) => `It got away! ${k} × ${n} = ${a}`, noBalloon: v => `No balloon says ${v}. Try again!`, titleNew: 'New record!', good: 'Great!', ok: 'Good job!', msg: s => `You popped ${s} right balloon${s === 1 ? '' : 's'}.`, best: b => ` Your best: ${b}.` },
     closet: { title: 'Timesy’s Closet', sub: 'Answer correctly to collect carrots. Tap an item to buy, wear or take it off.', hats: 'Hats & hair', face: 'Face', bg: 'Background', wear: 'Wear', worn: 'Wearing', need: n => `Need ${n} more`, bought: n => `${n} bought!`, short: n => `Collect ${n} more carrots to buy this.`, info: (c, o) => `${c} carrot${c === 1 ? '' : 's'} · ${o} item${o === 1 ? '' : 's'}` },
     chalTitle: '60-second Challenge', chalDesc: 'Mixed tables 2 to 12. Answer as many as you can!', rec: 'Best', fist: 'Fist',
     installCta: 'Install on phones & computers', installSub: 'Android, iPhone & iPad, Windows and Mac. Tap for the steps.',
     back: 'Menu', exit: 'Exit', read: 'Read aloud', stop: 'Stop',
     startQuiz: n => `Start Table ${n} Quiz`, quizTitle: n => `Table <span class="numpill">${n}</span> Quiz`, chTitle: '60-second Challenge',
-    caption: (k, n) => `${k} groups of ${n} = ${k * n}`,
+    caption: (k, n) => `${k} baskets of ${n} carrots = ${k * n}`,
     sec: 'sec', correct: 'Correct', inARow: 'in a row',
     praise: ['Correct!', 'Great!', 'Well done!', 'Super!', 'Brilliant!', 'Spot on!', 'Clever!'],
     streakMsg: (p, s) => `${p} ${s} in a row!`,
@@ -1017,10 +1234,11 @@ const I18N = {
     chMsg: s => `You answered ${s} correctly in 60 seconds.`, chBest: b => ` Your best: ${b}.`, correctUnit: 'correct',
     again: 'Play again', learnNext: n => `Learn Table ${n}`, review: n => `Review Table ${n}`, menu: 'Main menu', notX: v => `(not ${v})`,
     hints: {
-      home: { touch: 'Tap a times table to start learning.', gesture: 'Show <b>1–10 fingers</b> and hold to pick a table. <b>11</b> = 1 finger on each hand. <b>12</b> = 1 finger (left) + 2 fingers (right). <b>Make a fist</b> for the Challenge.', voice: 'Say <b>“table five”</b> to learn, <b>“quiz five”</b> for a quiz, or <b>“challenge”</b>.' },
-      learn: { touch: 'Tap a row to see it as groups.', gesture: 'Show fingers to pick a row (4 fingers = row 4). Row <b>11</b> = 1 + 1 fingers, row <b>12</b> = 1 + 2 fingers (two hands). <b>Make a fist</b> to start the quiz.', voice: 'Say a number, like <b>“four”</b>. Say <b>“read”</b> to hear the table, <b>“quiz”</b> to start the quiz.' },
+      home: { touch: 'Tap a level on the map to start learning.', gesture: 'Show <b>1–10 fingers</b> and hold to pick a table. <b>11</b> = 1 finger on each hand. <b>12</b> = 1 finger (left) + 2 fingers (right). <b>Make a fist</b> for the Challenge.', voice: 'Say <b>“table five”</b> to learn, <b>“quiz five”</b> for a quiz, <b>“challenge”</b> or <b>“balloons”</b>.' },
+      learn: { touch: 'Tap a row and watch the carrots drop into the baskets.', gesture: 'Show fingers to pick a row (4 fingers = row 4). Row <b>11</b> = 1 + 1 fingers, row <b>12</b> = 1 + 2 fingers (two hands). <b>Make a fist</b> to start the quiz.', voice: 'Say a number, like <b>“four”</b>. Say <b>“read”</b> to hear the table, <b>“quiz”</b> to start the quiz.' },
       quiz: { touch: 'Tap the right answer.', gesture: 'Show <b>1, 2, 3 or 4 fingers</b> and hold to choose.', voice: 'Say the answer out loud, like <b>“twenty-eight”</b>. Say <b>“repeat”</b> to hear the question again.' },
-      result: { touch: 'Choose what to do next.', gesture: 'Show the number of fingers on the button.', voice: 'Say <b>“play again”</b>, <b>“next”</b> or <b>“menu”</b>.' }
+      result: { touch: 'Choose what to do next.', gesture: 'Show the number of fingers on the button.', voice: 'Say <b>“play again”</b>, <b>“next”</b> or <b>“menu”</b>.' },
+      balloon: { touch: 'Tap the balloon with the right answer before it floats away!', gesture: 'Show <b>1–4 fingers</b> to match the number on a balloon, and hold.', voice: 'Say the answer out loud, like <b>“twenty-four”</b>.' }
     },
     bubble: { touch: 'Hi, I’m Timesy the bunny! Let’s learn times tables while we play.', gesture: 'Hi, I’m Timesy! Hold up your fingers to the camera and I’ll count them.', voice: 'Hi, I’m Timesy! Speak up, I’m listening.' },
     camera: 'Camera', microphone: 'Microphone', fingers: 'fingers',
@@ -1153,10 +1371,14 @@ $$('.i-mic').forEach(e => { e.innerHTML = MIC; });
 $$('.i-tap').forEach(e => { e.innerHTML = TAP; });
 $('#icStar').innerHTML = STAR.replace('<svg', '<svg fill="currentColor"');
 $('#icMedal').innerHTML = MEDAL; $('#icTrophy').innerHTML = TROPHY; $('#icCarrot').innerHTML = CARROT;
-$('#icReview').innerHTML = REVIEW_IC; $('#icCloset').innerHTML = HANGER_IC; $('.ci').innerHTML = CARROT;
+$('#icReview').innerHTML = REVIEW_IC; $('#icCloset').innerHTML = HANGER_IC; $$('.ci').forEach(e => { e.innerHTML = CARROT; });
 $('#devIcons').innerHTML = ['android', 'ios', 'windows', 'mac'].map(p => `<span style="background:${DEV_COLOR[p]}">${DEV[p]}</span>`).join('');
 
-const setMood = (el, m) => { el.dataset.mood = ''; void el.offsetWidth; el.dataset.mood = m; };
+const setMood = (el, m) => {
+  if (!el) return;
+  el.dataset.mood = ''; void el.offsetWidth; el.dataset.mood = m;
+  clearTimeout(el._mt); if (m === 'happy') el._mt = setTimeout(() => { el.dataset.mood = ''; }, 1000);
+};
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const LIGHT = new Set([3, 4]);
 function setSifirColor(n) {
@@ -1180,6 +1402,21 @@ function tone(f, t, d, type = 'triangle', g = .2) {
   v.gain.setValueAtTime(.0001, s); v.gain.exponentialRampToValueAtTime(g, s + .015); v.gain.exponentialRampToValueAtTime(.0001, s + d);
   o.connect(v).connect(a.destination); o.start(s); o.stop(s + d + .05);
 }
+function noise(d, f, g) {
+  const a = audio(); if (!a) return;
+  const n = Math.floor(a.sampleRate * d), buf = a.createBuffer(1, n, a.sampleRate), ch = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3);
+  const src = a.createBufferSource(), bp = a.createBiquadFilter(), v = a.createGain();
+  src.buffer = buf; bp.type = 'bandpass'; bp.frequency.value = f; bp.Q.value = .7; v.gain.value = g;
+  src.connect(bp).connect(v).connect(a.destination); src.start();
+}
+function glide(f0, f1, d, g, t = 0) {
+  const a = audio(); if (!a) return;
+  const o = a.createOscillator(), v = a.createGain(), s = a.currentTime + t;
+  o.type = 'sine'; o.frequency.setValueAtTime(f0, s); o.frequency.exponentialRampToValueAtTime(f1, s + d);
+  v.gain.setValueAtTime(.0001, s); v.gain.exponentialRampToValueAtTime(g, s + .02); v.gain.exponentialRampToValueAtTime(.0001, s + d + .05);
+  o.connect(v).connect(a.destination); o.start(s); o.stop(s + d + .1);
+}
 function sfx(k) {
   if (!store.sound) return;
   try {
@@ -1188,6 +1425,11 @@ function sfx(k) {
     else if (k === 'tap') tone(560, 0, .08, 'sine', .12);
     else if (k === 'tick') tone(1180, 0, .05, 'sine', .05);
     else if (k === 'win') [523, 659, 784, 1047].forEach((f, i) => tone(f, i * .12, .32));
+    else if (k === 'coin') { tone(1320, 0, .07, 'sine', .1); tone(1760, .06, .14, 'sine', .1); }
+    else if (k === 'combo') [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => tone(f, i * .065, .24, 'triangle', .16));
+    else if (k === 'pop') { noise(.18, 1500, .55); tone(300, 0, .07, 'sine', .14); }
+    else if (k === 'hop') glide(380, 820, .18, .14);
+    else if (k === 'boing') { glide(260, 620, .12, .14); glide(620, 380, .16, .1, .12); }
   } catch (e) {}
 }
 
@@ -1272,15 +1514,17 @@ function cfStep() {
 const burstFrom = (el, n, spread) => { const r = el.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, n, spread); };
 
 /* ================= screens ================= */
-const screens = { home: $('#scrHome'), learn: $('#scrLearn'), quiz: $('#scrQuiz'), result: $('#scrResult') };
+const screens = { home: $('#scrHome'), learn: $('#scrLearn'), quiz: $('#scrQuiz'), balloon: $('#scrBalloon'), result: $('#scrResult') };
 function show(name) {
   for (const [k, el] of Object.entries(screens)) el.hidden = k !== name;
   if (name !== 'learn' && S.reciting) stopRecite();
-  if (name !== 'quiz' && Q) { stopTimer(); clearTimeout(Q.timer); }
+  if (name !== 'quiz' && name !== 'balloon' && Q) { stopTimer(); clearTimeout(Q.timer); }
+  if (name !== 'balloon') blStop();
   S.screen = name; body.dataset.screen = name;
   clearHold();
   renderHints();
   window.scrollTo(0, 0);
+  if (name === 'home') requestAnimationFrame(layoutMap);
 }
 function renderHints() {
   const ic = S.mode === 'gesture' ? handSVG(5) : S.mode === 'voice' ? MIC : TAP;
@@ -1298,7 +1542,8 @@ function applyLang() {
   syncSound();
   renderHome(); renderHints();
   if (S.screen === 'learn') { relabelLearn(); selectRow(S.row, false); }
-  if (Q) renderQuizTitle();
+  if (Q && Q.kind !== 'balloon') renderQuizTitle();
+  if (Q && Q.kind === 'balloon') renderLives();
   if (S.screen === 'result' && S.lastResult) renderResult();
   $('#reciteLbl').textContent = S.reciting ? T.stop : T.read;
   if (S.mode === 'gesture') camUI(S.camState);
@@ -1312,17 +1557,9 @@ function setLang(l) { if (l === S.lang) return; hush(); S.lang = l; store.lang =
 
 /* ---------- home ---------- */
 function renderHome() {
-  const T = L(), p = P(), t = $('#tiles'); t.innerHTML = '';
-  for (let n = 1; n <= 12; n++) {
-    const b = document.createElement('button');
-    const st = p.stars[n] || 0;
-    b.className = 'tile' + (LIGHT.has(n) ? ' lt' : ''); b.dataset.finger = n;
-    b.style.setProperty('--c', `var(--c${n})`);
-    b.setAttribute('aria-label', `${T.tileK} ${n}, ${st} ★`);
-    b.innerHTML = `<span class="fbadge">${handsIcon(n)}${n}</span><span class="tile-k">${T.tileK}</span><span class="tile-n">${n}</span><span class="stars">${starsHTML(st)}</span>`;
-    b.addEventListener('click', () => { sfx('tap'); openLearn(n); });
-    t.append(b);
-  }
+  const T = L(), p = P();
+  renderMap();
+  $('#blBest').textContent = p.balloonBest || 0;
   const total = Object.values(p.stars).reduce((a, b) => a + b, 0);
   const mastered = Object.values(p.stars).filter(v => v >= 3).length;
   $('#stStars').innerHTML = `${total}<small>/36</small>`;
@@ -1371,14 +1608,7 @@ function selectRow(k, speak = true) {
   const n = S.sifir; S.row = k;
   $$('.row').forEach(r => r.setAttribute('aria-current', String(+r.dataset.k === k)));
   $('#eqA').textContent = k; $('#eqB').textContent = n; $('#eqC').textContent = k * n;
-  const dots = $('#dots'); dots.innerHTML = '';
-  const tot = k * n; dots.style.setProperty('--ds', (tot <= 20 ? 20 : tot <= 40 ? 17 : tot <= 70 ? 14 : tot <= 100 ? 12 : 10) + 'px');
-  for (let g = 0; g < k; g++) {
-    const grp = document.createElement('div');
-    grp.className = 'grp'; grp.style.setProperty('--cols', n <= 5 ? n : n <= 10 ? 5 : 6); grp.style.animationDelay = (g * 45) + 'ms';
-    for (let i = 0; i < n; i++) { const d = document.createElement('span'); d.className = 'dot'; grp.append(d); }
-    dots.append(grp);
-  }
+  fillBaskets(k, n);
   $('#caption').textContent = L().caption(k, n);
   $('#addition').textContent = Array(k).fill(n).join(' + ') + ' = ' + (k * n);
   if (speak) { sfx('tap'); say(L().tts.full(k, n)); }
@@ -1415,6 +1645,7 @@ function resetQuizChrome(ch) {
   $('#streak').hidden = true;
   $('#pips').hidden = ch; $('#chTime').hidden = !ch; $('#chScore').hidden = !ch; $('#timebar').hidden = !ch;
   $('#chScoreN').textContent = 0; $('#qCarrotsN').textContent = 0;
+  $('#streak').classList.remove('fire');
 }
 const newQ = (kind, extra) => Object.assign({ kind, i: -1, score: 0, streak: 0, wrong: [], marks: [], earned: 0 }, extra);
 function startQuiz(n) {
@@ -1497,14 +1728,15 @@ function answer(v, btn) {
   noteFact(Q.k, Q.n2, ok);
   if (ok) {
     Q.score++; Q.streak++; Q.earned++; P().carrots++;
-    $('#qCarrotsN').textContent = Q.earned;
+    const earned = Q.earned;
     fb.className = 'fb ok';
     const p = T.praise[Math.floor(Math.random() * T.praise.length)];
     fb.textContent = Q.streak >= 3 ? T.streakMsg(p, Q.streak) : p;
     setMood(m, 'happy'); sfx('ok');
     burstFrom(btn || slot, Q.streak >= 3 ? 50 : 30, .8);
-    floatCarrot(btn || slot);
-    if (!ch) say(p);
+    flyCarrot(btn || slot, $('#qCarrots'), () => { $('#qCarrotsN').textContent = earned; });
+    const combo = comboFx(Q.streak);
+    if (!ch) say(combo ? sayable(combo) : p);
   } else {
     Q.streak = 0;
     if (btn) { btn.classList.add('is-wrong'); btn.insertAdjacentHTML('beforeend', `<span class="mark no">${CROSS}</span>`); }
@@ -1516,6 +1748,7 @@ function answer(v, btn) {
   }
   save();
   $('#streak').hidden = Q.streak < 2; $('#streakN').textContent = Q.streak;
+  $('#streak').classList.toggle('fire', Q.streak >= 3);
   if (ch) $('#chScoreN').textContent = Q.score;
   renderPips();
   Q.timer = setTimeout(nextQ, ok ? (ch ? 700 : 1400) : (ch ? 1500 : 2800));
@@ -1548,6 +1781,9 @@ function finish() {
   } else if (kind === 'ch') {
     R.best = sc > (p.best || 0) && sc > 0;
     if (R.best) { p.best = sc; bonus = 5; }
+  } else if (kind === 'balloon') {
+    R.best = sc > (p.balloonBest || 0) && sc > 0;
+    if (R.best) { p.balloonBest = sc; bonus = 5; }
   } else {
     R.stars = sc >= 12 ? 3 : sc >= 10 ? 2 : sc >= 6 ? 1 : 0;
     if (sc === Q.total) bonus = 5;
@@ -1557,9 +1793,10 @@ function finish() {
   S.lastResult = R;
   const { title, msg } = renderResult();
   show('result');
-  setMood($('#rMascot'), R.ch || R.stars >= 1 ? 'happy' : 'sad');
+  const happy = R.ch ? true : R.kind === 'balloon' ? sc > 0 : R.stars >= 1;
+  setMood($('#rMascot'), happy ? 'happy' : 'sad');
   sfx('win');
-  if (R.ch ? sc > 0 : R.stars >= 1) setTimeout(() => burst(innerWidth / 2, innerHeight * .3, R.stars === 3 || R.best ? 130 : 70, 1.3), 150);
+  if (R.ch || R.kind === 'balloon' ? sc > 0 : R.stars >= 1) setTimeout(() => burst(innerWidth / 2, innerHeight * .3, R.stars === 3 || R.best ? 130 : 70, 1.3), 150);
   say(`${title} ${msg}`);
 }
 function renderResult() {
@@ -1571,6 +1808,9 @@ function renderResult() {
   } else if (R.kind === 'review') {
     title = T.rv.titles[R.stars];
     msg = T.rv.resMsg(R.sc, weakFacts().length);
+  } else if (R.kind === 'balloon') {
+    title = R.best ? T.bl.titleNew : R.sc >= 10 ? T.bl.good : T.bl.ok;
+    msg = T.bl.msg(R.sc) + (R.best ? '' : T.bl.best(P().balloonBest || 0));
   } else {
     title = R.best ? T.chNew : R.sc >= 10 ? T.chGood : T.chOk;
     msg = T.chMsg(R.sc) + (R.best ? '' : T.chBest(P().best || 0));
@@ -1578,7 +1818,7 @@ function renderResult() {
   $('#rTitle').textContent = title;
   $('#rMsg').textContent = msg;
   const rs = $('#rStars'); rs.hidden = R.kind !== 'sifir'; rs.innerHTML = starsHTML(R.stars);
-  $('#rScore').innerHTML = R.ch ? `${R.sc}<small> ${T.correctUnit}</small>` : `${R.sc}<small>/12</small>`;
+  $('#rScore').innerHTML = R.ch ? `${R.sc}<small> ${T.correctUnit}</small>` : R.kind === 'balloon' ? `${R.sc}<small> ${T.bl.unit}</small>` : `${R.sc}<small>/12</small>`;
   const re = $('#rEarned'); re.hidden = !R.carrots; re.innerHTML = CARROT + esc(T.carrotsEarned(R.carrots));
   const rv = $('#rReview');
   rv.innerHTML = R.wrong.slice(0, 8).map(w => `<li>${w.k} × ${w.n} = ${w.ans}${w.got != null ? ` <span>${T.notX(w.got)}</span>` : ''}</li>`).join('');
@@ -1586,6 +1826,7 @@ function renderResult() {
   const nx = R.n % 12 + 1, weak = weakFacts().length;
   const acts = R.kind === 'ch' ? [['again', T.again, startChallenge], ['menu', T.menu, goHome]]
     : R.kind === 'review' ? [['again', T.again, startReview], ['menu', T.menu, goHome]]
+    : R.kind === 'balloon' ? [['again', T.again, startBalloon], ['menu', T.menu, goHome]]
     : [['again', T.again, () => startQuiz(R.n)],
        R.stars >= 2 ? ['next', T.learnNext(nx), () => openLearn(nx)] : ['next', T.review(R.n), () => openLearn(R.n)],
        ['menu', T.menu, goHome]];
@@ -1876,7 +2117,8 @@ const KW = {
   next: ['seterusnya', 'next', 'belajar', 'learn'],
   again: ['lagi', 'ulang', 'semula', 'main', 'again', 'play', 'retry', 'replay'],
   review: ['ulang kaji', 'ulangkaji', 'latihan', 'review', 'practice', 'practise'],
-  closet: ['almari', 'closet', 'wardrobe', 'kedai', 'shop']
+  closet: ['almari', 'closet', 'wardrobe', 'kedai', 'shop'],
+  balloon: ['belon', 'balloon', 'balloons', 'pop']
 };
 function onVoice(alts) {
   const norm = alts.map(a => ' ' + a.toLowerCase().replace(/[^a-z0-9\s]/g, ' ') + ' ');
@@ -1889,6 +2131,7 @@ function onVoice(alts) {
       if (has('review')) return startReview();
       if (has('closet')) return openCloset();
       if (has('challenge')) return startChallenge();
+      if (has('balloon')) return startBalloon();
       if (nums.length && nums[0] >= 1 && nums[0] <= 12) { sfx('tap'); return has('quiz') ? startQuiz(nums[0]) : openLearn(nums[0]); }
       break;
     case 'learn':
@@ -1905,6 +2148,15 @@ function onVoice(alts) {
         return answer(v, $$('.opt').find(b => +b.dataset.v === v));
       }
       if (Q && !Q.answered) { $('#fb').className = 'fb'; $('#fb').textContent = L().noNum; }
+      return;
+    case 'balloon':
+      if (has('stop')) return goHome();
+      if (nums.length && Q && Q.kind === 'balloon' && !Q.answered) {
+        const live = BL.balloons.filter(b => !b.popped && !b.gone);
+        const v = live.some(b => b.v === Q.ans) && nums.includes(Q.ans) ? Q.ans : nums.find(x => live.some(b => b.v === x));
+        if (v != null) return blPop(live.find(b => b.v === v));
+        const msg = $('#blMsg'); msg.className = 'bl-msg no'; msg.innerHTML = `<span>${esc(L().bl.noBalloon(nums[0]))}</span>`;
+      }
       return;
     case 'result':
       if (has('home')) return click('[data-act="menu"]');
@@ -2103,6 +2355,405 @@ $('#btnCopy').addEventListener('click', async () => {
   setTimeout(() => { b.textContent = L().help.copy; }, 1600);
 });
 
+/* ================= fun & motion: flying carrots, Timesy reactions, combos, 3D tilt ================= */
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const FLAME = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.6 2c.7 3.3-1.2 5-2.7 6.7C8.3 10.5 7 12.3 7 15a5 5 0 0 0 10 0c0-2.4-1.1-3.8-2-5.1.1 1.6-.4 2.8-1.6 3.4.5-3.7-1.1-7.8-.8-11.3z" fill="#FFE27A"/><path d="M12 12.4c-1.6 1.4-2.6 2.5-2.6 4.1a2.6 2.6 0 0 0 5.2 0c0-1.5-.9-2.5-1.6-3.4-.2.9-.6 1.4-1.2 1.6.4-.8.4-1.5.2-2.3z" fill="#FFFFFF"/></svg>';
+const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.7l-1.4-1.3C5.4 14.7 2 11.6 2 7.8 2 4.7 4.4 2.3 7.5 2.3c1.7 0 3.4.8 4.5 2.1 1.1-1.3 2.8-2.1 4.5-2.1 3.1 0 5.5 2.4 5.5 5.5 0 3.8-3.4 6.9-8.6 11.6z"/></svg>';
+const FLAG = '<svg viewBox="0 0 24 28" aria-hidden="true"><path d="M5 3v23" stroke="#7A5530" stroke-width="2.6" stroke-linecap="round"/><path d="M6.2 3.6h13.6l-3.6 4.6 3.6 4.6H6.2z" fill="#FFD23F" stroke="#C99200" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.6 8.2l1.2 1.2 2.4-2.6" fill="none" stroke="#7A4A00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const BALLOON = '<svg viewBox="0 0 100 170" aria-hidden="true"><path class="str" d="M50 114c-7 12 7 21 0 33s6 15 1 23" fill="none" stroke-width="2.4" stroke-linecap="round"/><path d="M50 4C24 4 6 26 6 54c0 30 22 52 40 56l-5 8h18l-5-8c18-4 40-26 40-56C94 26 76 4 50 4z" style="fill:var(--b)"/><path d="M50 4C24 4 6 26 6 54c0 30 22 52 40 56l-5 8h18l-5-8c18-4 40-26 40-56C94 26 76 4 50 4z" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="2"/><ellipse cx="31" cy="33" rx="8" ry="15" fill="#fff" opacity=".38" transform="rotate(24 31 33)"/></svg>';
+const BALLOON_IC = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 29c1 5 3 9 5 16M35 27c-1 6-3 11-6 18M24 25c0 7 0 13-1 20" stroke="#8A93A6" stroke-width="1.6" fill="none" stroke-linecap="round"/><ellipse cx="13" cy="18" rx="9" ry="11" fill="#F03E5A"/><ellipse cx="35" cy="16" rx="9" ry="11" fill="#3B82F6"/><ellipse cx="24" cy="13" rx="9.5" ry="11.5" fill="#FFB800"/><ellipse cx="20.5" cy="8.5" rx="2.4" ry="3.6" fill="#fff" opacity=".55"/></svg>';
+document.documentElement.style.setProperty('--carrot', `url("data:image/svg+xml,${encodeURIComponent(CARROT.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '))}")`);
+$$('.flame').forEach(e => { e.innerHTML = FLAME; });
+$('#blIcon').innerHTML = BALLOON_IC;
+const sayable = w => w.charAt(0) + w.slice(1).toLowerCase();
+
+/* A carrot flies from where the answer was to the carrot counter, which bounces when it lands. */
+function bumpEl(el) { if (!el) return; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+function flyCarrot(from, to, done) {
+  const land = () => { bumpEl(to); sfx('coin'); if (done) done(); };
+  if (!from || !to || RM.matches || !to.offsetParent || !from.getBoundingClientRect().width) { land(); return; }
+  const a = from.getBoundingClientRect(), b = to.getBoundingClientRect();
+  const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2, x1 = b.left + 20, y1 = b.top + b.height / 2;
+  const cx = (x0 + x1) / 2 + (x1 > x0 ? -70 : 70), cy = Math.min(y0, y1) - 150;
+  const f = document.createElement('span'); f.className = 'fly'; f.innerHTML = CARROT + '<b>+1</b>';
+  body.append(f);
+  const frames = [];
+  for (let i = 0; i <= 14; i++) {
+    const t = i / 14, u = 1 - t;
+    const x = u * u * x0 + 2 * u * t * cx + t * t * x1, y = u * u * y0 + 2 * u * t * cy + t * t * y1;
+    frames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${(1 + Math.sin(t * Math.PI) * .6 - t * .25).toFixed(3)})` });
+  }
+  const an = f.animate(frames, { duration: 760, easing: 'cubic-bezier(.4,.05,.55,1)' });
+  let ended = false;
+  const fin = () => { if (ended) return; ended = true; f.remove(); land(); };
+  an.onfinish = fin; an.oncancel = fin; setTimeout(fin, 1200);
+}
+/* Hearts and stars burst out around Timesy. */
+function sparkle(el, n = 10) {
+  if (RM.matches || !el) return;
+  const r = el.getBoundingClientRect(); if (!r.width) return;
+  const cx = r.left + r.width / 2, cy = r.top + r.height * .42;
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('span'); s.className = 'spark';
+    s.innerHTML = i % 2 ? STAR.replace('<svg', '<svg fill="#FFC21A"') : HEART.replace('<svg', '<svg fill="#FF6FA3"');
+    body.append(s);
+    const ang = -Math.PI / 2 + (i / (n - 1) - .5) * Math.PI * 1.5 + (Math.random() - .5) * .3, d = r.width * .45 + 34 + Math.random() * 46;
+    const x = cx + Math.cos(ang) * d, y = cy + Math.sin(ang) * d;
+    const an = s.animate([
+      { transform: `translate(${cx}px,${cy}px) scale(.2)`, opacity: 0 },
+      { transform: `translate(${(cx + x) / 2}px,${(cy + y) / 2}px) scale(1.15)`, opacity: 1, offset: .35 },
+      { transform: `translate(${x}px,${y - 34}px) scale(.75) rotate(${Math.round((Math.random() - .5) * 70)}deg)`, opacity: 0 }
+    ], { duration: 950 + Math.random() * 350, delay: i * 35, easing: 'ease-out', fill: 'backwards' });
+    an.onfinish = () => s.remove(); setTimeout(() => s.remove(), 2000);
+  }
+}
+/* Tap Timesy: a wiggle, hearts and stars, and a friendly line. */
+let pokeN = 0;
+function pokeTimesy(m) {
+  const d = m.querySelector('.dress');
+  if (d && !RM.matches) { d.classList.remove('poke'); void d.offsetWidth; d.classList.add('poke'); setTimeout(() => d.classList.remove('poke'), 950); }
+  sparkle(m); sfx('boing');
+  if (m.id === 'homeMascot') askMotion();
+  if (['homeMascot', 'mapMascot', 'rMascot'].includes(m.id)) {
+    const lines = L().poke, line = lines[pokeN++ % lines.length];
+    if (S.screen === 'home') $('#homeBubble').textContent = line;
+    say(line);
+  }
+}
+document.addEventListener('click', e => {
+  const m = e.target.closest && e.target.closest('.mascot');
+  if (!m || m.classList.contains('mini')) return;
+  pokeTimesy(m);
+});
+
+/* Combos: a big stamp, a shake and a burst at 3, 5 and 10 in a row (then every 5). */
+function stamp(word, lvl, streak) {
+  $$('.stamp').forEach(x => x.remove());
+  const s = document.createElement('div'); s.className = 'stamp lv' + lvl; s.setAttribute('aria-hidden', 'true');
+  s.innerHTML = `<span class="rays"></span><b>${esc(word)}</b><small>${esc(L().streakSmall(streak))}</small>`;
+  body.append(s);
+  setTimeout(() => s.classList.add('out'), 1150); setTimeout(() => s.remove(), 1600);
+}
+function shakeApp(big) {
+  if (RM.matches) return;
+  app.classList.remove('shake-s', 'shake-l'); void app.offsetWidth; app.classList.add(big ? 'shake-l' : 'shake-s');
+  setTimeout(() => app.classList.remove('shake-s', 'shake-l'), 650);
+}
+function comboFx(streak) {
+  const i = streak === 3 ? 0 : streak === 5 ? 1 : streak === 10 ? 2 : streak > 10 && streak % 5 === 0 ? 3 : -1;
+  if (i < 0) return null;
+  const word = L().combo[i];
+  stamp(word, i, streak); shakeApp(i >= 1); sfx('combo');
+  setTimeout(() => burst(innerWidth / 2, innerHeight * .4, 50 + i * 30, 1.1 + i * .15), 140);
+  return word;
+}
+
+/* 3D tilt: cards lean toward the mouse or a finger; the banner and the map also follow the tilt of a phone. */
+const TILT = '.hero,.map,.challenge,.bl-card,.feature,.mode-card,.opt:not(:disabled)';
+let tiltEl = null;
+function tiltTo(el, e) {
+  const r = el.getBoundingClientRect(); if (!r.width) return;
+  const x = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), y = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+  const k = el.matches('.hero,.map') ? 5 : 10;
+  el.style.setProperty('--pry', ((x - .5) * 2 * k).toFixed(2) + 'deg');
+  el.style.setProperty('--prx', ((.5 - y) * 2 * k).toFixed(2) + 'deg');
+  el.style.setProperty('--gx', (x * 100).toFixed(1) + '%'); el.style.setProperty('--gy', (y * 100).toFixed(1) + '%');
+  if (!el.querySelector(':scope > .glare')) { const g = document.createElement('span'); g.className = 'glare'; g.setAttribute('aria-hidden', 'true'); el.append(g); }
+  el.classList.add('tilting');
+}
+function untilt(el) { if (!el) return; el.style.removeProperty('--prx'); el.style.removeProperty('--pry'); el.classList.remove('tilting'); }
+document.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse' || RM.matches) return;
+  const el = e.target.closest ? e.target.closest(TILT) : null;
+  if (el !== tiltEl) { untilt(tiltEl); tiltEl = el; }
+  if (el) tiltTo(el, e);
+}, { passive: true });
+document.addEventListener('mouseout', e => { if (!e.relatedTarget) { untilt(tiltEl); tiltEl = null; } });
+document.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse' || RM.matches) return;
+  const el = e.target.closest ? e.target.closest(TILT) : null;
+  if (el) { tiltTo(el, e); setTimeout(() => untilt(el), 300); }
+}, { passive: true });
+const DO = { b0: null, g0: null, tx: 0, ty: 0, x: 0, y: 0, raf: 0, asked: false };
+function orientFrame() {
+  DO.raf = 0;
+  DO.x += (DO.tx - DO.x) * .3; DO.y += (DO.ty - DO.y) * .3;
+  const r = document.documentElement.style;
+  r.setProperty('--dry', (DO.x * 6).toFixed(2) + 'deg'); r.setProperty('--drx', (-DO.y * 6).toFixed(2) + 'deg');
+}
+addEventListener('deviceorientation', e => {
+  if (RM.matches || e.beta == null || e.gamma == null) return;
+  if (DO.b0 == null) { DO.b0 = e.beta; DO.g0 = e.gamma; }
+  /* the resting angle slowly re-centres, so however the phone is held, holding it still looks flat */
+  DO.b0 += (e.beta - DO.b0) * .02; DO.g0 += (e.gamma - DO.g0) * .02;
+  DO.tx = Math.max(-1, Math.min(1, (e.gamma - DO.g0) / 15)); DO.ty = Math.max(-1, Math.min(1, (e.beta - DO.b0) / 15));
+  if (!DO.raf) DO.raf = requestAnimationFrame(orientFrame);
+});
+/* iPhone and iPad ask before sharing motion; ask once, when the child taps Timesy on the banner. */
+function askMotion() {
+  if (DO.asked || RM.matches || EMBEDDED) return; DO.asked = true;
+  const D = window.DeviceOrientationEvent;
+  if (D && typeof D.requestPermission === 'function') D.requestPermission().catch(() => {});
+}
+
+/* ================= adventure map: 12 levels on Times Table Island ================= */
+const MAP = { el: $('#map'), svg: $('#mapPath'), me: $('#mapMe'), pts: [], hopping: false, R: 36, size: 52 };
+const mapGoal = p => { for (let n = 1; n <= 12; n++) if ((p.stars[n] || 0) < 3) return n; return 12; };
+function renderMap() {
+  const T = L(), p = P(), box = $('#tiles'), goal = mapGoal(p);
+  box.innerHTML = '';
+  for (let n = 1; n <= 12; n++) {
+    const st = p.stars[n] || 0, b = document.createElement('button');
+    b.className = 'node' + (LIGHT.has(n) ? ' lt' : '') + (st >= 3 ? ' done' : '') + (n === goal && st < 3 ? ' goal' : '');
+    b.dataset.finger = n; b.dataset.n = n;
+    b.style.setProperty('--c', `var(--c${n})`);
+    b.setAttribute('aria-label', `${T.tileK} ${n}, ${st} ★`);
+    b.innerHTML = `<span class="fbadge">${handsIcon(n)}${n}</span>${st >= 3 ? `<span class="flag">${FLAG}</span>` : ''}<span class="nd"><span class="nk">${T.tileK}</span><span class="nn">${n}</span></span><span class="stars">${starsHTML(st)}</span>`;
+    b.addEventListener('click', () => { sfx('tap'); openLearn(n); });
+    box.append(b);
+  }
+  layoutMap();
+}
+function segs(pts) {
+  const out = [], f = v => v.toFixed(1);
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    out.push({ d: `C${f(c1[0])} ${f(c1[1])} ${f(c2[0])} ${f(c2[1])} ${f(p2[0])} ${f(p2[1])}`, p1, c1, c2, p2 });
+  }
+  return out;
+}
+const pathD = (pts, ss, upto) => `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}` + ss.slice(0, upto).map(s => s.d).join('');
+function rng(seed) { return () => { seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const DECO = {
+  tree: (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><rect class="tk" x="-3" y="-2" width="6" height="12" rx="2"/><circle class="tr2" cx="0" cy="-9" r="13"/><circle class="tr" cx="-4" cy="-13" r="10"/><circle class="tr" cx="5" cy="-10" r="8"/></g>`,
+  bush: (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><circle class="tr2" cx="-7" cy="0" r="7"/><circle class="tr" cx="0" cy="-3" r="8"/><circle class="tr2" cx="7" cy="0" r="6"/></g>`,
+  flower: (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><circle class="fl" cx="0" cy="-4" r="3.2"/><circle class="fl" cx="4" cy="0" r="3.2"/><circle class="fl" cx="0" cy="4" r="3.2"/><circle class="fl" cx="-4" cy="0" r="3.2"/><circle class="fc" r="2.4"/></g>`,
+  rock: (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><ellipse class="rk" cx="0" cy="0" rx="10" ry="6.5"/><ellipse class="rk" cx="8" cy="2" rx="5" ry="3.5" opacity=".8"/></g>`
+};
+function decor(W, H, pts, ss) {
+  const R = rng(97 + Math.round(W) * 7), samples = [], items = [], want = Math.round(W * H / 6500);
+  ss.forEach(s => { for (let t = 0; t <= 1.001; t += .1) { const u = 1 - t; samples.push([u * u * u * s.p1[0] + 3 * u * u * t * s.c1[0] + 3 * u * t * t * s.c2[0] + t * t * t * s.p2[0], u * u * u * s.p1[1] + 3 * u * u * t * s.c1[1] + 3 * u * t * t * s.c2[1] + t * t * t * s.p2[1]]); } });
+  for (let tries = 0; tries < want * 14 && items.length < want; tries++) {
+    const x = 16 + R() * (W - 32), y = 22 + R() * (H - 34);
+    if (pts.some(([a, b]) => Math.hypot(a - x, b + 12 - y) < 64)) continue;
+    if (samples.some(([a, b]) => Math.hypot(a - x, b - y) < 30)) continue;
+    if (items.some(o => Math.hypot(o.x - x, o.y - y) < 28)) continue;
+    const r = R(), s = (.8 + R() * .5).toFixed(2);
+    items.push({ x: Math.round(x), y: Math.round(y), k: r < .34 ? 'tree' : r < .58 ? 'bush' : r < .87 ? 'flower' : 'rock', s });
+  }
+  return items.sort((a, b) => a.y - b.y).map(o => DECO[o.k](o.x, o.y, o.s)).join('');
+}
+const mePos = n => { const [x, y] = MAP.pts[n - 1]; return [x - MAP.size / 2, y - MAP.R - MAP.size + 12]; };
+function setMe(n) { if (!MAP.pts.length) return; const [x, y] = mePos(n); MAP.me.style.transform = `translate(${x}px,${y}px)`; }
+function layoutMap() {
+  const el = MAP.el, W = el.clientWidth; if (!W) return;
+  const small = W < 480, cols = W >= 700 ? 6 : small ? 3 : 4, rows = Math.ceil(12 / cols);
+  const nd = small ? 60 : 72; MAP.R = nd / 2; MAP.size = small ? 46 : 54;
+  el.style.setProperty('--nd', nd + 'px'); el.style.setProperty('--me', MAP.size + 'px');
+  const padX = small ? 52 : 74, top = small ? 92 : 100, rowH = small ? 148 : 160;
+  const H = top + (rows - 1) * rowH + (small ? 72 : 78), bw = (el.offsetWidth - el.clientWidth) / 2;
+  el.style.height = (H + 2 * bw) + 'px';
+  const pts = [];
+  for (let i = 0; i < 12; i++) {
+    const r = Math.floor(i / cols), c0 = i % cols, c = r % 2 ? cols - 1 - c0 : c0;
+    pts.push([Math.round(padX + c * (W - 2 * padX) / (cols - 1)), Math.round(top + r * rowH + (c % 2 ? 14 : -6))]);
+  }
+  MAP.pts = pts;
+  $$('#tiles .node').forEach((b, i) => { b.style.left = pts[i][0] + 'px'; b.style.top = pts[i][1] + 'px'; });
+  const ss = segs(pts), p = P(), goal = mapGoal(p);
+  MAP.svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  MAP.svg.innerHTML = decor(W, H, pts, ss) + `<path class="p-edge" d="${pathD(pts, ss, 11)}"/><path class="p-base" d="${pathD(pts, ss, 11)}"/>` +
+    (goal > 1 ? `<path class="p-done" d="${pathD(pts, ss, goal - 1)}"/>` : '') + `<path class="p-dash" d="${pathD(pts, ss, 11)}"/>`;
+  if (MAP.hopping) return;
+  if (!p.mapPos || p.mapPos > goal || RM.matches) { if (p.mapPos !== goal) { p.mapPos = goal; save(); } setMe(goal); }
+  else if (p.mapPos < goal) { setMe(p.mapPos); hopTo(p.mapPos, goal); }
+  else setMe(goal);
+}
+/* When a table is mastered, Timesy hops along the path to the next level. */
+async function hopTo(from, to) {
+  MAP.hopping = true;
+  const me = MAP.me, rect = MAP.el.getBoundingClientRect();
+  if (rect.top < 40 || rect.top > innerHeight * .55) { MAP.el.scrollIntoView({ behavior: 'smooth', block: 'center' }); await wait(750); }
+  await wait(350);
+  for (let n = from; n < to; n++) {
+    if (!MAP.pts.length) break;
+    const [x0, y0] = mePos(n), [x1, y1] = mePos(n + 1), peak = Math.min(y0, y1) - 60;
+    me.style.transform = `translate(${x1}px,${y1}px)`;
+    sfx('hop');
+    const an = me.animate([
+      { transform: `translate(${x0}px,${y0}px)` },
+      { transform: `translate(${x0}px,${y0 + 6}px) scale(1.12,.86)`, offset: .12 },
+      { transform: `translate(${(x0 + x1) / 2}px,${peak}px) rotate(${x1 >= x0 ? 14 : -14}deg) scale(1.06)`, offset: .52 },
+      { transform: `translate(${x1}px,${y1 + 4}px) scale(1.12,.88)`, offset: .88 },
+      { transform: `translate(${x1}px,${y1}px)` }
+    ], { duration: 560, easing: 'ease-in-out' });
+    try { await an.finished; } catch (e) {}
+  }
+  MAP.hopping = false;
+  const p = P(); p.mapPos = to; save(); setMe(to);
+  const all = Object.values(p.stars).filter(v => v >= 3).length >= 12;
+  const msg = all ? L().map.allDone : L().map.next(to);
+  const node = $(`#tiles .node[data-n="${to}"]`);
+  if (node) burstFrom(node, 60, 1);
+  sfx('win'); setMood($('#mapMascot'), 'happy'); sparkle($('#mapMascot'), 8);
+  if (S.screen === 'home') { $('#homeBubble').textContent = msg; say(msg); }
+}
+if (window.ResizeObserver) new ResizeObserver(() => layoutMap()).observe(MAP.el);
+else addEventListener('resize', layoutMap);
+
+/* ================= learn: carrots drop into baskets ================= */
+let countTok = 0;
+function fillBaskets(k, n) {
+  const box = $('#dots'), tot = k * n;
+  const cs = tot <= 12 ? 34 : tot <= 30 ? 27 : tot <= 60 ? 21 : tot <= 100 ? 17 : 14, cols = n <= 5 ? n : { 6: 3, 7: 4, 8: 4, 9: 3, 10: 5, 11: 4, 12: 4 }[n];
+  box.innerHTML = ''; box.style.setProperty('--cs', cs + 'px');
+  const step = Math.min(.09, 1.7 / tot), lands = [];
+  for (let g = 0; g < k; g++) {
+    const bk = document.createElement('div'); bk.className = 'basket';
+    bk.style.setProperty('--cols', cols); bk.style.animationDelay = (g * 40) + 'ms';
+    let items = '';
+    for (let i = 0; i < n; i++) {
+      const d = .2 + (g * n + i) * step; lands.push(d + .4);
+      items += `<i class="ct" style="--d:${d.toFixed(2)}s;--r:${(i * 37 + g * 23) % 34 - 17}deg"></i>`;
+    }
+    bk.innerHTML = `<div class="bk-items">${items}</div><div class="bk-front"><span>${g + 1}</span></div>`;
+    box.append(bk);
+  }
+  countUp($('#eqC'), tot, lands, n);
+}
+function countUp(el, total, lands, per) {
+  const tok = ++countTok;
+  if (RM.matches) { el.textContent = total; return; }
+  el.textContent = 0;
+  const t0 = performance.now(); let shown = 0;
+  const step = () => {
+    if (tok !== countTok) return;
+    const t = (performance.now() - t0) / 1000;
+    let c = shown; while (c < lands.length && lands[c] <= t) c++;
+    if (c !== shown) { const full = Math.floor(c / per) > Math.floor(shown / per); shown = c; el.textContent = c; if (full && store.sound) tone(520 + Math.floor(c / per) * 40, 0, .07, 'sine', .07); }
+    if (c < total) requestAnimationFrame(step); else bumpEl(el);
+  };
+  requestAnimationFrame(step);
+}
+
+/* ================= Balloon Pop ================= */
+const BL = { raf: 0, last: 0, balloons: [], on: false };
+const blField = $('#blField');
+function blCrossSecs() {
+  const base = S.mode === 'gesture' ? 12 : S.mode === 'voice' ? 11 : 7.5, min = S.mode === 'touch' ? 3.6 : 6.5;
+  return Math.max(min, base * Math.pow(.94, Q ? Q.score : 0));
+}
+function renderLives() {
+  const n = Q && Q.kind === 'balloon' ? Q.lives : 3, el = $('#blLives');
+  el.innerHTML = [0, 1, 2].map(i => HEART.replace('<svg', `<svg class="${i < n ? 'on' : 'lost'}"`)).join('');
+  el.setAttribute('aria-label', `${L().bl.lives}: ${n}`);
+}
+function blStop() { BL.on = false; cancelAnimationFrame(BL.raf); BL.balloons = []; if (blField) blField.innerHTML = ''; }
+function blSetStreak() {
+  $('#blStreak').hidden = Q.streak < 2; $('#blStreakN').textContent = Q.streak; $('#blStreak').classList.toggle('fire', Q.streak >= 3);
+}
+function blSay(text, cls) { const m = $('#blMsg'); m.className = 'bl-msg' + (cls ? ' ' + cls : ''); m.innerHTML = text ? `<span>${esc(text)}</span>` : ''; }
+function startBalloon() {
+  if (Q) { stopTimer(); clearTimeout(Q.timer); }
+  blStop();
+  Q = newQ('balloon', { lives: 3 });
+  $('#blScore').textContent = 0; $('#blCarrotsN').textContent = 0;
+  blSetStreak(); renderLives();
+  $('#blA').textContent = '?'; $('#blB').textContent = '?'; $('#blSlot').textContent = '?'; $('#blSlot').className = 'slot';
+  show('balloon');
+  blSay(L().bl.start);
+  BL.on = true; BL.last = 0; BL.raf = requestAnimationFrame(blTick);
+  say(L().bl.start);
+  Q.timer = setTimeout(blRound, 900);
+}
+function blRound() {
+  if (!Q || Q.kind !== 'balloon' || !BL.on) return;
+  let k, n;
+  const weak = weakFacts().filter(([a, b]) => b >= 2 && Q.last !== a + 'x' + b);
+  if (weak.length && Math.random() < .35) [k, n] = weak[Math.floor(Math.random() * Math.min(weak.length, 6))];
+  else do { n = 2 + Math.floor(Math.random() * 11); k = 1 + Math.floor(Math.random() * 12); } while (Q.last === k + 'x' + n);
+  Q.last = k + 'x' + n; setSifirColor(n);
+  Object.assign(Q, { k, n2: n, ans: k * n, answered: false }); Q.i++;
+  $('#blA').textContent = k; $('#blB').textContent = n;
+  $('#blSlot').textContent = '?'; $('#blSlot').className = 'slot';
+  blSay(''); $('#blMascot').dataset.mood = '';
+  BL.balloons.forEach(b => b.el.remove()); BL.balloons = [];
+  const W = blField.clientWidth, H = blField.clientHeight, bw = W < 480 ? 74 : 92, bh = bw * 1.7, secs = blCrossSecs();
+  makeOptions(k, n).forEach((v, i) => {
+    const el = document.createElement('button');
+    el.className = 'balloon' + (i === 2 ? ' lt' : ''); el.dataset.finger = i + 1; el.dataset.v = v;
+    el.style.setProperty('--b', `var(--o${i + 1})`); el.style.setProperty('--bw', bw + 'px');
+    el.setAttribute('aria-label', `${i + 1}: ${v}`);
+    el.innerHTML = `${BALLOON}<span class="bv">${v}</span><span class="fbadge">${handSVG(i + 1)}${i + 1}</span>`;
+    const b = { el, v, lane: i, bw, bh, y: H + 8 + Math.random() * H * .28, vy: (H + bh) / (secs * (.88 + Math.random() * .24)), ph: Math.random() * 6.28, popped: false, gone: false, flee: false };
+    el.addEventListener('click', () => blPop(b));
+    blField.append(el); BL.balloons.push(b);
+    blPlace(b, W, performance.now());
+  });
+}
+function blPlace(b, W, t) {
+  const x = W * (b.lane + .5) / 4 - b.bw / 2 + Math.sin(t / 650 + b.ph) * 9;
+  b.el.style.transform = `translate(${x.toFixed(1)}px,${b.y.toFixed(1)}px) rotate(${(Math.sin(t / 900 + b.ph) * 4).toFixed(2)}deg)`;
+}
+function blTick(t) {
+  if (!BL.on) return;
+  BL.raf = requestAnimationFrame(blTick);
+  const dt = BL.last ? Math.min(.05, (t - BL.last) / 1000) : 0; BL.last = t;
+  const W = blField.clientWidth;
+  for (const b of BL.balloons) {
+    if (b.gone || (b.popped && !b.flee)) continue;
+    b.y -= b.vy * dt * (b.flee ? 3.4 : 1);
+    blPlace(b, W, t);
+    if (b.y + b.bh * .55 < 0) {
+      b.gone = true; b.el.remove();
+      if (!b.flee && Q && Q.kind === 'balloon' && b.v === Q.ans && !Q.answered) blMiss();
+    }
+  }
+}
+function blPop(b) {
+  if (!b || !Q || Q.kind !== 'balloon' || Q.answered || b.popped || b.gone) return;
+  clearHold();
+  const T = L(), ok = b.v === Q.ans, m = $('#blMascot');
+  b.popped = true; b.el.disabled = true; b.el.classList.add('pop');
+  sfx('pop');
+  const r = b.el.getBoundingClientRect();
+  Q.answered = true; noteFact(Q.k, Q.n2, ok);
+  $('#blSlot').textContent = Q.ans; $('#blSlot').classList.add('ok');
+  BL.balloons.forEach(o => { if (o === b) return; o.el.disabled = true; if (ok) o.flee = true; else if (o.v === Q.ans) { o.popped = true; o.el.classList.add('reveal'); } });
+  if (ok) {
+    burst(r.left + r.width / 2, r.top + r.width * .55, 36, .9);
+    Q.score++; Q.streak++; Q.earned++; P().carrots++;
+    const earned = Q.earned;
+    $('#blScore').textContent = Q.score;
+    flyCarrot(b.el, $('#blCarrots'), () => { $('#blCarrotsN').textContent = earned; });
+    const combo = comboFx(Q.streak);
+    blSay(combo ? '' : T.praise[Math.floor(Math.random() * T.praise.length)], 'ok');
+    setMood(m, 'happy'); setTimeout(() => sfx('ok'), 90);
+    Q.timer = setTimeout(blRound, 950);
+  } else {
+    Q.streak = 0; Q.lives--;
+    Q.wrong.push({ k: Q.k, n: Q.n2, ans: Q.ans, got: b.v });
+    blSay(T.bl.wrong(Q.k, Q.n2, Q.ans), 'no');
+    setMood(m, 'sad'); setTimeout(() => sfx('no'), 90);
+    renderLives(); bumpLives();
+    Q.timer = setTimeout(Q.lives > 0 ? blRound : finish, 1800);
+  }
+  save(); blSetStreak();
+}
+function bumpLives() { const el = $('#blLives'); el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit'); }
+function blMiss() {
+  const T = L();
+  Q.answered = true; Q.streak = 0; Q.lives--;
+  noteFact(Q.k, Q.n2, false); Q.wrong.push({ k: Q.k, n: Q.n2, ans: Q.ans, got: null });
+  $('#blSlot').textContent = Q.ans; $('#blSlot').classList.add('ok');
+  blSay(T.bl.miss(Q.k, Q.n2, Q.ans), 'no');
+  setMood($('#blMascot'), 'sad'); sfx('no'); renderLives(); bumpLives(); save();
+  BL.balloons.forEach(o => { o.el.disabled = true; o.flee = true; });
+  blSetStreak();
+  Q.timer = setTimeout(Q.lives > 0 ? blRound : finish, 1600);
+}
+
 /* ================= wire up ================= */
 $$('[data-set-mode]').forEach(b => b.addEventListener('click', () => { audio(); sfx('tap'); setMode(b.dataset.setMode, true); }));
 $$('[data-lang]').forEach(b => b.addEventListener('click', () => { sfx('tap'); setLang(b.dataset.lang); }));
@@ -2112,6 +2763,8 @@ $('#quizBack').addEventListener('click', goHome);
 $('#btnRecite').addEventListener('click', toggleRecite);
 $('#btnStartQuiz').addEventListener('click', () => { sfx('tap'); startQuiz(S.sifir); });
 $('#btnChallenge').addEventListener('click', () => { sfx('tap'); startChallenge(); });
+$('#btnBalloon').addEventListener('click', () => { sfx('tap'); startBalloon(); });
+$('#blBack').addEventListener('click', goHome);
 const darkMQ = matchMedia('(prefers-color-scheme: dark)');
 const curTheme = () => store.theme || document.documentElement.dataset.theme || (darkMQ.matches ? 'dark' : 'light');
 function applyTheme() {
@@ -2138,7 +2791,7 @@ setMode(['touch', 'gesture', 'voice'].includes(store.mode) ? store.mode : 'touch
 show('home');
 if (store.profiles.length > 1) openWho();
 
-window.__pintar = { parseNumber, countFingers, handsValue, rankVoice, ms, en, makeOptions, onVoice, setLang, openHelp, P, store, weakFacts, reviewSet, startReview, openWho, openCloset, renderHome, renderDress, state: () => ({ S, Q }), dbg: () => ({ frames: G.frames, hist: G.hist.slice(), lock: G.lock }) };
+window.__pintar = { parseNumber, countFingers, handsValue, rankVoice, ms, en, makeOptions, onVoice, setLang, openHelp, P, store, weakFacts, reviewSet, startReview, openWho, openCloset, renderHome, renderDress, startBalloon, blPop, BL, MAP, mapGoal, layoutMap, comboFx, save, state: () => ({ S, Q }), dbg: () => ({ frames: G.frames, hist: G.hist.slice(), lock: G.lock }) };
 })();
 </script>
 </body>
