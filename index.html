@@ -296,7 +296,7 @@ button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
 .slot{min-width:1.5em;text-align:center;background:var(--hl);color:var(--hl-ink);border-radius:20px;padding:0 .14em;box-shadow:0 5px 0 color-mix(in srgb,var(--hl) 55%,var(--shade))}
 .slot.ok{background:var(--good);color:var(--on-color);box-shadow:0 5px 0 color-mix(in srgb,var(--good) 60%,var(--shade))}
 .fb{grid-column:1/-1;margin:0;min-height:1.5em;font-weight:700;font-size:19px;text-align:center}
-.fb.ok{color:var(--good)} .fb.no{color:var(--bad)}
+.fb.ok{color:var(--good)} .fb.no{color:var(--bad)} .fb.heard{color:var(--ink-soft);font-style:italic}
 .timebar{position:absolute;left:0;top:0;height:9px;width:calc(var(--t,1)*100%);background:linear-gradient(90deg,var(--chal-a),var(--chal-b));transition:width .1s linear}
 .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 @media (min-width:880px){ .opts{grid-template-columns:repeat(4,minmax(0,1fr))} }
@@ -686,7 +686,7 @@ body::after{display:none}
 .bl-q .slot{padding:0 .12em}
 .bl-msg{position:absolute;z-index:4;top:calc(30px + clamp(34px,8vw,58px) + 12px);left:12px;right:12px;margin:0;text-align:center;font-weight:700;font-size:18px;min-height:1.4em}
 .bl-msg span{display:inline-block;background:var(--card);border-radius:999px;padding:4px 14px;box-shadow:0 6px 14px -10px var(--lift)}
-.bl-msg.ok span{color:var(--good)}.bl-msg.no span{color:var(--bad)}
+.bl-msg.ok span{color:var(--good)}.bl-msg.no span{color:var(--bad)}.bl-msg.heard span{color:var(--ink-soft);font-style:italic}
 .bl-msg:empty{visibility:hidden}
 .bl-me{position:absolute;z-index:5;left:12px;top:12px;width:70px}
 .cloud{position:absolute;z-index:1;width:130px;height:42px;border-radius:42px;background:var(--cloud);animation:drift 46s linear infinite}
@@ -1074,7 +1074,7 @@ function en(n) {
 }
 
 /* Spoken number parser: Malay or English words, or digits. Returns the last number heard. */
-const W_UNIT = { kosong:0, sifar:0, satu:1, dua:2, tiga:3, empat:4, ampat:4, lima:5, enam:6, anam:6, tujuh:7, lapan:8, delapan:8, sembilan:9,
+const W_UNIT = { kosong:0, sifar:0, satu:1, dua:2, tiga:3, empat:4, ampat:4, lima:5, enam:6, anam:6, tujuh:7, tuju:7, lapan:8, delapan:8, sembilan:9, semilan:9, sambilan:9,
   zero:0, one:1, two:2, three:3, four:4, for:4, fore:4, five:5, six:6, seven:7, eight:8, ate:8, nine:9 };
 const W_TEEN = { ten:10, eleven:11, twelve:12, thirteen:13, fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19 };
 const W_TENS = { twenty:20, thirty:30, forty:40, fourty:40, fifty:50, sixty:60, seventy:70, eighty:80, ninety:90 };
@@ -1086,10 +1086,12 @@ function parseNumber(text) {
   let total = 0, cur = 0, inRun = false, last = '';
   const flush = () => { if (inRun) runs.push(total + cur); total = 0; cur = 0; inRun = false; last = ''; };
   for (const w of t.split(/\s+/).filter(Boolean)) {
-    if (/^\d+$/.test(w)) { flush(); runs.push(parseInt(w, 10)); continue; }
-    if (w in W_UNIT) {
+    /* A single digit works like a number word, so "2 puluh 4" and "dua puluh 4" both mean 24. */
+    if (/^\d+$/.test(w) && w.length > 1) { flush(); runs.push(parseInt(w, 10)); continue; }
+    const unit = /^\d$/.test(w) ? +w : W_UNIT[w];
+    if (unit !== undefined) {
       if (last === 'unit' || last === 'end') flush();
-      inRun = true; cur += W_UNIT[w]; last = 'unit';
+      inRun = true; cur += unit; last = 'unit';
     } else if (w in W_TEEN) {
       if (last === 'unit' || last === 'end' || last === 'tens') flush();
       inRun = true; cur += W_TEEN[w]; last = 'end';
@@ -1147,7 +1149,7 @@ const I18N = {
     hints: {
       home: { touch: 'Sentuh satu tahap di peta untuk mula belajar.', gesture: 'Tunjuk <b>1–10 jari</b> dan tahan untuk pilih sifir. <b>11</b> = 1 jari setiap tangan. <b>12</b> = 1 jari (kiri) + 2 jari (kanan). <b>Genggam tangan</b> untuk Cabaran.', voice: 'Sebut <b>“sifir lima”</b> untuk belajar, <b>“kuiz lima”</b> untuk kuiz, <b>“cabaran”</b> atau <b>“belon”</b>.' },
       learn: { touch: 'Sentuh satu baris dan lihat lobak merah jatuh ke dalam bakul.', gesture: 'Tunjuk jari untuk pilih baris (4 jari = baris 4). Baris <b>11</b> = 1 + 1 jari, baris <b>12</b> = 1 + 2 jari (dua tangan). <b>Genggam tangan</b> untuk mula kuiz.', voice: 'Sebut nombor, contoh <b>“empat”</b>. Sebut <b>“baca”</b> untuk dengar sifir, <b>“kuiz”</b> untuk mula kuiz.' },
-      quiz: { touch: 'Sentuh jawapan yang betul.', gesture: 'Tunjuk <b>1, 2, 3 atau 4 jari</b> dan tahan untuk pilih jawapan.', voice: 'Sebut jawapan dengan kuat, contoh <b>“dua puluh lapan”</b>. Sebut <b>“ulang”</b> untuk dengar soalan lagi.' },
+      quiz: { touch: 'Sentuh jawapan yang betul.', gesture: 'Tunjuk <b>1, 2, 3 atau 4 jari</b> dan tahan untuk pilih jawapan.', voice: 'Terus sebut jawapan sebaik soalan keluar, contoh <b>“dua puluh lapan”</b>. Sebut <b>“ulang”</b> untuk dengar soalan.' },
       result: { touch: 'Pilih apa yang kamu mahu buat seterusnya.', gesture: 'Tunjuk jari ikut nombor pada butang.', voice: 'Sebut <b>“main lagi”</b>, <b>“seterusnya”</b> atau <b>“menu”</b>.' },
       balloon: { touch: 'Sentuh belon yang ada jawapan betul sebelum ia terbang!', gesture: 'Tunjuk <b>1–4 jari</b> ikut nombor pada belon, dan tahan sekejap.', voice: 'Sebut jawapan dengan kuat, contoh <b>“dua puluh empat”</b>.' }
     },
@@ -1236,7 +1238,7 @@ const I18N = {
     hints: {
       home: { touch: 'Tap a level on the map to start learning.', gesture: 'Show <b>1–10 fingers</b> and hold to pick a table. <b>11</b> = 1 finger on each hand. <b>12</b> = 1 finger (left) + 2 fingers (right). <b>Make a fist</b> for the Challenge.', voice: 'Say <b>“table five”</b> to learn, <b>“quiz five”</b> for a quiz, <b>“challenge”</b> or <b>“balloons”</b>.' },
       learn: { touch: 'Tap a row and watch the carrots drop into the baskets.', gesture: 'Show fingers to pick a row (4 fingers = row 4). Row <b>11</b> = 1 + 1 fingers, row <b>12</b> = 1 + 2 fingers (two hands). <b>Make a fist</b> to start the quiz.', voice: 'Say a number, like <b>“four”</b>. Say <b>“read”</b> to hear the table, <b>“quiz”</b> to start the quiz.' },
-      quiz: { touch: 'Tap the right answer.', gesture: 'Show <b>1, 2, 3 or 4 fingers</b> and hold to choose.', voice: 'Say the answer out loud, like <b>“twenty-eight”</b>. Say <b>“repeat”</b> to hear the question again.' },
+      quiz: { touch: 'Tap the right answer.', gesture: 'Show <b>1, 2, 3 or 4 fingers</b> and hold to choose.', voice: 'Say the answer as soon as the question appears, like <b>“twenty-eight”</b>. Say <b>“repeat”</b> to hear the question.' },
       result: { touch: 'Choose what to do next.', gesture: 'Show the number of fingers on the button.', voice: 'Say <b>“play again”</b>, <b>“next”</b> or <b>“menu”</b>.' },
       balloon: { touch: 'Tap the balloon with the right answer before it floats away!', gesture: 'Show <b>1–4 fingers</b> to match the number on a balloon, and hold.', voice: 'Say the answer out loud, like <b>“twenty-four”</b>.' }
     },
@@ -1699,7 +1701,7 @@ function nextQ() {
     box.append(b);
   });
   renderPips();
-  if (Q.kind !== 'ch') readQ();
+  if (Q.kind !== 'ch' && S.mode !== 'voice') readQ();
 }
 function readQ() { if (Q && !Q.answered) say(L().tts.q(Q.k, Q.n2)); }
 function renderPips() {
@@ -1736,7 +1738,7 @@ function answer(v, btn) {
     burstFrom(btn || slot, Q.streak >= 3 ? 50 : 30, .8);
     flyCarrot(btn || slot, $('#qCarrots'), () => { $('#qCarrotsN').textContent = earned; });
     const combo = comboFx(Q.streak);
-    if (!ch) say(combo ? sayable(combo) : p);
+    if (!ch && S.mode !== 'voice') say(combo ? sayable(combo) : p);
   } else {
     Q.streak = 0;
     if (btn) { btn.classList.add('is-wrong'); btn.insertAdjacentHTML('beforeend', `<span class="mark no">${CROSS}</span>`); }
@@ -1744,14 +1746,19 @@ function answer(v, btn) {
     fb.textContent = T.almost(Q.k, Q.n2, Q.ans) + (v != null && !btn ? T.youSaid(v) : '');
     Q.wrong.push({ k: Q.k, n: Q.n2, ans: Q.ans, got: v });
     setMood(m, 'sad'); sfx('no');
-    if (!ch) say(T.tts.full(Q.k, Q.n2));
+    if (!ch && S.mode === 'voice') {
+      /* say the right answer, then show the next question as soon as Timesy stops talking (the mic is back on by then) */
+      const q = Q, i = Q.i;
+      say(T.tts.full(Q.k, Q.n2), () => { if (Q === q && Q.i === i) { clearTimeout(Q.timer); Q.timer = setTimeout(nextQ, 250); } });
+    } else if (!ch) say(T.tts.full(Q.k, Q.n2));
   }
   save();
   $('#streak').hidden = Q.streak < 2; $('#streakN').textContent = Q.streak;
   $('#streak').classList.toggle('fire', Q.streak >= 3);
   if (ch) $('#chScoreN').textContent = Q.score;
   renderPips();
-  Q.timer = setTimeout(nextQ, ok ? (ch ? 700 : 1400) : (ch ? 1500 : 2800));
+  const vm = S.mode === 'voice';
+  Q.timer = setTimeout(nextQ, ok ? (ch ? 700 : vm ? 1000 : 1400) : (ch ? 1500 : vm ? 7000 : 2800));
 }
 function startTimer() {
   stopTimer();
@@ -2030,7 +2037,9 @@ function clearHold() {
 
 /* ================= voice commands (Web Speech API) ================= */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-const V = { rec: null, want: false, on: false, starting: false, speaking: false, fails: 0, gotResult: false };
+const V = { rec: null, want: false, on: false, starting: false, speaking: false, fails: 0, gotResult: false, session: 0, prev: '', acted: '', lastInterim: '', stableT: 0 };
+/* Keep one listening session open where browsers handle it well (Chrome, Edge, Android); Safari restarts after each phrase. */
+const CONT = !IS_IOS && !IS_SAFARI;
 function recStart(showStarting) {
   if (!V.rec || V.on || V.starting) return;
   V.starting = true;
@@ -2047,22 +2056,59 @@ function micUI(state) {
   sbtn(state === 'off' ? 'micOn' : state === 'embedded' || state === 'insecure' ? 'open' : err && state !== 'nosupport' && state !== 'nomic' ? 'retry' : '');
   sensor.classList.toggle('listening', state === 'listen');
 }
-function heard(text, interim) { heardEl.textContent = text ? `“${text}”` : ''; heardEl.classList.toggle('interim', !!interim); }
+function heard(text, interim) {
+  heardEl.textContent = text ? `“${text}”` : ''; heardEl.classList.toggle('interim', !!interim);
+  /* show what Timesy hears right under the question, so the child knows it is listening */
+  if (S.screen === 'quiz' && Q && !Q.answered) { const fb = $('#fb'); fb.className = 'fb heard'; fb.textContent = text ? `“${text}”` : ''; }
+  if (S.screen === 'balloon' && Q && Q.kind === 'balloon' && !Q.answered && text) blSay(`“${text}”`, 'heard');
+}
+/* Words for a number in both languages, used to tell whether an answer heard so far could still grow
+   into a longer one ("dua" → "dua puluh empat", "twenty" → "twenty-four"). */
+const spoken = v => [ms(v), en(v).replace(/-/g, ' ')].map(x => x.split(' '));
+function canGrow(v, valid) {
+  const mine = spoken(v);
+  return valid.some(u => u !== v && spoken(u).some(w => mine.some(m => m.length < w.length && m.every((x, i) => w[i] === x))));
+}
+/* Numbers that count as an answer right now: the four choices in a quiz, or the balloons still in the sky. */
+function liveAnswers() {
+  if (anySheet() || !Q || Q.answered) return null;
+  if (S.screen === 'quiz' && Q.opts) return Q.opts.slice();
+  if (S.screen === 'balloon' && Q.kind === 'balloon') return BL.balloons.filter(b => !b.popped && !b.gone).map(b => b.v);
+  return null;
+}
+/* Act on a partial result as soon as it is clearly a complete answer; otherwise act once it has stopped
+   changing for a moment. This answers well before the browser decides the child has finished speaking. */
+function voiceInterim(text, idx) {
+  const key = V.session + ':' + idx;
+  if (V.acted === key || !text) return;
+  const valid = liveAnswers(), v = parseNumber(text);
+  if (valid && v != null && valid.includes(v) && !canGrow(v, valid)) { V.acted = key; clearTimeout(V.stableT); onVoice([text], 'quick'); return; }
+  V.lastInterim = text; clearTimeout(V.stableT);
+  V.stableT = setTimeout(() => {
+    if (V.acted === key || V.lastInterim !== text || V.speaking) return;
+    if (onVoice([text], 'stable')) V.acted = key;
+  }, 750);
+}
+const newWords = t => {
+  const raw = t.trim(), p = V.prev.toLowerCase();
+  /* Android sometimes repeats earlier words in the next result; keep only what is new. */
+  return p && raw.length > p.length && raw.toLowerCase().startsWith(p) ? raw.slice(p.length).trim() : raw;
+};
 function buildRec() {
   const r = new SR();
-  /* One phrase per session works the same on Chrome, Edge, Android and Safari; we restart after each phrase. */
-  r.continuous = false; r.interimResults = true; r.maxAlternatives = 3;
-  r.onstart = () => { V.on = true; V.starting = false; V.gotResult = false; if (!V.speaking) micUI('listen'); };
+  r.continuous = CONT; r.interimResults = true; r.maxAlternatives = 3;
+  r.onstart = () => { V.on = true; V.starting = false; V.gotResult = false; V.session++; V.prev = ''; V.lastInterim = ''; if (!V.speaking) micUI('listen'); };
   r.onresult = e => {
     if (V.speaking) return;
     for (let i = e.resultIndex; i < e.results.length; i++) {
-      const res = e.results[i];
-      heard(res[0].transcript.trim(), !res.isFinal);
-      if (res.isFinal) {
-        V.fails = 0; V.gotResult = true;
-        const alts = []; for (let j = 0; j < res.length; j++) alts.push(res[j].transcript.trim());
-        onVoice(alts);
-      }
+      const res = e.results[i], text = newWords(res[0].transcript);
+      heard(text, !res.isFinal);
+      if (!res.isFinal) { voiceInterim(text, i); continue; }
+      V.fails = 0; V.gotResult = true; clearTimeout(V.stableT);
+      const key = V.session + ':' + i, alts = [];
+      for (let j = 0; j < res.length; j++) alts.push(newWords(res[j].transcript));
+      V.prev = res[0].transcript.trim();
+      if (V.acted !== key) { V.acted = key; onVoice(alts, 'final'); }
     }
   };
   r.onerror = e => {
@@ -2076,7 +2122,7 @@ function buildRec() {
   r.onend = () => {
     V.on = false; V.starting = false;
     if (V.want && S.mode === 'voice' && !V.speaking && !document.hidden) {
-      setTimeout(() => { if (V.want && !V.speaking && S.mode === 'voice') recStart(false); }, 250);
+      setTimeout(() => { if (V.want && !V.speaking && S.mode === 'voice') recStart(false); }, 60);
     } else if (S.mode === 'voice' && S.micState === 'listen') micUI(V.want ? 'tap' : 'off');
   };
   return r;
@@ -2099,7 +2145,7 @@ function voicePause() {
 }
 function voiceResume() {
   if (S.mode !== 'voice' || !V.want || !V.rec) return;
-  setTimeout(() => { if (V.want && !V.speaking && S.mode === 'voice') recStart(true); }, 200);
+  setTimeout(() => { if (V.want && !V.speaking && S.mode === 'voice') recStart(true); }, 60);
 }
 $('#micBtn').addEventListener('click', () => {
   audio(); hush();
@@ -2120,12 +2166,16 @@ const KW = {
   closet: ['almari', 'closet', 'wardrobe', 'kedai', 'shop'],
   balloon: ['belon', 'balloon', 'balloons', 'pop']
 };
-function onVoice(alts) {
+/* Returns true when the words led to an action. */
+function onVoice(alts, how = 'final') { return voiceAct(alts, how) !== false; }
+function voiceAct(alts, how) {
+  const quick = how === 'quick', partial = how !== 'final';
   const norm = alts.map(a => ' ' + a.toLowerCase().replace(/[^a-z0-9\s]/g, ' ') + ' ');
   const has = key => norm.some(t => KW[key].some(w => t.includes(' ' + w + ' ')));
   const nums = alts.map(parseNumber).filter(v => v != null);
   const click = sel => { const b = screens[S.screen].querySelector(sel); if (b) { b.click(); return true; } return false; };
-  if (anySheet()) return;
+  if (anySheet()) return false;
+  if (quick && S.screen !== 'quiz' && S.screen !== 'balloon') return false;
   switch (S.screen) {
     case 'home':
       if (has('review')) return startReview();
@@ -2145,16 +2195,20 @@ function onVoice(alts) {
       if (has('repeat')) return readQ();
       if (nums.length && Q && !Q.answered) {
         const v = nums.includes(Q.ans) ? Q.ans : nums[0];
+        if (partial && !Q.opts.includes(v)) return false;
         return answer(v, $$('.opt').find(b => +b.dataset.v === v));
       }
+      if (partial) return false;
       if (Q && !Q.answered) { $('#fb').className = 'fb'; $('#fb').textContent = L().noNum; }
       return;
     case 'balloon':
       if (has('stop')) return goHome();
       if (nums.length && Q && Q.kind === 'balloon' && !Q.answered) {
+        if (quick && !nums.some(x => BL.balloons.some(b => !b.popped && !b.gone && b.v === x))) return false;
         const live = BL.balloons.filter(b => !b.popped && !b.gone);
         const v = live.some(b => b.v === Q.ans) && nums.includes(Q.ans) ? Q.ans : nums.find(x => live.some(b => b.v === x));
         if (v != null) return blPop(live.find(b => b.v === v));
+        if (partial) return false;
         const msg = $('#blMsg'); msg.className = 'bl-msg no'; msg.innerHTML = `<span>${esc(L().bl.noBalloon(nums[0]))}</span>`;
       }
       return;
@@ -2165,6 +2219,7 @@ function onVoice(alts) {
       if (has('again')) return click('[data-act="again"]');
       break;
   }
+  return false;
 }
 
 /* ================= install & help ================= */
@@ -2791,7 +2846,7 @@ setMode(['touch', 'gesture', 'voice'].includes(store.mode) ? store.mode : 'touch
 show('home');
 if (store.profiles.length > 1) openWho();
 
-window.__pintar = { parseNumber, countFingers, handsValue, rankVoice, ms, en, makeOptions, onVoice, setLang, openHelp, P, store, weakFacts, reviewSet, startReview, openWho, openCloset, renderHome, renderDress, startBalloon, blPop, BL, MAP, mapGoal, layoutMap, comboFx, save, state: () => ({ S, Q }), dbg: () => ({ frames: G.frames, hist: G.hist.slice(), lock: G.lock }) };
+window.__pintar = { canGrow, V, parseNumber, countFingers, handsValue, rankVoice, ms, en, makeOptions, onVoice, setLang, openHelp, P, store, weakFacts, reviewSet, startReview, openWho, openCloset, renderHome, renderDress, startBalloon, blPop, BL, MAP, mapGoal, layoutMap, comboFx, save, state: () => ({ S, Q }), dbg: () => ({ frames: G.frames, hist: G.hist.slice(), lock: G.lock }) };
 })();
 </script>
 </body>
