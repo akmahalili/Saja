@@ -104,7 +104,9 @@ body[data-screen="home"] .brand{display:none}
 body[data-screen="home"] .seg{display:none}
 .icon-btn{width:42px;height:42px;border-radius:50%;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;color:var(--ink);flex:none}
 .icon-btn svg{width:22px;height:22px}
-.icon-btn .off{display:none}
+.icon-btn .off,#btnTheme .sun{display:none}
+#btnTheme[aria-pressed="true"] .sun{display:block}
+#btnTheme[aria-pressed="true"] .moon{display:none}
 .icon-btn[aria-pressed="false"] .on{display:none}
 .icon-btn[aria-pressed="false"] .off{display:block}
 @media (max-width:560px){ .bar{gap:6px} .bar-right{gap:6px} .brand > span:last-child{display:none} .seg button .t{display:none} .seg button{padding:7px 9px} .lang button{padding:6px 8px;font-size:14px} .icon-btn{width:38px;height:38px} .icon-btn svg{width:20px;height:20px} }
@@ -164,6 +166,7 @@ body[data-mode="gesture"] .fbadge,body[data-mode="gesture"] .fist-tag{display:in
 .bubble::before{content:"";position:absolute;left:-8px;top:16px;width:16px;height:16px;background:var(--card);transform:rotate(45deg);border-radius:3px}
 .stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
+@media (max-width:620px){ button.stat{text-align:center} }
 .stat .si.c{background:var(--on-color)}
 .stat{display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--on-color) 16%,transparent);border:2px solid color-mix(in srgb,var(--on-color) 30%,transparent);border-radius:18px;padding:8px 12px 8px 8px;min-width:0}
 .stat .si{width:42px;height:42px;flex:none;border-radius:13px;display:grid;place-items:center}
@@ -408,7 +411,9 @@ button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
 .voicebox{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px}
 .voicebox select{flex:1 1 220px;min-width:0;font:700 15px var(--f-body);color:var(--ink);background:var(--card-2);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
 .voicebox .btn{padding:10px 16px;font-size:15px}
-#pitchPill button[aria-pressed="true"]{background:var(--c12);color:var(--on-color)}
+#pitchPill button[aria-pressed="true"],#ratePill button[aria-pressed="true"]{background:var(--c12);color:var(--on-color)}
+.vrow{display:flex;align-items:center;gap:8px}
+.vl{font-weight:700;font-size:14px;color:var(--ink-soft)}
 .vnote{flex-basis:100%;margin:0;font-size:14px;color:var(--ink-soft)}
 .checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .checks li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px 12px}
@@ -494,6 +499,60 @@ button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
 .item.poor .st{background:var(--card-2);color:var(--ink-soft)}
 @media (max-width:520px){ .closet-top{grid-template-columns:110px minmax(0,1fr)} .closet-prev{width:110px} .items{grid-template-columns:repeat(2,minmax(0,1fr))} }
 #confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
+/* ---------- clean look: white, calm surfaces for primary pupils; colour kept only as accents ---------- */
+:root{--bg:#FFFFFF;--pat-op:0;--card:#FFFFFF;--card-2:#F3F4F8;--line:#E2E5EE;--ink:#1E2A44;--ink-soft:#5A6378;--primary:#5B3FD9;--lift:rgba(30,42,68,.16)}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--bg:#0F1522;--pat-op:0;--card:#172033;--card-2:#1F2A40;--line:#2B3753;--ink:#EEF2FA;--ink-soft:#A3AEC6;--primary:#8C73FF;--lift:rgba(0,0,0,.5)} }
+:root[data-theme="dark"]{--bg:#0F1522;--pat-op:0;--card:#172033;--card-2:#1F2A40;--line:#2B3753;--ink:#EEF2FA;--ink-soft:#A3AEC6;--primary:#8C73FF;--lift:rgba(0,0,0,.5)}
+body::after{display:none}
+.hero{background:var(--card);color:var(--ink);border:2px solid var(--line);box-shadow:0 14px 34px -24px var(--lift)}
+.hero .deco{display:none}
+.hero .mascot{filter:drop-shadow(0 8px 10px var(--lift))}
+.title{text-shadow:none;color:var(--ink)}
+.title .tx{box-shadow:none}
+.sub{color:var(--primary);opacity:1}
+.bubble{background:var(--card-2);box-shadow:none}
+.bubble::before{background:var(--card-2)}
+.stat{background:var(--card-2);border-color:var(--line)}
+.stat .si.c{background:var(--card);border:2px solid var(--line)}
+.hero[data-bg]:not([data-bg=""]){color:var(--on-color);border-color:transparent}
+.hero[data-bg]:not([data-bg=""]) .title,.hero[data-bg]:not([data-bg=""]) .sub{color:var(--on-color);text-shadow:0 2px 4px rgba(0,0,0,.35)}
+.hero[data-bg]:not([data-bg=""]) .stat{background:color-mix(in srgb,var(--on-color) 16%,transparent);border-color:color-mix(in srgb,var(--on-color) 30%,transparent)}
+.hero[data-bg]:not([data-bg=""]) .bubble,.hero[data-bg]:not([data-bg=""]) .bubble::before{background:var(--card)}
+.mode-card{border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.mode-card[aria-pressed="true"]{background:color-mix(in srgb,var(--m) 9%,var(--card));color:var(--ink);border-color:var(--m);box-shadow:0 4px 0 var(--m)}
+.mode-card[aria-pressed="true"] strong{text-shadow:none}
+.mode-card[aria-pressed="true"] .ic{background:var(--m);color:var(--on-color)}
+.mode-card[aria-pressed="true"] .d{color:var(--ink-soft)}
+.hint{background:var(--card-2);border:2px solid var(--line)}
+.tile{background:var(--card);color:color-mix(in srgb,var(--c) 66%,var(--ink));border:2px solid var(--line);border-bottom:7px solid var(--c);box-shadow:0 8px 18px -14px var(--lift)}
+.tile:active{box-shadow:none}
+.tile::before{display:none}
+.tile .tile-n,.tile.lt .tile-n{text-shadow:none}
+.tile .tile-k{color:var(--ink-soft)}
+.tile .stars{background:var(--card-2)}
+.challenge{background:var(--card);color:var(--ink);border:2px solid var(--line);border-left:10px solid var(--chal-a);box-shadow:0 8px 18px -14px var(--lift)}
+.challenge strong{text-shadow:none}
+.challenge .d{color:var(--ink-soft)}
+.challenge .rec{background:var(--card-2)}
+.feature{background:var(--card);border-width:2px;border-color:var(--line);border-left:10px solid var(--f);box-shadow:0 8px 18px -14px var(--lift)}
+.install{border-width:2px}
+.stage{background:var(--card);border-width:2px;box-shadow:0 8px 18px -14px var(--lift);border-top:8px solid var(--sc)}
+.grp{background:var(--card-2)}
+.qcard{border-width:2px;border-top:8px solid var(--sc);box-shadow:0 8px 18px -14px var(--lift)}
+.slot{box-shadow:none}
+.opt{background:var(--card);color:var(--ink);border:3px solid var(--o);box-shadow:0 5px 0 color-mix(in srgb,var(--o) 40%,var(--line));text-shadow:none}
+.opt::before{display:none}
+.opt[data-finger="3"]{text-shadow:none}
+.opt .fbadge{background:var(--o);color:var(--on-color)}
+.opt[data-finger="3"] .fbadge{color:var(--on-light)}
+.opt.is-right{background:var(--good);color:var(--on-color);border-color:var(--good);outline-color:color-mix(in srgb,var(--good) 40%,transparent)}
+.opt.dim,.opt.is-wrong{background:var(--card);color:var(--ink-soft);border-color:var(--line);box-shadow:0 5px 0 var(--line)}
+.opt.is-wrong{border-color:var(--bad)}
+.chip.streak{background:var(--card);color:var(--chal-b);border-color:var(--chal-b)}
+.result{border-width:2px}
+.result h2{color:var(--ink)}
+.sensor{border-width:2px;border-color:var(--line);box-shadow:0 18px 40px -18px var(--lift)}
+.btn.primary{box-shadow:0 4px 0 color-mix(in srgb,var(--primary) 55%,var(--shade))}
 @media (prefers-reduced-motion:reduce){ *,*::before,*::after{animation:none!important;transition:none!important} }
 </style>
 </head>
@@ -514,6 +573,10 @@ button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
         <button data-lang="ms" aria-pressed="true" lang="ms">BM</button>
         <button data-lang="en" aria-pressed="false" lang="en">EN</button>
       </div>
+      <button class="icon-btn" id="btnTheme" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.3" fill="currentColor" stroke="none"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+      </button>
       <button class="icon-btn" id="btnHelp" aria-label="Pasang & bantuan">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M9.4 9.3a2.7 2.7 0 0 1 5.2.9c0 1.8-2.6 2.3-2.6 3.9"/><circle cx="12" cy="17.2" r=".6" fill="currentColor"/></svg>
       </button>
@@ -682,7 +745,8 @@ button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
     <h3 data-i18n="help.voiceTitle">Suara Timesy</h3>
     <div class="voicebox">
       <select id="voiceSel" aria-label="Suara"></select>
-      <div class="pill" id="pitchPill" role="group"><button data-pitch="child"></button><button data-pitch="normal"></button></div>
+      <div class="vrow"><span class="vl" id="pitchLbl"></span><div class="pill" id="pitchPill" role="group"><button data-pitch="child"></button><button data-pitch="normal"></button></div></div>
+      <div class="vrow"><span class="vl" id="rateLbl"></span><div class="pill" id="ratePill" role="group"><button data-rate="slow"></button><button data-rate="normal"></button></div></div>
       <button class="btn primary" id="btnTestVoice"></button>
       <p class="vnote" id="voiceNote"></p>
     </div>
@@ -740,9 +804,11 @@ const PLATFORM = IS_IOS ? 'ios' : IS_ANDROID ? 'android' : /Windows/.test(UA) ? 
 
 /* ================= storage (per-viewer only) ================= */
 const KEY = 'timesy-v1';
-const store = { mode: 'touch', sound: true, lang: 'ms', pitch: 'child', voiceMs: '', voiceEn: '', profiles: [], current: '' };
+const store = { mode: 'touch', sound: true, lang: 'ms', pitch: 'child', rate: 'slow', voiceMs: '', voiceEn: '', profiles: [], current: '' };
 try { Object.assign(store, JSON.parse(localStorage.getItem(KEY) || localStorage.getItem('pintar-sifir-v1') || '{}')); } catch (e) {}
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} };
+/* A light/dark choice made in the app wins over the device setting. */
+if (store.theme === 'light' || store.theme === 'dark') document.documentElement.dataset.theme = store.theme;
 /* Players: each child on a shared device keeps their own stars, carrots, closet and question history. */
 function newProfile(name, color) {
   return { id: 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name: name || '', color: color || 9, stars: {}, best: 0, facts: {}, carrots: 0, owned: [], wear: { hat: '', face: '', bg: '' } };
@@ -894,10 +960,10 @@ const I18N = {
       lang: ['Bahasa Melayu tidak disokong untuk pengecaman suara di sini.', 'Tukar ke EN, atau cuba Google Chrome.']
     },
     btn: { camOn: 'Hidupkan kamera', micOn: 'Mula dengar', retry: 'Cuba lagi', open: 'Buka apps penuh' },
-    sound: ['Matikan bunyi', 'Hidupkan bunyi'], helpLbl: 'Pasang & bantuan',
+    sound: ['Matikan bunyi', 'Hidupkan bunyi'], themeDark: 'Tukar ke mod gelap', themeLight: 'Tukar ke mod cerah', helpLbl: 'Pasang & bantuan',
     help: {
       title: 'Pasang & bantuan', linkTitle: 'Pautan apps', howTitle: 'Cara pasang', checkTitle: 'Semak peranti ini',
-      voiceTitle: 'Suara Timesy', voiceAuto: 'Automatik (disyorkan)', pitchChild: 'Kanak-kanak', pitchNormal: 'Biasa', test: 'Uji suara',
+      voiceTitle: 'Suara Timesy', voiceAuto: 'Automatik (disyorkan)', pitchChild: 'Kanak-kanak', pitchNormal: 'Biasa', pitchLbl: 'Nada', rateLbl: 'Kelajuan', rateSlow: 'Perlahan', rateNormal: 'Biasa', test: 'Uji suara',
       voiceNone: 'Tiada suara BM pada peranti ini. Apps masih boleh dimainkan tanpa suara bacaan.',
       voiceNote: 'Suara kanak-kanak dibuat dengan menaikkan nada suara yang ada pada peranti. Pada Microsoft Edge, suara EN “Ana” ialah suara kanak-kanak sebenar.',
       installNow: 'Pasang apps sekarang', installed: 'Apps ini sudah dipasang pada peranti ini.', copy: 'Salin', copied: 'Disalin!', open: 'Buka', you: 'Peranti anda',
@@ -917,7 +983,7 @@ const I18N = {
       }
     },
     tts: {
-      q: (k, n) => `${ms(k)} darab ${ms(n)}?`, full: (k, n) => `${ms(k)} darab ${ms(n)}, sama dengan ${ms(k * n)}`,
+      q: (k, n) => `${ms(k)} darab ${ms(n)}?`, full: (k, n) => `${ms(k)} darab ${ms(n)}, sama dengan, ${ms(k * n)}.`,
       recite: (k, n) => `${ms(k)} darab ${ms(n)}, ${ms(k * n)}`, table: n => `Sifir ${ms(n)}`, chStart: 'Cabaran bermula!',
       test: 'Hai! Saya Timesy. Tiga darab empat, sama dengan dua belas!'
     },
@@ -978,10 +1044,10 @@ const I18N = {
       lang: ['English speech recognition is not available here.', 'Switch to BM, or try Google Chrome.']
     },
     btn: { camOn: 'Turn on camera', micOn: 'Start listening', retry: 'Try again', open: 'Open full app' },
-    sound: ['Turn sound off', 'Turn sound on'], helpLbl: 'Install & help',
+    sound: ['Turn sound off', 'Turn sound on'], themeDark: 'Switch to dark mode', themeLight: 'Switch to light mode', helpLbl: 'Install & help',
     help: {
       title: 'Install & help', linkTitle: 'App link', howTitle: 'How to install', checkTitle: 'Check this device',
-      voiceTitle: 'Timesy’s voice', voiceAuto: 'Automatic (recommended)', pitchChild: 'Child', pitchNormal: 'Normal', test: 'Test voice',
+      voiceTitle: 'Timesy’s voice', voiceAuto: 'Automatic (recommended)', pitchChild: 'Child', pitchNormal: 'Normal', pitchLbl: 'Pitch', rateLbl: 'Speed', rateSlow: 'Slow', rateNormal: 'Normal', test: 'Test voice',
       voiceNone: 'No English voice on this device. The app still works without reading aloud.',
       voiceNote: 'The child voice is made by raising the pitch of the voices on this device. In Microsoft Edge, the English voice “Ana” is a real child voice.',
       installNow: 'Install the app now', installed: 'The app is already installed on this device.', copy: 'Copy', copied: 'Copied!', open: 'Open', you: 'Your device',
@@ -1001,7 +1067,7 @@ const I18N = {
       }
     },
     tts: {
-      q: (k, n) => `${en(k)} times ${en(n)}?`, full: (k, n) => `${en(k)} times ${en(n)} equals ${en(k * n)}`,
+      q: (k, n) => `${en(k)} times ${en(n)}?`, full: (k, n) => `${en(k)} times ${en(n)}, equals, ${en(k * n)}.`,
       recite: (k, n) => `${en(k)} times ${en(n)} is ${en(k * n)}`, table: n => `The ${en(n)} times table`, chStart: 'The challenge starts now!',
       test: 'Hi! I am Timesy. Three times four equals twelve!'
     },
@@ -1161,7 +1227,7 @@ function say(text, done) {
   try { speechSynthesis.cancel(); } catch (e) {}
   const u = new SpeechSynthesisUtterance(text);
   const kid = store.pitch !== 'normal';
-  u.voice = voice; u.lang = voice.lang; u.rate = kid ? 1 : .95; u.pitch = kid ? (KID_RE.test(voice.name) ? 1.15 : 1.6) : 1;
+  u.voice = voice; u.lang = voice.lang; u.rate = store.rate === 'normal' ? .95 : .78; u.pitch = kid ? (KID_RE.test(voice.name) ? 1.15 : 1.6) : 1;
   voicePause();
   let fin = false;
   const end = () => {
@@ -1172,7 +1238,7 @@ function say(text, done) {
   u.onend = end; u.onerror = end;
   V.speaking = true;
   try { speechSynthesis.speak(u); } catch (e) { end(); }
-  setTimeout(end, 1500 + text.length * 110);
+  setTimeout(end, 2000 + text.length * (store.rate === 'normal' ? 110 : 150));
 }
 function hush() { TTS.id++; try { speechSynthesis.cancel(); } catch (e) {} if (V.speaking) { V.speaking = false; voiceResume(); } }
 
@@ -1870,6 +1936,8 @@ async function renderHelp() {
     vList.map(v => `<option value="${esc(v.name)}"${v.name === vSaved ? ' selected' : ''}>${esc(v.name)} (${esc(v.lang)})</option>`).join('');
   sel.disabled = !vList.length;
   $$('#pitchPill button').forEach(b => { b.textContent = b.dataset.pitch === 'child' ? H.pitchChild : H.pitchNormal; b.setAttribute('aria-pressed', String((store.pitch || 'child') === b.dataset.pitch)); });
+  $$('#ratePill button').forEach(b => { b.textContent = b.dataset.rate === 'slow' ? H.rateSlow : H.rateNormal; b.setAttribute('aria-pressed', String((store.rate || 'slow') === b.dataset.rate)); });
+  $('#pitchLbl').textContent = H.pitchLbl; $('#rateLbl').textContent = H.rateLbl;
   $('#btnTestVoice').textContent = H.test; $('#btnTestVoice').disabled = !vCur;
   $('#voiceNote').textContent = vList.length ? H.voiceNote : (S.lang === 'en' ? H.voiceNone : H.voiceNone);
   $('#plats').innerHTML = ['android', 'ios', 'windows', 'mac'].map(p => {
@@ -2020,6 +2088,7 @@ $('#voiceSel').addEventListener('change', e => {
   save(); pickVoices(); audio(); say(L().tts.test);
 });
 $$('#pitchPill button').forEach(b => b.addEventListener('click', () => { store.pitch = b.dataset.pitch; save(); renderHelp(); audio(); say(L().tts.test); }));
+$$('#ratePill button').forEach(b => b.addEventListener('click', () => { store.rate = b.dataset.rate; save(); renderHelp(); audio(); say(L().tts.test); }));
 $('#btnTestVoice').addEventListener('click', () => { audio(); say(L().tts.test); });
 $('#btnInstallNow').addEventListener('click', async () => {
   if (!installEvt) return;
@@ -2042,8 +2111,19 @@ $('#quizBack').addEventListener('click', goHome);
 $('#btnRecite').addEventListener('click', toggleRecite);
 $('#btnStartQuiz').addEventListener('click', () => { sfx('tap'); startQuiz(S.sifir); });
 $('#btnChallenge').addEventListener('click', () => { sfx('tap'); startChallenge(); });
+const darkMQ = matchMedia('(prefers-color-scheme: dark)');
+const curTheme = () => store.theme || document.documentElement.dataset.theme || (darkMQ.matches ? 'dark' : 'light');
+function applyTheme() {
+  if (store.theme) document.documentElement.dataset.theme = store.theme;
+  const dark = curTheme() === 'dark', b = $('#btnTheme');
+  b.setAttribute('aria-pressed', String(dark)); b.setAttribute('aria-label', dark ? L().themeLight : L().themeDark); b.title = b.getAttribute('aria-label');
+  const cs = getComputedStyle(document.documentElement);
+  G.colA = cs.getPropertyValue('--hl').trim() || G.colA; G.colB = cs.getPropertyValue('--primary').trim() || G.colB;
+}
+$('#btnTheme').addEventListener('click', () => { store.theme = curTheme() === 'dark' ? 'light' : 'dark'; save(); applyTheme(); sfx('tap'); });
+try { darkMQ.addEventListener('change', applyTheme); } catch (e) {}
 const sndBtn = $('#btnSound');
-function syncSound() { sndBtn.setAttribute('aria-pressed', String(!!store.sound)); sndBtn.setAttribute('aria-label', L().sound[store.sound ? 0 : 1]); }
+function syncSound() { sndBtn.setAttribute('aria-pressed', String(!!store.sound)); sndBtn.setAttribute('aria-label', L().sound[store.sound ? 0 : 1]); if ($('#btnTheme').title) applyTheme(); }
 sndBtn.addEventListener('click', () => { store.sound = !store.sound; save(); syncSound(); if (!store.sound) hush(); else sfx('tap'); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden && S.mode === 'voice' && V.want && !V.on && !V.speaking) voiceResume(); });
 
@@ -2052,6 +2132,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 }
 
 applyLang();
+applyTheme();
 setMode(['touch', 'gesture', 'voice'].includes(store.mode) ? store.mode : 'touch', false);
 show('home');
 if (store.profiles.length > 1) openWho();
