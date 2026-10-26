@@ -470,6 +470,7 @@ button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
 .prow{display:flex;gap:10px;flex-wrap:wrap}
 .prow .btn{padding:11px 16px;font-size:15.5px}
 .btn.danger{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,var(--line));box-shadow:0 4px 0 color-mix(in srgb,var(--bad) 30%,var(--line))}
+.reset-box{display:grid;gap:10px;justify-items:start;border-top:2px dashed var(--line);padding-top:14px}
 .confirm{display:grid;gap:10px;padding:12px;border-radius:14px;background:var(--bad-bg)}
 .confirm p{margin:0;font-weight:700}
 .cbal{display:inline-flex;align-items:center;gap:6px;background:var(--hl);color:var(--hl-ink);border-radius:999px;padding:6px 14px 6px 10px;font:400 22px/1 var(--f-display)}
@@ -702,6 +703,11 @@ button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer}
       <div class="prow"><button type="submit" class="btn primary" id="pSave"></button><button type="button" class="btn" id="pCancel"></button><button type="button" class="btn danger" id="pDel"></button></div>
       <div class="confirm" id="pConfirm" hidden><p id="pConfirmMsg"></p><div class="prow"><button type="button" class="btn danger" id="pDelYes"></button><button type="button" class="btn" id="pDelNo"></button></div></div>
     </form>
+    <div class="reset-box">
+      <p class="vnote" id="resetNote"></p>
+      <button type="button" class="btn danger" id="btnReset"></button>
+      <div class="confirm" id="resetConfirm" hidden><p id="resetMsg"></p><div class="prow"><button type="button" class="btn danger" id="resetYes"></button><button type="button" class="btn" id="resetNo"></button></div></div>
+    </div>
   </div>
 </div>
 <div class="sheet-back" id="closetSheet" hidden>
@@ -839,7 +845,7 @@ const I18N = {
     seg: { touch: 'Sentuh', gesture: 'Tangan', voice: 'Suara' },
     modes: { touch: ['Sentuh', 'Sentuh jawapan pada skrin.'], gesture: ['Isyarat Tangan', 'Tunjuk jari ke kamera, tahan sekejap untuk pilih.'], voice: ['Arahan Suara', 'Sebut jawapan dengan kuat, contoh “dua puluh empat”.'] },
     stats: { stars: 'Bintang', mastered: 'Sifir dikuasai', best: 'Rekod cabaran', carrots: 'Lobak merah' },
-    who: { title: 'Siapa bermain?', add: 'Tambah pemain', addTitle: 'Pemain baharu', editTitle: 'Ubah pemain', edit: 'Ubah', nameLbl: 'Nama', namePh: 'Contoh: Aisyah', colorLbl: 'Warna', save: 'Simpan', cancel: 'Batal', del: 'Padam pemain', delConfirm: n => `Padam ${n}? Semua bintang dan lobak merah ${n} akan hilang.`, delYes: 'Ya, padam', player: i => `Pemain ${i}`, hello: n => `Hai ${n}! Jom main.` },
+    who: { title: 'Siapa bermain?', add: 'Tambah pemain', addTitle: 'Pemain baharu', editTitle: 'Ubah pemain', edit: 'Ubah', nameLbl: 'Nama', namePh: 'Contoh: Aisyah', colorLbl: 'Warna', save: 'Simpan', cancel: 'Batal', del: 'Padam pemain', delConfirm: n => `Padam ${n}? Semua bintang dan lobak merah ${n} akan hilang.`, delYes: 'Ya, padam', player: i => `Pemain ${i}`, hello: n => `Hai ${n}! Jom main.`, reset: 'Padam semua pemain di peranti ini', resetNote: 'Nama dan markah disimpan dalam peranti ini sahaja. Orang lain yang buka pautan Timesy di peranti mereka tidak nampak data ini.', resetMsg: 'Semua nama, bintang, lobak merah dan barang almari di peranti ini akan dipadam. Timesy akan bermula semula seperti baharu.', resetYes: 'Ya, padam semua', resetDone: 'Semua pemain sudah dipadam. Timesy bermula semula.' },
     rv: { title: 'Ulang Kaji Pintar', btn: 'Ulang kaji pintar', weak: n => `${n} soalan perlu latihan`, none: 'Tiada soalan sukar. Hebat!', empty: 'Main kuiz dahulu. Timesy akan ingat soalan yang sukar.', titles: ['Teruskan berlatih!', 'Bagus!', 'Hebat!', 'Cemerlang!'], resMsg: (s, left) => `Kamu jawab ${s} daripada 12 betul. ` + (left ? `Masih ada ${left} soalan untuk dilatih.` : 'Semua soalan sukar sudah dikuasai!') },
     carrotsEarned: n => `Kamu dapat ${n} lobak merah!`,
     closet: { title: 'Almari Timesy', sub: 'Jawab soalan dengan betul untuk kumpul lobak merah. Tekan barang untuk beli, pakai atau tanggalkan.', hats: 'Topi & hiasan kepala', face: 'Muka', bg: 'Latar', wear: 'Pakai', worn: 'Dipakai', need: n => `Perlu ${n} lagi`, bought: n => `${n} sudah dibeli!`, short: n => `Kumpul ${n} lobak merah lagi untuk beli barang ini.`, info: (c, o) => `${c} lobak merah · ${o} barang` },
@@ -923,7 +929,7 @@ const I18N = {
     seg: { touch: 'Touch', gesture: 'Hands', voice: 'Voice' },
     modes: { touch: ['Touch', 'Tap the answer on the screen.'], gesture: ['Hand Gestures', 'Show your fingers to the camera and hold to choose.'], voice: ['Voice Commands', 'Say the answer out loud, like “twenty-four”.'] },
     stats: { stars: 'Stars', mastered: 'Tables mastered', best: 'Challenge best', carrots: 'Carrots' },
-    who: { title: 'Who’s playing?', add: 'Add player', addTitle: 'New player', editTitle: 'Edit player', edit: 'Edit', nameLbl: 'Name', namePh: 'For example: Aisyah', colorLbl: 'Colour', save: 'Save', cancel: 'Cancel', del: 'Delete player', delConfirm: n => `Delete ${n}? All of ${n}’s stars and carrots will be lost.`, delYes: 'Yes, delete', player: i => `Player ${i}`, hello: n => `Hi ${n}! Let’s play.` },
+    who: { title: 'Who’s playing?', add: 'Add player', addTitle: 'New player', editTitle: 'Edit player', edit: 'Edit', nameLbl: 'Name', namePh: 'For example: Aisyah', colorLbl: 'Colour', save: 'Save', cancel: 'Cancel', del: 'Delete player', delConfirm: n => `Delete ${n}? All of ${n}’s stars and carrots will be lost.`, delYes: 'Yes, delete', player: i => `Player ${i}`, hello: n => `Hi ${n}! Let’s play.`, reset: 'Delete all players on this device', resetNote: 'Names and scores are saved on this device only. People who open the Timesy link on their own device cannot see them.', resetMsg: 'All names, stars, carrots and closet items on this device will be deleted. Timesy will start fresh.', resetYes: 'Yes, delete all', resetDone: 'All players were deleted. Timesy has started fresh.' },
     rv: { title: 'Smart Review', btn: 'Smart review', weak: n => `${n} question${n === 1 ? '' : 's'} to practise`, none: 'No tricky questions. Great job!', empty: 'Play a quiz first. Timesy will remember the tricky questions.', titles: ['Keep practising!', 'Good job!', 'Great!', 'Excellent!'], resMsg: (s, left) => `You got ${s} out of 12. ` + (left ? `${left} question${left === 1 ? '' : 's'} still to practise.` : 'You have mastered all the tricky questions!') },
     carrotsEarned: n => `You earned ${n} carrot${n === 1 ? '' : 's'}!`,
     closet: { title: 'Timesy’s Closet', sub: 'Answer correctly to collect carrots. Tap an item to buy, wear or take it off.', hats: 'Hats & hair', face: 'Face', bg: 'Background', wear: 'Wear', worn: 'Wearing', need: n => `Need ${n} more`, bought: n => `${n} bought!`, short: n => `Collect ${n} more carrots to buy this.`, info: (c, o) => `${c} carrot${c === 1 ? '' : 's'} · ${o} item${o === 1 ? '' : 's'}` },
@@ -1912,8 +1918,10 @@ function renderWho() {
     const st = Object.values(p.stars).reduce((a, b) => a + b, 0);
     return `<div class="pcard${p.id === store.current ? ' cur' : ''}"><button class="pick" data-pick="${p.id}"><span class="av" style="--c:var(--c${p.color})">${esc(initial(p))}</span><strong>${esc(pname(p))}</strong><small>★ ${st} · ${CARROT} ${p.carrots}</small></button><button class="edit" data-edit="${p.id}" aria-label="${esc(T.edit + ' ' + pname(p))}">${PENCIL}</button></div>`;
   }).join('') + `<button class="pcard add" id="pAdd"><span class="plusic">+</span><strong>${T.add}</strong></button>`;
+  $('#resetNote').textContent = T.resetNote; $('#btnReset').textContent = T.reset;
+  $('#resetMsg').textContent = T.resetMsg; $('#resetYes').textContent = T.resetYes; $('#resetNo').textContent = T.cancel;
 }
-function openWho() { renderWho(); $('#pform').hidden = true; openSheet('whoSheet'); }
+function openWho() { renderWho(); $('#pform').hidden = true; $('#resetConfirm').hidden = true; openSheet('whoSheet'); }
 function openForm(id) {
   const T = L().who, p = id === 'new' ? null : store.profiles.find(x => x.id === id);
   pEdit = id; pColor = p ? p.color : (store.profiles.length % 12) + 1;
@@ -1959,6 +1967,15 @@ $('#pDel').addEventListener('click', () => {
   $('#pConfirm').hidden = false;
 });
 $('#pDelNo').addEventListener('click', () => { $('#pConfirm').hidden = true; });
+$('#btnReset').addEventListener('click', () => { $('#resetConfirm').hidden = false; $('#resetConfirm').scrollIntoView({ block: 'nearest' }); });
+$('#resetNo').addEventListener('click', () => { $('#resetConfirm').hidden = true; });
+$('#resetYes').addEventListener('click', () => {
+  const fresh = newProfile('', 9);
+  store.profiles = [fresh]; store.current = fresh.id; save();
+  try { localStorage.removeItem('pintar-sifir-v1'); } catch (e) {}
+  closeSheets(); renderDress(); goHome();
+  $('#homeBubble').textContent = L().who.resetDone; sfx('tap');
+});
 $('#pDelYes').addEventListener('click', () => {
   store.profiles = store.profiles.filter(x => x.id !== pEdit);
   if (!store.profiles.some(x => x.id === store.current)) store.current = store.profiles[0].id;
