@@ -1114,6 +1114,36 @@ function parseNumber(text) {
   return runs.length ? runs[runs.length - 1] : null;
 }
 
+/* Short number words are easy to mishear: "two" comes back as "to", "three" as "free", "eight" as "ate",
+   and a Malay recogniser writes English numbers the way they sound ("wan", "tu", "tri"). For short answers only,
+   read these sound-alikes as numbers. The result is used only when it matches one of the choices on screen. */
+const SOUNDS = {
+  won: 1, wan: 1, wun: 1, juan: 1,
+  to: 2, too: 2, tu: 2, tou: 2, tew: 2,
+  tree: 3, free: 3, tri: 3, thri: 3, sri: 3,
+  far: 4, fo: 4, foe: 4, faw: 4, fore: 4,
+  fife: 5, faif: 5, fai: 5,
+  sex: 6, sick: 6, sicks: 6, siks: 6, seeks: 6, sik: 6,
+  sevan: 7, sevin: 7,
+  eat: 8, et: 8, eit: 8, ait: 8, hate: 8, eighth: 8,
+  nain: 9, nein: 9, nyne: 9,
+  tan: 10, tenn: 10,
+  enem: 6, nam: 6, lepan: 8, lapang: 8, duo: 2,
+  dirty: 30, tirty: 30, forteen: 14, fiveteen: 15
+};
+const FILLER = new Set(['number', 'nombor', 'nomber', 'jawapan', 'answer', 'is', 'the', 'its', 'it', 's', 'ialah', 'dia', 'ni', 'itu', 'saya', 'rasa', 'i', 'think', 'uh', 'um', 'eh', 'a']);
+function looseNumber(text) {
+  const words = String(text).toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w && !FILLER.has(w));
+  if (!words.length || words.length > 3) return null;
+  return parseNumber(words.map(w => (w in SOUNDS ? String(SOUNDS[w]) : w)).join(' '));
+}
+/* The best number in what was heard: a clear number first, otherwise a sound-alike, but only one that is allowed. */
+function pickNumber(alts, valid) {
+  const strict = alts.map(parseNumber).filter(v => v != null);
+  if (!valid) return strict.length ? strict[0] : alts.map(looseNumber).find(v => v != null) ?? null;
+  return strict.find(v => valid.includes(v)) ?? alts.map(looseNumber).find(v => v != null && valid.includes(v)) ?? null;
+}
+
 /* ================= words in both languages ================= */
 const I18N = {
   ms: {
@@ -1149,9 +1179,9 @@ const I18N = {
     hints: {
       home: { touch: 'Sentuh satu tahap di peta untuk mula belajar.', gesture: 'Tunjuk <b>1–10 jari</b> dan tahan untuk pilih sifir. <b>11</b> = 1 jari setiap tangan. <b>12</b> = 1 jari (kiri) + 2 jari (kanan). <b>Genggam tangan</b> untuk Cabaran.', voice: 'Sebut <b>“sifir lima”</b> untuk belajar, <b>“kuiz lima”</b> untuk kuiz, <b>“cabaran”</b> atau <b>“belon”</b>.' },
       learn: { touch: 'Sentuh satu baris dan lihat lobak merah jatuh ke dalam bakul.', gesture: 'Tunjuk jari untuk pilih baris (4 jari = baris 4). Baris <b>11</b> = 1 + 1 jari, baris <b>12</b> = 1 + 2 jari (dua tangan). <b>Genggam tangan</b> untuk mula kuiz.', voice: 'Sebut nombor, contoh <b>“empat”</b>. Sebut <b>“baca”</b> untuk dengar sifir, <b>“kuiz”</b> untuk mula kuiz.' },
-      quiz: { touch: 'Sentuh jawapan yang betul.', gesture: 'Tunjuk <b>1, 2, 3 atau 4 jari</b> dan tahan untuk pilih jawapan.', voice: 'Terus sebut jawapan sebaik soalan keluar, contoh <b>“dua puluh lapan”</b>. Sebut <b>“ulang”</b> untuk dengar soalan.' },
+      quiz: { touch: 'Sentuh jawapan yang betul.', gesture: 'Tunjuk <b>1, 2, 3 atau 4 jari</b> dan tahan untuk pilih jawapan.', voice: 'Terus sebut jawapan sebaik soalan keluar, contoh <b>“dua puluh lapan”</b>. Nombor pendek susah didengar? Sebut <b>“nombor lapan”</b>.' },
       result: { touch: 'Pilih apa yang kamu mahu buat seterusnya.', gesture: 'Tunjuk jari ikut nombor pada butang.', voice: 'Sebut <b>“main lagi”</b>, <b>“seterusnya”</b> atau <b>“menu”</b>.' },
-      balloon: { touch: 'Sentuh belon yang ada jawapan betul sebelum ia terbang!', gesture: 'Tunjuk <b>1–4 jari</b> ikut nombor pada belon, dan tahan sekejap.', voice: 'Sebut jawapan dengan kuat, contoh <b>“dua puluh empat”</b>.' }
+      balloon: { touch: 'Sentuh belon yang ada jawapan betul sebelum ia terbang!', gesture: 'Tunjuk <b>1–4 jari</b> ikut nombor pada belon, dan tahan sekejap.', voice: 'Sebut jawapan dengan kuat, contoh <b>“dua puluh empat”</b> atau <b>“nombor lapan”</b>.' }
     },
     bubble: { touch: 'Hai, saya Timesy si arnab! Jom hafal sifir sambil bermain.', gesture: 'Hai, saya Timesy! Angkat jari ke kamera, nanti saya kira.', voice: 'Hai, saya Timesy! Cakap dengan kuat, saya sedang mendengar.' },
     camera: 'Kamera', microphone: 'Mikrofon', fingers: 'jari',
@@ -1238,9 +1268,9 @@ const I18N = {
     hints: {
       home: { touch: 'Tap a level on the map to start learning.', gesture: 'Show <b>1–10 fingers</b> and hold to pick a table. <b>11</b> = 1 finger on each hand. <b>12</b> = 1 finger (left) + 2 fingers (right). <b>Make a fist</b> for the Challenge.', voice: 'Say <b>“table five”</b> to learn, <b>“quiz five”</b> for a quiz, <b>“challenge”</b> or <b>“balloons”</b>.' },
       learn: { touch: 'Tap a row and watch the carrots drop into the baskets.', gesture: 'Show fingers to pick a row (4 fingers = row 4). Row <b>11</b> = 1 + 1 fingers, row <b>12</b> = 1 + 2 fingers (two hands). <b>Make a fist</b> to start the quiz.', voice: 'Say a number, like <b>“four”</b>. Say <b>“read”</b> to hear the table, <b>“quiz”</b> to start the quiz.' },
-      quiz: { touch: 'Tap the right answer.', gesture: 'Show <b>1, 2, 3 or 4 fingers</b> and hold to choose.', voice: 'Say the answer as soon as the question appears, like <b>“twenty-eight”</b>. Say <b>“repeat”</b> to hear the question.' },
+      quiz: { touch: 'Tap the right answer.', gesture: 'Show <b>1, 2, 3 or 4 fingers</b> and hold to choose.', voice: 'Say the answer as soon as the question appears, like <b>“twenty-eight”</b>. Short number not heard? Say <b>“number eight”</b>.' },
       result: { touch: 'Choose what to do next.', gesture: 'Show the number of fingers on the button.', voice: 'Say <b>“play again”</b>, <b>“next”</b> or <b>“menu”</b>.' },
-      balloon: { touch: 'Tap the balloon with the right answer before it floats away!', gesture: 'Show <b>1–4 fingers</b> to match the number on a balloon, and hold.', voice: 'Say the answer out loud, like <b>“twenty-four”</b>.' }
+      balloon: { touch: 'Tap the balloon with the right answer before it floats away!', gesture: 'Show <b>1–4 fingers</b> to match the number on a balloon, and hold.', voice: 'Say the answer out loud, like <b>“twenty-four”</b> or <b>“number eight”</b>.' }
     },
     bubble: { touch: 'Hi, I’m Timesy the bunny! Let’s learn times tables while we play.', gesture: 'Hi, I’m Timesy! Hold up your fingers to the camera and I’ll count them.', voice: 'Hi, I’m Timesy! Speak up, I’m listening.' },
     camera: 'Camera', microphone: 'Microphone', fingers: 'fingers',
@@ -2081,7 +2111,7 @@ function liveAnswers() {
 function voiceInterim(text, idx) {
   const key = V.session + ':' + idx;
   if (V.acted === key || !text) return;
-  const valid = liveAnswers(), v = parseNumber(text);
+  const valid = liveAnswers(), v = valid ? pickNumber([text], valid) : parseNumber(text);
   if (valid && v != null && valid.includes(v) && !canGrow(v, valid)) { V.acted = key; clearTimeout(V.stableT); onVoice([text], 'quick'); return; }
   V.lastInterim = text; clearTimeout(V.stableT);
   V.stableT = setTimeout(() => {
@@ -2096,7 +2126,7 @@ const newWords = t => {
 };
 function buildRec() {
   const r = new SR();
-  r.continuous = CONT; r.interimResults = true; r.maxAlternatives = 3;
+  r.continuous = CONT; r.interimResults = true; r.maxAlternatives = 5;
   r.onstart = () => { V.on = true; V.starting = false; V.gotResult = false; V.session++; V.prev = ''; V.lastInterim = ''; if (!V.speaking) micUI('listen'); };
   r.onresult = e => {
     if (V.speaking) return;
@@ -2164,7 +2194,8 @@ const KW = {
   again: ['lagi', 'ulang', 'semula', 'main', 'again', 'play', 'retry', 'replay'],
   review: ['ulang kaji', 'ulangkaji', 'latihan', 'review', 'practice', 'practise'],
   closet: ['almari', 'closet', 'wardrobe', 'kedai', 'shop'],
-  balloon: ['belon', 'balloon', 'balloons', 'pop']
+  balloon: ['belon', 'balloon', 'balloons', 'pop'],
+  table: ['sifir', 'table', 'times', 'kuiz', 'kuis', 'quiz']
 };
 /* Returns true when the words led to an action. */
 function onVoice(alts, how = 'final') { return voiceAct(alts, how) !== false; }
@@ -2182,7 +2213,8 @@ function voiceAct(alts, how) {
       if (has('closet')) return openCloset();
       if (has('challenge')) return startChallenge();
       if (has('balloon')) return startBalloon();
-      if (nums.length && nums[0] >= 1 && nums[0] <= 12) { sfx('tap'); return has('quiz') ? startQuiz(nums[0]) : openLearn(nums[0]); }
+      { const t = nums.length ? nums[0] : has('table') ? pickNumber(alts.map(a => a.replace(/\b(sifir|table|times|kuiz|kuis|quiz)\b/gi, ' ')), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) : null;
+        if (t >= 1 && t <= 12) { sfx('tap'); return has('quiz') ? startQuiz(t) : openLearn(t); } }
       break;
     case 'learn':
       if (has('home')) return goHome();
@@ -2193,20 +2225,20 @@ function voiceAct(alts, how) {
     case 'quiz':
       if (has('stop')) return goHome();
       if (has('repeat')) return readQ();
-      if (nums.length && Q && !Q.answered) {
-        const v = nums.includes(Q.ans) ? Q.ans : nums[0];
-        if (partial && !Q.opts.includes(v)) return false;
-        return answer(v, $$('.opt').find(b => +b.dataset.v === v));
+      if (Q && !Q.answered && Q.opts) {
+        const pick = pickNumber(alts, Q.opts);
+        const v = nums.includes(Q.ans) ? Q.ans : pick != null ? pick : nums[0];
+        if (v != null && !(partial && !Q.opts.includes(v))) return answer(v, $$('.opt').find(b => +b.dataset.v === v));
       }
       if (partial) return false;
       if (Q && !Q.answered) { $('#fb').className = 'fb'; $('#fb').textContent = L().noNum; }
       return;
     case 'balloon':
       if (has('stop')) return goHome();
-      if (nums.length && Q && Q.kind === 'balloon' && !Q.answered) {
-        if (quick && !nums.some(x => BL.balloons.some(b => !b.popped && !b.gone && b.v === x))) return false;
-        const live = BL.balloons.filter(b => !b.popped && !b.gone);
-        const v = live.some(b => b.v === Q.ans) && nums.includes(Q.ans) ? Q.ans : nums.find(x => live.some(b => b.v === x));
+      if (Q && Q.kind === 'balloon' && !Q.answered) {
+        const live = BL.balloons.filter(b => !b.popped && !b.gone), vals = live.map(b => b.v);
+        const v = live.some(b => b.v === Q.ans) && nums.includes(Q.ans) ? Q.ans : pickNumber(alts, vals);
+        if (v == null && !nums.length) { if (partial) return false; break; }
         if (v != null) return blPop(live.find(b => b.v === v));
         if (partial) return false;
         const msg = $('#blMsg'); msg.className = 'bl-msg no'; msg.innerHTML = `<span>${esc(L().bl.noBalloon(nums[0]))}</span>`;
@@ -2846,7 +2878,7 @@ setMode(['touch', 'gesture', 'voice'].includes(store.mode) ? store.mode : 'touch
 show('home');
 if (store.profiles.length > 1) openWho();
 
-window.__pintar = { canGrow, V, parseNumber, countFingers, handsValue, rankVoice, ms, en, makeOptions, onVoice, setLang, openHelp, P, store, weakFacts, reviewSet, startReview, openWho, openCloset, renderHome, renderDress, startBalloon, blPop, BL, MAP, mapGoal, layoutMap, comboFx, save, state: () => ({ S, Q }), dbg: () => ({ frames: G.frames, hist: G.hist.slice(), lock: G.lock }) };
+window.__pintar = { canGrow, V, looseNumber, pickNumber, parseNumber, countFingers, handsValue, rankVoice, ms, en, makeOptions, onVoice, setLang, openHelp, P, store, weakFacts, reviewSet, startReview, openWho, openCloset, renderHome, renderDress, startBalloon, blPop, BL, MAP, mapGoal, layoutMap, comboFx, save, state: () => ({ S, Q }), dbg: () => ({ frames: G.frames, hist: G.hist.slice(), lock: G.lock }) };
 })();
 </script>
 </body>
